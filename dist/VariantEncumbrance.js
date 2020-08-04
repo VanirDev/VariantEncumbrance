@@ -29,7 +29,6 @@ Hooks.once('init', async function () {
 	registerSettings();
 	DND5E.encumbrance.strMultiplier = game.settings.get("VariantEncumbrance", "heavyMultiplier");
 	DND5E.encumbrance.currencyPerWeight = game.settings.get("VariantEncumbrance", "currencyWeight");
-	CONFIG.debug.hooks = true;
 	// Preload Handlebars templates
 	await preloadTemplates();
 
@@ -55,27 +54,11 @@ Hooks.once('ready', function () {
 Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 	if (actorObject.isCharacter) {
 		var encumbranceElements;
-		var encumbranceContainer;
-		var speedElements;
 		var speedDecrease = 0;
 		if (htmlElement[0].tagName == "FORM" && htmlElement[0].id == "") {
-			console.log(htmlElement.find('.encumbrance'));
 			encumbranceElements = htmlElement.find('.encumbrance')[0].children;
-			encumbranceContainer = htmlElement.find('.encumbrance')[0];
-			console.log(htmlElement.find('[name="data.attributes.speed.value"]'));
-			speedElements = htmlElement.find('[name="data.attributes.speed.value"]')[0].parentElement.parentElement;
-			//encumbranceElements = pageElement[0].offsetParent.children[1].children[0].children[2].children[1].children[2].children;
-			//encumbranceContainer = pageElement[0].offsetParent.children[1].children[0].children[2].children[1].children[2];
-			//speedElements = pageElement[0].offsetParent.children[1].children[0].children[0].children[1].children[3].children[4].children;
 		} else {
-			console.log(htmlElement.find('.encumbrance'));
 			encumbranceElements = htmlElement.find('.encumbrance')[0].children;
-			encumbranceContainer = htmlElement.find('.encumbrance')[0];
-			console.log(htmlElement.find('[name="data.attributes.speed.value"]'));
-			speedElements = htmlElement.find('[name="data.attributes.speed.value"]')[0].parentElement.parentElement;
-			// encumbranceElements = htmlElement[0].children[1].children[0].children[2].children[1].children[2].children;
-			// encumbranceContainer = htmlElement[0].children[1].children[0].children[2].children[1].children[2];
-			// speedElements = htmlElement[0].children[1].children[0].children[0].children[1].children[3].children[4].children
 		}
 		var totalWeight = 0;
 		var strengthScore = actorObject.data.abilities.str.value;
@@ -126,7 +109,6 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
 
 		if (game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
-			console.log(actorObject.data.attributes.speed.value);
 			var newSpeed = actorObject.data.attributes.speed.value.split(" ")[0];
 			if (isNaN(newSpeed)) {
 				newSpeed = "?"
@@ -142,9 +124,6 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 			$('[name="data.attributes.speed.value"]').parent().css("width", "100%");
 			$('[name="data.attributes.speed.value"]').parent().css("display", "flex");
 		}
-
-		console.log([totalWeight, lightMax, mediumMax, heavyMax]);
-		console.log(encumbranceContainer);
 	}
 })
 
