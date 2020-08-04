@@ -1,15 +1,38 @@
+import { DND5E } from "../../../systems/dnd5e/module/config.js";
+
 export const registerSettings = function () {
 	// Register any custom module settings here
-	game.settings.register("customEncumbrance", "strengthMultiplier", {
-		name: "Strength Multiplier",
-		hint: "Choose the multiplier used to calculate maximum carrying weight from the strength ability score.",
+	game.settings.register("VariantEncumbrance", "lightMultiplier", {
+		name: "Unencumbered Strength Multiplier",
+		hint: "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
 		scope: "world",
 		config: true,
 		type: Number,
-		default: 15
+		default: 5
 	});
 
-	game.settings.registeR("customEncumbrance", "useVariantEncumbranceSpeed", {
+	game.settings.register("VariantEncumbrance", "mediumMultiplier", {
+		name: "Encumbered Strength Multiplier",
+		hint: "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 10
+	});
+
+	game.settings.register("VariantEncumbrance", "heavyMultiplier", {
+		name: "Heavily Enc. Strength Multiplier",
+		hint: "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 15,
+		onChange: value => {
+			DND5E.encumbrance.strMultiplier = value;
+		}
+	});
+
+	game.settings.register("VariantEncumbrance", "useVariantEncumbrance", {
 		name: "Variant Encumbrance Speed Penalties",
 		hint: "Enable automatic speed penalties from carry weight.",
 		scope: "world",
@@ -18,12 +41,33 @@ export const registerSettings = function () {
 		default: false
 	})
 
-	game.settings.register("customEncumbrance", "currencyWeight", {
+	game.settings.register("VariantEncumbrance", "equippedMultiplier", {
+		name: "Equipped Item Weight Multiplier",
+		hint: "Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: "1"
+	});
+
+	game.settings.register("VariantEncumbrance", "profEquippedMultiplier", {
+		name: "Proficient Equipped Item Weight Multiplier",
+		hint: "Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: "1"
+	});
+
+	game.settings.register("VariantEncumbrance", "currencyWeight", {
 		name: "Currency Per Weight Unit",
 		hint: "Define the number of coins required to equal 1 unit of weight.",
 		scope: "world",
 		config: true,
 		type: Number,
-		default: 50
+		default: 50,
+		onChange: value => {
+			DND5E.encumbrance.currencyPerWeight = value;
+		}
 	});
 }

@@ -2,32 +2,20 @@
   "name": "VariantEncumbrance",
   "title": "Variant Encumbrance",
   "description": "A module for D&D 5th Edition, to automatically modify character carry weights to match the Variant Encumbrance optional rule set.",
-  "systems": [],
-  "version": "0.1.0",
-  "author": "Vanir#0001",
-  "authors": [
-    {
-      "name": "Vanir",
-      "email": "vvanir@gmail.com",
-      "url": "http://twitter.com/vanir112"
-    }
+  "systems": [
+    "dnd5e"
   ],
-  "scripts": [],
+  "version": "0.1.0",
+  "author": "Vanir#0001 (discord)",
   "esmodules": [
     "VariantEncumbrance.js"
   ],
   "styles": [
     "VariantEncumbrance.css"
   ],
-  "packs": [],
-  "languages": [],
-  "minimumCoreVersion": "0.5.0",
-  "compatibleCoreVersion": "0.5.0",
+  "minimumCoreVersion": "0.6.5",
+  "compatibleCoreVersion": "0.6.5",
   "url": "https://github.com/Vanir112/VariantEncumbrance",
   "manifest": "https://raw.githubusercontent.com/Vanir112/VariantEncumbrance/master/dist/module.json",
-  "download": "https://github.com/Vanir112/VariantEncumbrance/raw/master/VariantEncumbrance.zip",
-  "license": "",
-  "readme": "",
-  "bugs": "",
-  "changelog": ""
+  "download": "https://github.com/Vanir112/VariantEncumbrance/raw/master/VariantEncumbrance.zip"
 }

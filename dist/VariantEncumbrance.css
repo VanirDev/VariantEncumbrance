@@ -3,3 +3,61 @@
 /*  	  Add your styles here			*/
 /* ------------------------------------ */
 
+.encumbrance {
+    margin-top: 18px !important;
+}
+.encumbrance-label {
+    margin: auto !important;
+    width: 100% !important;
+    text-align: center !important;
+    top: -15px !important;
+    color: #191813 !important;
+    text-shadow: none !important;
+}
+
+.VELabel {
+    bottom: -18px;
+    display: block;
+    position: absolute;
+}
+
+.VESpeed {
+    width: 100% !important;
+    text-align: right !important;
+}
+
+.DnDSpeed {
+    width: inherit !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    text-align: left !important;
+}
+
+.encumbrance-breakpoint-label{
+    font-style: normal !important;
+    bottom: -24px;
+    width: 100px;
+    left: -50px;
+    text-align: center;
+}
+
+.encumbrance-bar {
+    background: #6eb313 !important;
+}
+
+.encumbrance-bar.medium {
+    background: #ea7e20 !important;
+}
+
+.encumbrance-bar.heavy {
+    background: #e40000 !important;
+}
+.encumbrance-bar.max {
+    background: repeating-linear-gradient(
+        135deg,
+        #2d2d2d,
+        #2d2d2d 10px,
+        #efd00e 10px,
+        #efd00e 20px
+      ) !important;
+}
