@@ -102,9 +102,12 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 			encumbranceElements[0].classList.add("max");
 		}
 
-		$('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
-		$('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${lightMax}<div>`);
-		$('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${mediumMax}<div>`);
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
+		//$('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${lightMax}<div>`);
+		//$('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${lightMax}<div>`);
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${mediumMax}<div>`);
+		//$('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${mediumMax}<div>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel" style="right:0%">${heavyMax}</span>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
 
@@ -119,10 +122,14 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 					newSpeed -= speedDecrease;
 				}
 			}
-			$('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
-			$('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
-			$('[name="data.attributes.speed.value"]').parent().css("width", "100%");
-			$('[name="data.attributes.speed.value"]').parent().css("display", "flex");
+			htmlElement.find('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
+			//$('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
+			htmlElement.find('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
+			//$('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
+			htmlElement.find('[name="data.attributes.speed.value"]').parent().css("width", "100%");
+			//$('[name="data.attributes.speed.value"]').parent().css("width", "100%");
+			htmlElement.find('[name="data.attributes.speed.value"]').parent().css("display", "flex");
+			//$('[name="data.attributes.speed.value"]').parent().css("display", "flex");
 		}
 	}
 })
