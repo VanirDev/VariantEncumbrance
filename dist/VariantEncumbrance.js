@@ -66,7 +66,8 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		var mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
 		var heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
 
-		actorObject.inventory.forEach(category => {
+		Object.keys(actorObject.inventory).forEach(categoryKey => {
+			var category = actorObject.inventory[categoryKey];
 			category.items.forEach(item => {
 				var appliedWeight = item.totalWeight;
 				if (item.data.equipped) {
