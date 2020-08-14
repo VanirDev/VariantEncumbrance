@@ -1,7 +1,6 @@
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
 export const registerSettings = function () {
-	// Register any custom module settings here
 	game.settings.register("VariantEncumbrance", "lightMultiplier", {
 		name: "Unencumbered Strength Multiplier",
 		hint: "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
@@ -38,7 +37,7 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		type: Boolean,
-		default: false
+		default: true
 	})
 
 	game.settings.register("VariantEncumbrance", "equippedMultiplier", {
