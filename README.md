@@ -29,7 +29,7 @@ The default character weight bar has received a lick of paint, giving labels for
 
 ![](https://i.imgur.com/DCfGuUJ.png)
 
-Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered.
+Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (The speed value must be separated by a space from its units).
 
 #### Equipped Item Weight Reduction (Optional)
 
