@@ -29,6 +29,7 @@ Hooks.once('init', async function () {
 	registerSettings();
 	DND5E.encumbrance.strMultiplier = game.settings.get("VariantEncumbrance", "heavyMultiplier");
 	DND5E.encumbrance.currencyPerWeight = game.settings.get("VariantEncumbrance", "currencyWeight");
+	//CONFIG.debug.hooks = true;
 	// Preload Handlebars templates
 	await preloadTemplates();
 
@@ -81,12 +82,21 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 			});
 		});
 
+
+		if (game.settings.get("dnd5e", "currencyWeight")) {
+			var totalCoins = 0;
+			Object.values(actorObject.data.currency).forEach(count => {
+				totalCoins += count;
+			});
+			totalWeight += totalCoins / game.settings.get("VariantEncumbrance", "currencyWeight");
+		}
+
 		encumbranceElements[2].style.left = (lightMax / heavyMax * 100) + "%";
 		encumbranceElements[3].style.left = (lightMax / heavyMax * 100) + "%";
 		encumbranceElements[4].style.left = (mediumMax / heavyMax * 100) + "%";
 		encumbranceElements[5].style.left = (mediumMax / heavyMax * 100) + "%";
 		encumbranceElements[0].style.cssText = "width: " + Math.min(Math.max((totalWeight / heavyMax * 100), 0), 99.8) + "%;";
-		encumbranceElements[1].textContent = totalWeight + " lbs.";
+		encumbranceElements[1].textContent = Math.round(totalWeight * 100) / 100 + " lbs.";
 
 		encumbranceElements[0].classList.remove("medium");
 		encumbranceElements[0].classList.remove("heavy");
