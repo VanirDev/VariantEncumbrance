@@ -63,6 +63,10 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		}
 		var totalWeight = 0;
 		var strengthScore = actorObject.data.abilities.str.value;
+		var powerfulBuild = actorObject.actor.flags.dnd5e.powerfulBuild;
+		if (powerfulBuild) {
+			strengthScore *= 2;
+		}
 		var lightMax = game.settings.get("VariantEncumbrance", "lightMultiplier") * strengthScore;
 		var mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
 		var heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
