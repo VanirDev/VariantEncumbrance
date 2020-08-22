@@ -63,9 +63,22 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		}
 		var totalWeight = 0;
 		var strengthScore = actorObject.data.abilities.str.value;
-		var powerfulBuild = actorObject.actor.flags.dnd5e.powerfulBuild;
-		if (powerfulBuild) {
-			strengthScore *= 2;
+		if (game.settings.get("VariantEncumbrance", "sizeMultipliers")) {
+			var size = actorObject.data.traits.size;
+			if (size == "tiny") {
+				strengthScore /= 2;
+			} else if (size == "lg") {
+				strengthScore *= 2;
+			} else if (size == "huge") {
+				strengthScore *= 4;
+			} else if (size == "grg") {
+				strengthScore *= 8;
+			} else {
+				strengthScore *= 1;
+			}
+			if (actorObject.actor.flags.dnd5e.powerfulBuild) {
+				strengthScore *= 2;
+			}
 		}
 		var lightMax = game.settings.get("VariantEncumbrance", "lightMultiplier") * strengthScore;
 		var mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
