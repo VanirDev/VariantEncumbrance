@@ -69,4 +69,13 @@ export const registerSettings = function () {
 			DND5E.encumbrance.currencyPerWeight = value;
 		}
 	});
+
+	game.settings.register("VariantEncumbrance", "sizeMultipliers", {
+		name: "Variant Encumbrance Size Modifiers",
+		hint: "Enable multipliers from creature size.",
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: true
+	});
 }
