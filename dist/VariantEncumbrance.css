@@ -11,7 +11,8 @@
     width: 100% !important;
     text-align: center !important;
     top: -15px !important;
-    color: #191813 !important;
+    /*color: #191813 !important;*/
+    color: inherit !important;
     text-shadow: none !important;
 }
 

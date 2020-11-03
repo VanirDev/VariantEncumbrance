@@ -14,8 +14,6 @@
 import { registerSettings } from './module/settings.js';
 import { preloadTemplates } from './module/preloadTemplates.js';
 import { DND5E } from "../../systems/dnd5e/module/config.js";
-import ActorSheet5e from "../../systems/dnd5e/module/actor/sheets/base.js";
-import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -76,7 +74,8 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 			} else {
 				strengthScore *= 1;
 			}
-			if (actorObject.actor.flags.dnd5e.powerfulBuild) {
+
+			if (actorObject.actor?.flags?.dnd5e?.powerfulBuild) { //jshint ignore:line
 				strengthScore *= 2;
 			}
 		}
@@ -118,48 +117,56 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		encumbranceElements[0].classList.remove("medium");
 		encumbranceElements[0].classList.remove("heavy");
 
+		let encumbranceTier = 0;
 		if (totalWeight >= lightMax && totalWeight < mediumMax) {
 			encumbranceElements[0].classList.add("medium");
 			speedDecrease = 10;
+			encumbranceTier = 1;
 		}
 		if (totalWeight >= mediumMax && totalWeight < heavyMax) {
 			encumbranceElements[0].classList.add("heavy");
 			speedDecrease = 20;
+			encumbranceTier = 2;
 		}
 		if (totalWeight >= heavyMax) {
 			encumbranceElements[0].classList.add("max");
+			encumbranceTier = 3;
 		}
 
 		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
-		//$('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
 		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${lightMax}<div>`);
-		//$('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${lightMax}<div>`);
 		htmlElement.find('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${mediumMax}<div>`);
-		//$('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${mediumMax}<div>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel" style="right:0%">${heavyMax}</span>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
 
+		let variantData = {
+			speed: actorObject.data.attributes.speed.value.split(" ")[0],
+			tier: encumbranceTier,
+			weight: totalWeight
+		};
+
 		if (game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
-			var newSpeed = actorObject.data.attributes.speed.value.split(" ")[0];
+			let newSpeed = actorObject.data.attributes.speed.value.split(" ")[0];
 			if (isNaN(newSpeed)) {
-				newSpeed = "?"
+				newSpeed = "?";
+				variantData.speed = undefined;
 			} else {
 				if (totalWeight >= heavyMax) {
 					newSpeed = 0;
 				} else {
 					newSpeed -= speedDecrease;
 				}
-			}
-			htmlElement.find('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
-			//$('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
-			htmlElement.find('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
-			//$('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
-			htmlElement.find('[name="data.attributes.speed.value"]').parent().css("width", "100%");
-			//$('[name="data.attributes.speed.value"]').parent().css("width", "100%");
-			htmlElement.find('[name="data.attributes.speed.value"]').parent().css("display", "flex");
-			//$('[name="data.attributes.speed.value"]').parent().css("display", "flex");
-		}
-	}
-})
+				variantData.speed = newSpeed;
 
-// Add any additional hooks if necessary
+				htmlElement.find('[name="data.attributes.speed.value"]').before(`<span class="VESpeed">${newSpeed} /</span>`);
+				htmlElement.find('[name="data.attributes.speed.value"]').addClass(`DnDSpeed`);
+				htmlElement.find('[name="data.attributes.speed.value"]').parent().css("width", "100%");
+				htmlElement.find('[name="data.attributes.speed.value"]').parent().css("display", "flex");
+			}
+		}
+		let actorEntity = game.actors.get(actorObject.actor._id);
+		actorEntity.setFlag("VariantEncumbrance", "speed", variantData.speed);
+		actorEntity.setFlag("VariantEncumbrance", "tier", variantData.tier);
+		actorEntity.setFlag("VariantEncumbrance", "weight", variantData.weight);
+	}
+});

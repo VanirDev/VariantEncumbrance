@@ -38,7 +38,7 @@ export const registerSettings = function () {
 		config: true,
 		type: Boolean,
 		default: true
-	})
+	});
 
 	game.settings.register("VariantEncumbrance", "equippedMultiplier", {
 		name: "Equipped Item Weight Multiplier",
@@ -78,4 +78,4 @@ export const registerSettings = function () {
 		type: Boolean,
 		default: true
 	});
-}
+};
