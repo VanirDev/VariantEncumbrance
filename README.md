@@ -17,8 +17,8 @@ Version 0.1.4 has been designed to run with FoundryVTT v0.7.5 and the D&D5e v0.9
 ## Update 1.4
 
 * Support for Tidy5e dark theme character sheet
-* [Improved weight calculations to support creature size and powerful build](#-Character-Size-&-Powerful-Build-(Optional))
-* [Added flags to support 3rd party module integration](#-Variant-Encumbrance-Flag)
+* [Improved weight calculations to support creature size and powerful build](#sizeAndBuild)
+* [Added flags to support 3rd party module integration](#variantFlags)
 
 ## Features
 
@@ -37,6 +37,7 @@ The default character weight bar has received a lick of paint, giving labels for
 
 Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (The speed value must be separated by a space from its units).
 
+<a name="sizeAndBuild"/>
 #### Character Size & Powerful Build (Optional)
 
 Enabled by default, the module will modify your maximum carry weight according to your character's size, and whether you have the powerful build special trait. This feature can be disabled in the module settings. (Credit to [Eruestani](https://github.com/Eruestani) for implementing this).
@@ -45,6 +46,7 @@ Enabled by default, the module will modify your maximum carry weight according t
 
 In the module settings, custom multipliers are available for equipped items, and equipped proficient items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them.
 
+<a name="variantFlags"/>
 #### Variant Encumbrance Flag
 
 Should you wish to integrate some of Variant Encumbrance's calculations into your own modules, there is now a flag which stores the actor's encumbrance tier, weight, and modified speed. Encumbrance tier is presented as 0, 1, 2, 3, as Unencumbered, Encumbered, Heavily Encumbered, Over Encumbered, respectively.
@@ -53,8 +55,8 @@ Should you wish to integrate some of Variant Encumbrance's calculations into you
 VariantEncumbrance:
 {
     speed: 30,
-	tier: 0,
-	weight: 21.25
+    tier: 0,
+    weight: 21.25
 }
 ```
 
