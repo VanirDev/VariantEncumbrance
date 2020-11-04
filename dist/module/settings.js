@@ -40,6 +40,15 @@ export const registerSettings = function () {
 		default: true
 	});
 
+	game.settings.register("VariantEncumbrance", "unequippedMultiplier", {
+		name: "Unequipped Item Weight Multiplier",
+		hint: "Multiplier for items when not equipped.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: "1"
+	});
+
 	game.settings.register("VariantEncumbrance", "equippedMultiplier", {
 		name: "Equipped Item Weight Multiplier",
 		hint: "Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.",

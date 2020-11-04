@@ -93,6 +93,8 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 					} else {
 						appliedWeight *= game.settings.get("VariantEncumbrance", "equippedMultiplier");
 					}
+				} else {
+					appliedWeight *= game.settings.get("VariantEncumbrance", "unequippedMultiplier");
 				}
 				totalWeight += appliedWeight;
 			});

@@ -19,6 +19,7 @@ Version 0.1.4 has been designed to run with FoundryVTT v0.7.5 and the D&D5e v0.9
 * Support for Tidy5e dark theme character sheet
 * [Improved weight calculations to support creature size and powerful build](#sizeAndBuild)
 * [Added flags to support 3rd party module integration](#variantFlags)
+* Added weight multiplier for unequipped items
 
 ## Features
 
@@ -43,10 +44,9 @@ Your encumbrance status is automatically used to provide a modified speed value,
 
 Enabled by default, the module will modify your maximum carry weight according to your character's size, and whether you have the powerful build special trait. This feature can be disabled in the module settings. (Credit to [Eruestani](https://github.com/Eruestani) for implementing this).
 
-#### Equipped Item Weight Reduction (Optional)
+#### Item Weight Multipliers (Optional)
 
-In the module settings, custom multipliers are available for equipped items, and equipped proficient items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them.
-
+In the module settings, custom multipliers are available for unequipped, equipped, and proficiently equipped items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them, but this lends some flexibility to the system for anyone to use.
 
 #### Variant Encumbrance Flag
 <a name="variantFlags"/>
