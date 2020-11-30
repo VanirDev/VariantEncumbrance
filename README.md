@@ -49,8 +49,8 @@ The default character weight bar has received a lick of paint, giving labels for
 #### Speed Reduction (Optional)
 
 ##### Effect-based Speed Reduction (0.2+)
-<a name="ActiveEffects"/>
 ![](https://i.imgur.com/ztcUqfU.png)
+<a name="ActiveEffects"/>
 
 ##### Old Speed Reduction (Pre 0.1.5)
 ![](https://i.imgur.com/DCfGuUJ.png)
