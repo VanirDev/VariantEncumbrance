@@ -7,7 +7,7 @@ The effects of this module are currently purely visual, although restricting mov
 
 ##### Compatability
 
-Version 0.1.5 has been designed to run with FoundryVTT v0.7.5 and the D&D5e v0.98 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested.
+Version 0.2 has been designed to run with FoundryVTT v0.7.7 and the D&D5e v1.1.1 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested.
 
 * D&D5e Default Character Sheet
 
@@ -19,6 +19,11 @@ Version 0.1.5 has been designed to run with FoundryVTT v0.7.5 and the D&D5e v0.9
 <details>
   <summary>Click to Expand</summary>
   
+  ## Update 0.2
+
+  * [Reworked weight reduction to use the new Active Effects system.](#ActiveEffects)
+  * Refactored weight calculations to happen on inventory update, instead of only re-calculating weight when opening the character sheet.
+
   ## Update 0.1.5
   
   * Added weight multiplier for unequipped items
@@ -43,9 +48,14 @@ The default character weight bar has received a lick of paint, giving labels for
 
 #### Speed Reduction (Optional)
 
+##### Effect-based Speed Reduction (0.2+)
+<a name="ActiveEffects"/>
+![](https://i.imgur.com/ztcUqfU.png)
+
+##### Old Speed Reduction (Pre 0.1.5)
 ![](https://i.imgur.com/DCfGuUJ.png)
 
-Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (The speed value must be separated by a space from its units).
+Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (For 0.1.5, the speed value must be separated by a space from its units).
 
 
 #### Character Size & Powerful Build (Optional)
