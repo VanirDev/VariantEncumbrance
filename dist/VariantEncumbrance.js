@@ -260,9 +260,17 @@ function updateEncumbrance(actorEntity, itemSet) {
 		}
 	}
 	actorEntity.applyActiveEffects();
-	actorEntity.setFlag("VariantEncumbrance", "speed", actorEntity.data.data.attributes.movement.walk);
-	actorEntity.setFlag("VariantEncumbrance", "tier", encumbranceData.encumbranceTier);
-	actorEntity.setFlag("VariantEncumbrance", "weight", encumbranceData.totalWeight);
+
+	const { speed, tier, weight } = (actorEntity.data.flags.VariantEncumbrance || {});
+	if (speed !== actorEntity.data.data.attributes.movement.walk) {
+		actorEntity.setFlag("VariantEncumbrance", "speed", actorEntity.data.data.attributes.movement.walk);
+	}
+	if (tier !== encumbranceData.encumbranceTier) {
+		actorEntity.setFlag("VariantEncumbrance", "tier", encumbranceData.encumbranceTier);
+	}
+	if (weight !== encumbranceData.totalWeight) {
+		actorEntity.setFlag("VariantEncumbrance", "weight", encumbranceData.totalWeight);
+	}
 }
 
 function calculateEncumbrance(actorEntity, itemSet) {
