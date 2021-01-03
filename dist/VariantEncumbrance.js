@@ -174,13 +174,13 @@ function updateEncumbrance(actorEntity, itemSet) {
 	console.log("#### VE DEBUG: " + effectTierChanged + " | " + effectTiersPresent);
 	if (effectTierChanged || effectTiersPresent == 0) {
 		if (encumbranceData.encumbranceTier != 0) {
-			let changeMode = encumbranceData.encumbranceTier >= 3 ? 1 : 2;
-			let changeValue = encumbranceData.encumbranceTier >= 3 ? 0 : encumbranceData.speedDecrease * -1;
+			let [changeMode, changeValue] = encumbranceData.encumbranceTier >= 3 ?
+				[ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
+				[ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
 			if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
-				changeMode = 2;
+				changeMode = ACTIVE_EFFECT_MODES.ADD;
 				changeValue = 0;
 			}
-			let effectIconURL;
 			let effectName;
 			switch (encumbranceData.encumbranceTier) {
 				case 1:
