@@ -16,6 +16,17 @@ import { preloadTemplates } from './module/preloadTemplates.js';
 import { DND5E } from "../../systems/dnd5e/module/config.js";
 
 /* ------------------------------------ */
+/* Constants         					*/
+/* ------------------------------------ */
+const ENCUMBRANCE_TIERS = {
+	NONE: 0,
+	LIGHT: 1,
+	HEAVY: 2,
+	MAX: 3,
+};
+
+
+/* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
 Hooks.once('init', async function () {
@@ -72,13 +83,13 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		encumbranceElements[0].classList.remove("medium");
 		encumbranceElements[0].classList.remove("heavy");
 
-		if (encumbranceData.encumbranceTier == 1) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
 			encumbranceElements[0].classList.add("medium");
 		}
-		if (encumbranceData.encumbranceTier == 2) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
 			encumbranceElements[0].classList.add("heavy");
 		}
-		if (encumbranceData.encumbranceTier == 3) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
 			encumbranceElements[0].classList.add("max");
 		}
 
@@ -177,7 +188,7 @@ function updateEncumbrance(actorEntity, itemSet) {
 	if (!shouldHaveEncumbrance && hasEncumbrance) {
 		effectEntityPresent.delete();
 	} else if (shouldHaveEncumbrance) {
-		let [changeMode, changeValue] = encumbranceData.encumbranceTier >= 3 ?
+		let [changeMode, changeValue] = encumbranceData.encumbranceTier >= ENCUMBRANCE_TIERS.MAX ?
 			[ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
 			[ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
 		if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
@@ -186,13 +197,13 @@ function updateEncumbrance(actorEntity, itemSet) {
 		}
 		let effectName;
 		switch (encumbranceData.encumbranceTier) {
-			case 1:
+			case ENCUMBRANCE_TIERS.LIGHT:
 				effectName = "Lightly Encumbered";
 				break;
-			case 2:
+			case ENCUMBRANCE_TIERS.HEAVY:
 				effectName = "Heavily Encumbered";
 				break
-			case 3:
+			case ENCUMBRANCE_TIERS.MAX:
 				effectName = "Overburdened";
 				break;
 			default:
@@ -314,14 +325,14 @@ function calculateEncumbrance(actorEntity, itemSet) {
 	let encumbranceTier = 0;
 	if (totalWeight >= lightMax && totalWeight < mediumMax) {
 		speedDecrease = 10;
-		encumbranceTier = 1;
+		encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
 	}
 	if (totalWeight >= mediumMax && totalWeight < heavyMax) {
 		speedDecrease = 20;
-		encumbranceTier = 2;
+		encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
 	}
 	if (totalWeight >= heavyMax) {
-		encumbranceTier = 3;
+		encumbranceTier = ENCUMBRANCE_TIERS.MAX;
 	}
 
 	return {
