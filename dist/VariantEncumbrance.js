@@ -157,88 +157,94 @@ function updateEncumbrance(actorEntity, itemSet) {
 	let encumbranceData = calculateEncumbrance(actorEntity, itemSet);
 	console.log(encumbranceData);
 
-	let effectTiersPresent = 0;
-	let effectTierChanged = false;
+	let effectEntityPresent = null;
+
 	actorEntity.effects.forEach(effectEntity => {
-		if (effectEntity.data?.flags?.VariantEncumbrance) {
-			effectTiersPresent++;
-			if (effectEntity.data?.flags?.VariantEncumbrance?.tier != encumbranceData.encumbranceTier) {
-				console.log("DELETING");
+		if (typeof effectEntity.getFlag('VariantEncumbrance', 'tier') === 'number') {
+			if (!effectEntityPresent) {
+				effectEntityPresent = effectEntity;
+			} else {
+				// Cannot have more than one effect tier present at any one time
+				console.log("DELETING", effectEntity);
 				effectEntity.delete();
-				effectTiersPresent--;
-				effectTierChanged = true;
 			}
 		}
 	});
 
-	console.log("#### VE DEBUG: " + effectTierChanged + " | " + effectTiersPresent);
-	if (effectTierChanged || effectTiersPresent == 0) {
-		if (encumbranceData.encumbranceTier != 0) {
-			let [changeMode, changeValue] = encumbranceData.encumbranceTier >= 3 ?
-				[ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
-				[ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
-			if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
-				changeMode = ACTIVE_EFFECT_MODES.ADD;
-				changeValue = 0;
-			}
-			let effectName;
-			switch (encumbranceData.encumbranceTier) {
-				case 1:
-					effectName = "Lightly Encumbered";
-					break;
-				case 2:
-					effectName = "Heavily Encumbered";
-					break
-				case 3:
-					effectName = "Overburdened";
-					break;
-				default:
-					break;
-			}
+	const hasEncumbrance = !!effectEntityPresent;
+	const shouldHaveEncumbrance = encumbranceData.encumbranceTier > 0;
 
-			let effect = {
-				label: effectName,
-				icon: "icons/tools/smithing/anvil.webp",
-				changes: [
-					{
-						key: "data.attributes.movement.walk",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.swim",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.fly",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.climb",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.burrow",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					}
-				],
-				flags: {
-					VariantEncumbrance: {
-						tier: encumbranceData.encumbranceTier
-					}
+	if (!shouldHaveEncumbrance && hasEncumbrance) {
+		effectEntityPresent.delete();
+	} else if (shouldHaveEncumbrance) {
+		let [changeMode, changeValue] = encumbranceData.encumbranceTier >= 3 ?
+			[ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
+			[ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
+		if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
+			changeMode = ACTIVE_EFFECT_MODES.ADD;
+			changeValue = 0;
+		}
+		let effectName;
+		switch (encumbranceData.encumbranceTier) {
+			case 1:
+				effectName = "Lightly Encumbered";
+				break;
+			case 2:
+				effectName = "Heavily Encumbered";
+				break
+			case 3:
+				effectName = "Overburdened";
+				break;
+			default:
+				break;
+		}
+
+		let effect = {
+			label: effectName,
+			icon: "icons/tools/smithing/anvil.webp",
+			changes: [
+				{
+					key: "data.attributes.movement.walk",
+					value: changeValue,
+					mode: changeMode,
+					priority: 1000
 				},
-				origin: `Actor.${actorEntity.data._id}`
-			};
+				{
+					key: "data.attributes.movement.swim",
+					value: changeValue,
+					mode: changeMode,
+					priority: 1000
+				},
+				{
+					key: "data.attributes.movement.fly",
+					value: changeValue,
+					mode: changeMode,
+					priority: 1000
+				},
+				{
+					key: "data.attributes.movement.climb",
+					value: changeValue,
+					mode: changeMode,
+					priority: 1000
+				},
+				{
+					key: "data.attributes.movement.burrow",
+					value: changeValue,
+					mode: changeMode,
+					priority: 1000
+				}
+			],
+			flags: {
+				VariantEncumbrance: {
+					tier: encumbranceData.encumbranceTier
+				}
+			},
+			origin: `Actor.${actorEntity.data._id}`
+		};
 
+		if (effectEntityPresent) {
+			effectEntityPresent.update(effect);
+		} else {
 			actorEntity.createEmbeddedEntity("ActiveEffect", effect);
 		}
 	}
