@@ -210,41 +210,20 @@ function updateEncumbrance(actorEntity, itemSet) {
 				break;
 		}
 
+		const changes = ['walk', 'swim', 'fly', 'climb', 'burrow'].map((movementType) => {
+			const changeKey = "data.attributes.movement." + movementType;
+			return {
+				key: changeKey,
+				value: changeValue,
+				mode: changeMode,
+				priority: 1000
+			};
+		});
+
 		let effect = {
 			label: effectName,
 			icon: "icons/tools/smithing/anvil.webp",
-			changes: [
-				{
-					key: "data.attributes.movement.walk",
-					value: changeValue,
-					mode: changeMode,
-					priority: 1000
-				},
-				{
-					key: "data.attributes.movement.swim",
-					value: changeValue,
-					mode: changeMode,
-					priority: 1000
-				},
-				{
-					key: "data.attributes.movement.fly",
-					value: changeValue,
-					mode: changeMode,
-					priority: 1000
-				},
-				{
-					key: "data.attributes.movement.climb",
-					value: changeValue,
-					mode: changeMode,
-					priority: 1000
-				},
-				{
-					key: "data.attributes.movement.burrow",
-					value: changeValue,
-					mode: changeMode,
-					priority: 1000
-				}
-			],
+			changes: changes,
 			flags: {
 				VariantEncumbrance: {
 					tier: encumbranceData.encumbranceTier
