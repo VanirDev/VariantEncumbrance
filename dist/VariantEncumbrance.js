@@ -136,8 +136,19 @@ function veItem(item) {
 
 function convertItemSet(actorEntity) {
 	let itemSet = {};
+	const weightlessCategoryIds = [];
+	const inventoryPlusCategories = actorEntity.getFlag('inventory-plus', 'categorys');
+	if (inventoryPlusCategories) {
+		for (const categoryId in inventoryPlusCategories) {
+			if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
+				weightlessCategoryIds.push(categoryId);
+			}
+		}
+	}
 	actorEntity.items.forEach(item => {
-		if (item.data.data.weight != undefined) {
+		const hasWeight = !!item.data.data.weight;
+		const isNotInWeightlessCategory = weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0;
+		if (hasWeight && isNotInWeightlessCategory) {
 			itemSet[item.data._id] = veItem(item.data);
 		}
 	});
