@@ -23,7 +23,7 @@ Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2
   ## Update 0.3
 
   * Complete support for the Inventory+ mod
-  * Major bugfixes for the effects-based system involving unwanted stacked effects, and permission errors.
+  * Major bugfixes for the effects-based system involving unwanted stacked effects, and permission errors. Major thanks to [Paul Lessing](https://github.com/paullessing) for his contributions here.
   * Support for custom units and speed decreases in the module settings.
   * Improved weight calculation to support active effects that affect the data.attributes.encumbrance.value value.
 
