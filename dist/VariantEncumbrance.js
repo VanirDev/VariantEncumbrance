@@ -16,6 +16,17 @@ import { preloadTemplates } from './module/preloadTemplates.js';
 import { DND5E } from "../../systems/dnd5e/module/config.js";
 
 /* ------------------------------------ */
+/* Constants         					*/
+/* ------------------------------------ */
+const ENCUMBRANCE_TIERS = {
+	NONE: 0,
+	LIGHT: 1,
+	HEAVY: 2,
+	MAX: 3,
+};
+
+
+/* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
 Hooks.once('init', async function () {
@@ -27,7 +38,7 @@ Hooks.once('init', async function () {
 	registerSettings();
 	DND5E.encumbrance.strMultiplier = game.settings.get("VariantEncumbrance", "heavyMultiplier");
 	DND5E.encumbrance.currencyPerWeight = game.settings.get("VariantEncumbrance", "currencyWeight");
-	CONFIG.debug.hooks = true;
+	// CONFIG.debug.hooks = true; // For debugging only
 	// Preload Handlebars templates
 	await preloadTemplates();
 
@@ -38,9 +49,7 @@ Hooks.once('init', async function () {
 /* Setup module							*/
 /* ------------------------------------ */
 Hooks.once('setup', function () {
-	// Do anything after initialization but before
-	// ready
-
+	// Do anything after initialization but before ready
 });
 
 /* ------------------------------------ */
@@ -56,7 +65,7 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		let encumbranceData = calculateEncumbrance(actorEntity);
 
 		let encumbranceElements;
-		if (htmlElement[0].tagName == "FORM" && htmlElement[0].id == "") {
+		if (htmlElement[0].tagName === "FORM" && htmlElement[0].id === "") {
 			encumbranceElements = htmlElement.find('.encumbrance')[0].children;
 		} else {
 			encumbranceElements = htmlElement.find('.encumbrance')[0].children;
@@ -72,13 +81,13 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		encumbranceElements[0].classList.remove("medium");
 		encumbranceElements[0].classList.remove("heavy");
 
-		if (encumbranceData.encumbranceTier == 1) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
 			encumbranceElements[0].classList.add("medium");
 		}
-		if (encumbranceData.encumbranceTier == 2) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
 			encumbranceElements[0].classList.add("heavy");
 		}
-		if (encumbranceData.encumbranceTier == 3) {
+		if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
 			encumbranceElements[0].classList.add("max");
 		}
 
@@ -90,37 +99,31 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 	}
 });
 
-Hooks.on('updateOwnedItem', function (actorObject, updatedItem, updateChanges) {
-	let actorEntity = game.actors.get(actorObject.data._id);
-
-	let itemSet = convertItemSet(actorEntity);
-	itemSet[updatedItem._id] = veItem(updatedItem);
-
-	if (actorEntity.data.type == "character") {
-		updateEncumbrance(actorObject, itemSet);
+Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+	if (game.userId !== userId) {
+		// Only act if we initiated the update ourselves
+		return;
 	}
+
+	updateEncumbrance(actorEntity, updatedItem);
 });
 
-Hooks.on('createOwnedItem', function (actorObject, updatedItem) {
-	let actorEntity = game.actors.get(actorObject.data._id);
-
-	let itemSet = convertItemSet(actorEntity);
-	itemSet[updatedItem._id] = veItem(updatedItem);
-
-	if (actorEntity.data.type == "character") {
-		updateEncumbrance(actorObject, itemSet);
+Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+	if (game.userId !== userId) {
+		// Only act if we initiated the update ourselves
+		return;
 	}
+
+	updateEncumbrance(actorEntity);
 });
 
-Hooks.on('deleteOwnedItem', function (actorObject, updatedItem) {
-	let actorEntity = game.actors.get(actorObject.data._id);
-
-	let itemSet = convertItemSet(actorEntity);
-	delete itemSet[updatedItem._id];
-
-	if (actorEntity.data.type == "character") {
-		updateEncumbrance(actorObject);
+Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+	if (game.userId !== userId) {
+		// Only act if we initiated the update ourselves
+		return;
 	}
+
+	updateEncumbrance(actorEntity);
 })
 
 function veItem(item) {
@@ -141,135 +144,129 @@ function convertItemSet(actorEntity) {
 			itemSet[item.data._id] = veItem(item.data);
 		}
 	});
-	console.log(itemSet);
+
 	return itemSet;
 }
 
-function updateEncumbrance(actorEntity, itemSet) {
-	if (actorEntity.data.type != "character") {
-		console.log("ERROR: NOT A CHARACTER");
-		return null;
+async function updateEncumbrance(actorEntity, updatedItem) {
+	if (game.actors.get(actorEntity.data._id).data.type !== "character") {
+		return;
 	}
-	console.log(actorEntity);
-	if (itemSet == null) {
-		itemSet = convertItemSet(actorEntity);
+	const itemSet = convertItemSet(actorEntity);
+	if (updatedItem) {
+		// On update operations, the actorEntity's items have not been updated.
+		// Override the entry for this item using the updatedItem data.
+		itemSet[updatedItem._id] = veItem(updatedItem);
 	}
 	let encumbranceData = calculateEncumbrance(actorEntity, itemSet);
-	console.log(encumbranceData);
 
-	let effectTiersPresent = 0;
-	let effectTierChanged = false;
-	actorEntity.effects.forEach(effectEntity => {
-		if (effectEntity.data?.flags?.VariantEncumbrance) {
-			effectTiersPresent++;
-			if (effectEntity.data?.flags?.VariantEncumbrance?.tier != encumbranceData.encumbranceTier) {
-				console.log("DELETING");
-				effectEntity.delete();
-				effectTiersPresent--;
-				effectTierChanged = true;
+	let effectEntityPresent = null;
+
+	for (const effectEntity of actorEntity.effects) {
+		if (typeof effectEntity.getFlag('VariantEncumbrance', 'tier') === 'number') {
+			if (!effectEntityPresent) {
+				effectEntityPresent = effectEntity;
+			} else {
+				// Cannot have more than one effect tier present at any one time
+				console.log("VariantEncumbrance | deleting duplicate effect", effectEntity);
+				await effectEntity.delete();
 			}
-		}
-	});
-
-	console.log("#### VE DEBUG: " + effectTierChanged + " | " + effectTiersPresent);
-	if (effectTierChanged || effectTiersPresent == 0) {
-		if (encumbranceData.encumbranceTier != 0) {
-			let changeMode = encumbranceData.encumbranceTier >= 3 ? 1 : 2;
-			let changeValue = encumbranceData.encumbranceTier >= 3 ? 0 : encumbranceData.speedDecrease * -1;
-			if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
-				changeMode = 2;
-				changeValue = 0;
-			}
-			let effectIconURL;
-			let effectName;
-			switch (encumbranceData.encumbranceTier) {
-				case 1:
-					effectName = "Lightly Encumbered";
-					break;
-				case 2:
-					effectName = "Heavily Encumbered";
-					break
-				case 3:
-					effectName = "Overburdened";
-					break;
-				default:
-					break;
-			}
-
-			let effect = {
-				label: effectName,
-				icon: "icons/tools/smithing/anvil.webp",
-				changes: [
-					{
-						key: "data.attributes.movement.walk",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.swim",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.fly",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.climb",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					},
-					{
-						key: "data.attributes.movement.burrow",
-						value: changeValue,
-						mode: changeMode,
-						priority: 1000
-					}
-				],
-				flags: {
-					VariantEncumbrance: {
-						tier: encumbranceData.encumbranceTier
-					}
-				},
-				origin: `Actor.${actorEntity.data._id}`
-			};
-
-			actorEntity.createEmbeddedEntity("ActiveEffect", effect);
 		}
 	}
-	actorEntity.applyActiveEffects();
-	actorEntity.setFlag("VariantEncumbrance", "speed", actorEntity.data.data.attributes.movement.walk);
-	actorEntity.setFlag("VariantEncumbrance", "tier", encumbranceData.encumbranceTier);
-	actorEntity.setFlag("VariantEncumbrance", "weight", encumbranceData.totalWeight);
+
+	let [changeMode, changeValue] = encumbranceData.encumbranceTier >= ENCUMBRANCE_TIERS.MAX ?
+		[ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
+		[ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
+
+	if (!game.settings.get("VariantEncumbrance", "useVariantEncumbrance")) {
+		changeMode = ACTIVE_EFFECT_MODES.ADD;
+		changeValue = 0;
+	}
+	let effectName;
+	switch (encumbranceData.encumbranceTier) {
+		case ENCUMBRANCE_TIERS.NONE:
+			effectName = "Unencumbered";
+			break;
+		case ENCUMBRANCE_TIERS.LIGHT:
+			effectName = "Lightly Encumbered";
+			break;
+		case ENCUMBRANCE_TIERS.HEAVY:
+			effectName = "Heavily Encumbered";
+			break
+		case ENCUMBRANCE_TIERS.MAX:
+			effectName = "Overburdened";
+			break;
+		default:
+			return;
+	}
+
+	const changes = ['walk', 'swim', 'fly', 'climb', 'burrow'].map((movementType) => {
+		const changeKey = "data.attributes.movement." + movementType;
+		return {
+			key: changeKey,
+			value: changeValue,
+			mode: changeMode,
+			priority: 1000
+		};
+	});
+
+	let effectChange = {
+		disabled: encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.NONE,
+		label: effectName,
+		icon: "icons/tools/smithing/anvil.webp",
+		changes: changes,
+		flags: {
+			VariantEncumbrance: {
+				tier: encumbranceData.encumbranceTier
+			}
+		},
+		origin: `Actor.${actorEntity.data._id}`
+	};
+
+	if (effectChange) {
+		if (effectEntityPresent) {
+			await effectEntityPresent.update(effectChange);
+		} else {
+			await actorEntity.createEmbeddedEntity("ActiveEffect", effectChange);
+		}
+	}
+
+	await actorEntity.applyActiveEffects();
+
+	const { speed, tier, weight } = (actorEntity.data.flags.VariantEncumbrance || {});
+	if (speed !== actorEntity.data.data.attributes.movement.walk) {
+		actorEntity.setFlag("VariantEncumbrance", "speed", actorEntity.data.data.attributes.movement.walk);
+	}
+	if (tier !== encumbranceData.encumbranceTier) {
+		actorEntity.setFlag("VariantEncumbrance", "tier", encumbranceData.encumbranceTier);
+	}
+	if (weight !== encumbranceData.totalWeight) {
+		actorEntity.setFlag("VariantEncumbrance", "weight", encumbranceData.totalWeight);
+	}
 }
 
 function calculateEncumbrance(actorEntity, itemSet) {
-	if (actorEntity.data.type != "character") {
+	if (actorEntity.data.type !== "character") {
 		console.log("ERROR: NOT A CHARACTER");
 		return null;
 	}
 
-	if (itemSet == null) {
+	if (itemSet === null) {
 		itemSet = convertItemSet(actorEntity);
 	}
 
 	let speedDecrease = 0;
-	var totalWeight = 0;
-	var strengthScore = actorEntity.data.data.abilities.str.value;
+	let totalWeight = 0;
+	let strengthScore = actorEntity.data.data.abilities.str.value;
 	if (game.settings.get("VariantEncumbrance", "sizeMultipliers")) {
-		var size = actorEntity.data.data.traits.size;
-		if (size == "tiny") {
+		const size = actorEntity.data.data.traits.size;
+		if (size === "tiny") {
 			strengthScore /= 2;
-		} else if (size == "lg") {
+		} else if (size === "lg") {
 			strengthScore *= 2;
-		} else if (size == "huge") {
+		} else if (size === "huge") {
 			strengthScore *= 4;
-		} else if (size == "grg") {
+		} else if (size === "grg") {
 			strengthScore *= 8;
 		} else {
 			strengthScore *= 1;
@@ -279,12 +276,12 @@ function calculateEncumbrance(actorEntity, itemSet) {
 			strengthScore *= 2;
 		}
 	}
-	var lightMax = game.settings.get("VariantEncumbrance", "lightMultiplier") * strengthScore;
-	var mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
-	var heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
+	const lightMax = game.settings.get("VariantEncumbrance", "lightMultiplier") * strengthScore;
+	const mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
+	const heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
 
 	Object.values(itemSet).forEach(item => {
-		var appliedWeight = item.totalWeight;
+		let appliedWeight = item.totalWeight;
 		if (item.equipped) {
 			if (item.proficient) {
 				appliedWeight *= game.settings.get("VariantEncumbrance", "profEquippedMultiplier");
@@ -298,24 +295,24 @@ function calculateEncumbrance(actorEntity, itemSet) {
 	});
 
 	if (game.settings.get("dnd5e", "currencyWeight")) {
-		var totalCoins = 0;
+		let totalCoins = 0;
 		Object.values(actorEntity.data.data.currency).forEach(count => {
 			totalCoins += count;
 		});
 		totalWeight += totalCoins / game.settings.get("VariantEncumbrance", "currencyWeight");
 	}
 
-	let encumbranceTier = 0;
+	let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
 	if (totalWeight >= lightMax && totalWeight < mediumMax) {
 		speedDecrease = 10;
-		encumbranceTier = 1;
+		encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
 	}
 	if (totalWeight >= mediumMax && totalWeight < heavyMax) {
 		speedDecrease = 20;
-		encumbranceTier = 2;
+		encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
 	}
 	if (totalWeight >= heavyMax) {
-		encumbranceTier = 3;
+		encumbranceTier = ENCUMBRANCE_TIERS.MAX;
 	}
 
 	return {
