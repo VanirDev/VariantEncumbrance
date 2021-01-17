@@ -76,7 +76,7 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 		encumbranceElements[4].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
 		encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
 		encumbranceElements[0].style.cssText = "width: " + Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax * 100), 0), 99.8) + "%;";
-		encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " lbs.";
+		encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + game.settings.get("VariantEncumbrance", "units");;
 
 		encumbranceElements[0].classList.remove("medium");
 		encumbranceElements[0].classList.remove("heavy");
@@ -200,7 +200,22 @@ async function updateEncumbrance(actorEntity, updatedItem) {
 			return;
 	}
 
-	const changes = ['walk', 'swim', 'fly', 'climb', 'burrow'].map((movementType) => {
+	console.log(actorEntity);
+	let movementSet = ['walk', 'swim', 'fly', 'climb', 'burrow'];
+	if (actorEntity._data?.data?.attributes?.movement) {
+		movementSet = [];
+		Object.entries(actorEntity._data?.data?.attributes?.movement).forEach(speed => {
+			if (speed[0] == "hover" || speed[0] == "units") {
+				return;
+			}
+			if (speed[1] > 0) {
+				movementSet.push(speed[0]);
+			}
+		});
+	}
+	console.log(movementSet);
+
+	const changes = movementSet.map((movementType) => {
 		const changeKey = "data.attributes.movement." + movementType;
 		return {
 			key: changeKey,
@@ -280,7 +295,6 @@ function calculateEncumbrance(actorEntity, itemSet) {
 	const mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
 	const heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
 
-	console.log(itemSet)
 	Object.values(itemSet).forEach(item => {
 		let appliedWeight = item.totalWeight;
 		if (item.equipped) {
@@ -305,11 +319,11 @@ function calculateEncumbrance(actorEntity, itemSet) {
 
 	let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
 	if (totalWeight >= lightMax && totalWeight < mediumMax) {
-		speedDecrease = 10;
+		speedDecrease = game.settings.get("VariantEncumbrance", "lightWeightDecrease");
 		encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
 	}
 	if (totalWeight >= mediumMax && totalWeight < heavyMax) {
-		speedDecrease = 20;
+		speedDecrease = game.settings.get("VariantEncumbrance", "heavyWeightDecrease");
 		encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
 	}
 	if (totalWeight >= heavyMax) {

@@ -87,4 +87,31 @@ export const registerSettings = function () {
 		type: Boolean,
 		default: true
 	});
+
+	game.settings.register("VariantEncumbrance", "units", {
+		name: "Weight Units",
+		hint: "Units displayed in the encumbrance bar.",
+		scope: "world",
+		config: true,
+		type: String,
+		default: "lbs."
+	});
+
+	game.settings.register("VariantEncumbrance", "lightWeightDecrease", {
+		name: "Lightly Encumbered Speed Decrease",
+		hint: "The number of speed units subtracted when lightly encumbered.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 10
+	});
+
+	game.settings.register("VariantEncumbrance", "heavyWeightDecrease", {
+		name: "Encumbered Speed Decrease",
+		hint: "The number of speed units subtracted when heavily encumbered.",
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 20
+	});
 };
