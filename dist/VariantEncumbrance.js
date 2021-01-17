@@ -139,8 +139,26 @@ function veItem(item) {
 
 function convertItemSet(actorEntity) {
 	let itemSet = {};
+	const weightlessCategoryIds = [];
+	const inventoryPlusCategories = actorEntity.getFlag('inventory-plus', 'categorys');
+	console.log(inventoryPlusCategories);
+	if (inventoryPlusCategories) {
+		for (const categoryId in inventoryPlusCategories) {
+			if (inventoryPlusCategories[categoryId]?.ownWeight != 0) {
+				itemSet["i+" + categoryId] = {
+					_id: "i+" + categoryId,
+					totalWeight: inventoryPlusCategories[categoryId]?.ownWeight
+				};
+			}
+			if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
+				weightlessCategoryIds.push(categoryId);
+			}
+		}
+	}
 	actorEntity.items.forEach(item => {
-		if (item.data.data.weight != undefined) {
+		const hasWeight = !!item.data.data.weight;
+		const isNotInWeightlessCategory = weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0;
+		if (hasWeight && isNotInWeightlessCategory) {
 			itemSet[item.data._id] = veItem(item.data);
 		}
 	});
@@ -304,7 +322,9 @@ function calculateEncumbrance(actorEntity, itemSet) {
 				appliedWeight *= game.settings.get("VariantEncumbrance", "equippedMultiplier");
 			}
 		} else {
-			appliedWeight *= game.settings.get("VariantEncumbrance", "unequippedMultiplier");
+			if (!item._id.startsWith("i+")) {
+				appliedWeight *= game.settings.get("VariantEncumbrance", "unequippedMultiplier");
+			}
 		}
 		totalWeight += appliedWeight;
 	});
