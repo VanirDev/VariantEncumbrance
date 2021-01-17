@@ -38,7 +38,7 @@ Hooks.once('init', async function () {
 	registerSettings();
 	DND5E.encumbrance.strMultiplier = game.settings.get("VariantEncumbrance", "heavyMultiplier");
 	DND5E.encumbrance.currencyPerWeight = game.settings.get("VariantEncumbrance", "currencyWeight");
-	// CONFIG.debug.hooks = true; // For debugging only
+	CONFIG.debug.hooks = true; // For debugging only
 	// Preload Handlebars templates
 	await preloadTemplates();
 
@@ -91,9 +91,9 @@ Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
 			encumbranceElements[0].classList.add("max");
 		}
 
-		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').parent().css("margin-bottom", "16px");
-		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.lightMax}<div>`);
-		htmlElement.find('.encumbrance-breakpoint.encumbrance-66.arrow-down').append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.mediumMax}<div>`);
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-up').parent().css("margin-bottom", "4px");
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-up').append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.lightMax}<div>`);
+		htmlElement.find('.encumbrance-breakpoint.encumbrance-66.arrow-up').append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.mediumMax}<div>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel" style="right:0%">${encumbranceData.heavyMax}</span>`);
 		encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
 	}
@@ -251,7 +251,7 @@ function calculateEncumbrance(actorEntity, itemSet) {
 		return null;
 	}
 
-	if (itemSet === null) {
+	if (itemSet === null || itemSet === undefined) {
 		itemSet = convertItemSet(actorEntity);
 	}
 
@@ -280,6 +280,7 @@ function calculateEncumbrance(actorEntity, itemSet) {
 	const mediumMax = game.settings.get("VariantEncumbrance", "mediumMultiplier") * strengthScore;
 	const heavyMax = game.settings.get("VariantEncumbrance", "heavyMultiplier") * strengthScore;
 
+	console.log(itemSet)
 	Object.values(itemSet).forEach(item => {
 		let appliedWeight = item.totalWeight;
 		if (item.equipped) {
