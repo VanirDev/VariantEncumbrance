@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/Foundry-v0.7.5-blue) ![](https://img.shields.io/badge/D&D5e-v0.98-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.3.6-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.2.30-red)
+![](https://img.shields.io/badge/Foundry-v0.7.9-blue) ![](https://img.shields.io/badge/D&D5e-v1.2.2-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red)
 
 # Variant Encumbrance
 
@@ -7,18 +7,26 @@ The effects of this module are currently purely visual, although restricting mov
 
 ##### Compatability
 
-Version 0.2 has been designed to run with FoundryVTT v0.7.7 and the D&D5e v1.1.1 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested.
+Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. Support has now been added for Inventory+ and all of its features.
 
 * D&D5e Default Character Sheet
 
 * [Sky's Alternate 5th Edition Dungeons & Dragons Sheet](https://github.com/Sky-Captain-13/foundry/tree/master/alt5e)
 * [Tidy5e Sheet (Both light & dark themes)](https://github.com/sdenec/tidy5e-sheet)
+* [Inventory +](https://github.com/syl3r86/inventory-plus)
 
 ## Update Changelogs
 
 <details>
   <summary>Click to Expand</summary>
   
+  ## Update 0.3
+
+  * Complete support for the Inventory+ mod
+  * Major bugfixes for the effects-based system involving unwanted stacked effects, and permission errors.
+  * Support for custom units and speed decreases in the module settings.
+  * Improved weight calculation to support active effects that affect the data.attributes.encumbrance.value value.
+
   ## Update 0.2
 
   * [Reworked weight reduction to use the new Active Effects system.](#ActiveEffects)
