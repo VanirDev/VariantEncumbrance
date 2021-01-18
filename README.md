@@ -1,25 +1,36 @@
-![](https://img.shields.io/badge/Foundry-v0.7.9-blue) ![](https://img.shields.io/badge/D&D5e-v1.2.2-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red)
+![](https://img.shields.io/badge/Foundry-v0.7.9-blue) ![](https://img.shields.io/badge/D&D5e-v1.2.2-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) ![](https://img.shields.io/badge/Inventory+-v0.3.1-red) ![](https://img.shields.io/badge/DAE-v0.2.34-red)
 
 # Variant Encumbrance
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
 
-##### Compatability
+#### Compatability
 
 Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. Support has now been added for Inventory+ and all of its features.
+
+##### Character Sheets
 
 * D&D5e Default Character Sheet
 
 * [Sky's Alternate 5th Edition Dungeons & Dragons Sheet](https://github.com/Sky-Captain-13/foundry/tree/master/alt5e)
 * [Tidy5e Sheet (Both light & dark themes)](https://github.com/sdenec/tidy5e-sheet)
+
+##### Other Modules
+
 * [Inventory +](https://github.com/syl3r86/inventory-plus)
+* [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 
 ## Update Changelogs
 
 <details>
   <summary>Click to Expand</summary>
   
+  ## Update 0.3.2
+  
+  * Bugfixes for inventory+ support
+  * Added support for Dynamic Active Effects
+
   ## Update 0.3
 
   * Complete support for the Inventory+ mod

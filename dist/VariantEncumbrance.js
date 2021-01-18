@@ -1,13 +1,6 @@
 /**
- * This is your JavaScript entry file for Foundry VTT.
- * Register custom settings, sheets, and constants using the Foundry API.
- * Change this heading to be more descriptive to your module, or remove it.
- * Author: [your name]
- * Content License: [copyright and-or license] If using an existing system
- * 					you may want to put a (link to a) license or copyright
- * 					notice here (e.g. the OGL).
- * Software License: [your license] Put your desired license here, which
- * 					 determines how others may use and modify your module
+ * Author: Vanir#0001 (Discord) | github.com/VanirDev
+ * Software License: Creative Commons Attributions International License
  */
 
 // Import JavaScript modules
@@ -105,7 +98,7 @@ Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _
 		return;
 	}
 
-	updateEncumbrance(actorEntity, updatedItem);
+	updateEncumbrance(actorEntity, updatedItem, undefined, "add");
 });
 
 Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
@@ -114,7 +107,7 @@ Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
 		return;
 	}
 
-	updateEncumbrance(actorEntity);
+	updateEncumbrance(actorEntity, undefined, undefined, "add");
 });
 
 Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
@@ -123,17 +116,39 @@ Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
 		return;
 	}
 
-	updateEncumbrance(actorEntity);
+	updateEncumbrance(actorEntity, undefined, undefined, "delete");
 });
 
 Hooks.on('updateActiveEffect', function (actorEntity, changedEffect, _, __, userId) {
-	if (game.userId !== userId) {
-		// Only act if we initiated the update ourselves
+	if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+		// Only act if we initiated the update ourselves, and the effect is a child of a character
 		return;
 	}
 
 	if (!changedEffect?.flags.hasOwnProperty("VariantEncumbrance")) {
-		updateEncumbrance(actorEntity, undefined, changedEffect);
+		updateEncumbrance(actorEntity, undefined, changedEffect, "add");
+	}
+});
+
+Hooks.on('createActiveEffect', function (actorEntity, changedEffect, _, userId) {
+	if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+		// Only act if we initiated the update ourselves, and the effect is a child of a character
+		return;
+	}
+
+	if (!changedEffect?.flags.hasOwnProperty("VariantEncumbrance")) {
+		updateEncumbrance(actorEntity, undefined, changedEffect, "add");
+	}
+});
+
+Hooks.on('deleteActiveEffect', function (actorEntity, changedEffect, _, userId) {
+	if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+		// Only act if we initiated the update ourselves, and the effect is a child of a character
+		return;
+	}
+
+	if (!changedEffect?.flags.hasOwnProperty("VariantEncumbrance")) {
+		updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
 	}
 });
 
@@ -158,9 +173,9 @@ function veEffect(effect) {
 		effect.changes.forEach(change => {
 			if (change.key === "data.attributes.encumbrance.value") {
 				if (change.mode == 1) {
-					result.multiply.push(change.value);
+					result.multiply.push(Number(change.value));
 				} else if (change.mode == 2) {
-					result.add.push(change.value);
+					result.add.push(Number(change.value));
 				}
 			}
 		});
@@ -172,8 +187,9 @@ function convertItemSet(actorEntity) {
 	let itemSet = {};
 	const weightlessCategoryIds = [];
 	const scopes = SetupConfiguration.getPackageScopes();
+	const invPlusActive = game.modules.get("inventory-plus")?.active;
 	const hasInvPlus = scopes.includes('inventory-plus');
-	if (hasInvPlus) {
+	if (hasInvPlus && invPlusActive) {
 		const inventoryPlusCategories = actorEntity.getFlag('inventory-plus', 'categorys');
 		if (inventoryPlusCategories) {
 			for (const categoryId in inventoryPlusCategories) {
@@ -191,7 +207,7 @@ function convertItemSet(actorEntity) {
 	}
 	actorEntity.items.forEach(item => {
 		const hasWeight = !!item.data.data.weight;
-		const isNotInWeightlessCategory = hasInvPlus ? weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0 : true;
+		const isNotInWeightlessCategory = hasInvPlus && invPlusActive ? weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0 : true;
 		if (hasWeight && isNotInWeightlessCategory) {
 			itemSet[item.data._id] = veItem(item.data);
 		}
@@ -208,7 +224,7 @@ function convertEffectSet(actorEntity) {
 	return result;
 }
 
-async function updateEncumbrance(actorEntity, updatedItem, updatedEffect) {
+async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) {
 	if (game.actors.get(actorEntity.data._id).data.type !== "character") {
 		return;
 	}
@@ -216,14 +232,22 @@ async function updateEncumbrance(actorEntity, updatedItem, updatedEffect) {
 	if (updatedItem) {
 		// On update operations, the actorEntity's items have not been updated.
 		// Override the entry for this item using the updatedItem data.
-		itemSet[updatedItem._id] = veItem(updatedItem);
+		if (mode == "add") {
+			itemSet[updatedItem._id] = veItem(updatedItem);
+		} else if (mode == "delete") {
+			delete itemSet[updatedItem._id];
+		}
 	}
 
 	const effectSet = convertEffectSet(actorEntity);
 	if (updatedEffect) {
 		// On update operations, the actorEntity's effects have not been updated.
 		// Override the entry for this effect using the updatedActiveEffect data.
-		effectSet[updatedEffect._id] = veEffect(updatedEffect);
+		if (mode == "add") {
+			effectSet[updatedEffect._id] = veEffect(updatedEffect);
+		} else if (mode == "delete") {
+			delete effectSet[updatedEffect._id];
+		}
 	}
 	let encumbranceData = calculateEncumbrance(actorEntity, itemSet, effectSet);
 
