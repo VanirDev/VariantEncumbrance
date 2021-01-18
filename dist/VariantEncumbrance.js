@@ -171,23 +171,27 @@ function veEffect(effect) {
 function convertItemSet(actorEntity) {
 	let itemSet = {};
 	const weightlessCategoryIds = [];
-	const inventoryPlusCategories = actorEntity.getFlag('inventory-plus', 'categorys');
-	if (inventoryPlusCategories) {
-		for (const categoryId in inventoryPlusCategories) {
-			if (inventoryPlusCategories[categoryId]?.ownWeight != 0) {
-				itemSet["i+" + categoryId] = {
-					_id: "i+" + categoryId,
-					totalWeight: inventoryPlusCategories[categoryId]?.ownWeight
-				};
-			}
-			if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
-				weightlessCategoryIds.push(categoryId);
+	const scopes = SetupConfiguration.getPackageScopes();
+	const hasInvPlus = scopes.includes('inventory-plus');
+	if (hasInvPlus) {
+		const inventoryPlusCategories = actorEntity.getFlag('inventory-plus', 'categorys');
+		if (inventoryPlusCategories) {
+			for (const categoryId in inventoryPlusCategories) {
+				if (inventoryPlusCategories[categoryId]?.ownWeight != 0) {
+					itemSet["i+" + categoryId] = {
+						_id: "i+" + categoryId,
+						totalWeight: inventoryPlusCategories[categoryId]?.ownWeight
+					};
+				}
+				if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
+					weightlessCategoryIds.push(categoryId);
+				}
 			}
 		}
 	}
 	actorEntity.items.forEach(item => {
 		const hasWeight = !!item.data.data.weight;
-		const isNotInWeightlessCategory = weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0;
+		const isNotInWeightlessCategory = hasInvPlus ? weightlessCategoryIds.indexOf(item.getFlag('inventory-plus', 'category')) < 0 : true;
 		if (hasWeight && isNotInWeightlessCategory) {
 			itemSet[item.data._id] = veItem(item.data);
 		}
