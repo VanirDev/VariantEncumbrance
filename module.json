@@ -1,6 +1,6 @@
 {
   "name": "VariantEncumbrance",
-  "title": "Variant Encumbrance",
+  "title": "Variant Encumbrance+Midi",
   "description": "A module for D&D 5th Edition, to automatically modify character carry weights to match the Variant Encumbrance optional rule set.",
   "systems": [
     "dnd5e"
