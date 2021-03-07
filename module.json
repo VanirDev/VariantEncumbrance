@@ -5,8 +5,8 @@
   "systems": [
     "dnd5e"
   ],
-  "version": "0.3.2",
-  "author": "Vanir#0001 (discord)",
+  "version": "0.3.2.47",
+  "author": "Vanir#0001 (discord), 47Y",
   "esmodules": [
     "VariantEncumbrance.js"
   ],
@@ -15,7 +15,7 @@
   ],
   "minimumCoreVersion": "0.7.7",
   "compatibleCoreVersion": "0.7.9",
-  "url": "https://github.com/VanirDev/VariantEncumbrance",
-  "manifest": "https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/dist/module.json",
-  "download": "https://github.com/VanirDev/VariantEncumbrance/raw/master/VariantEncumbrance.zip"
+  "url": "https://github.com/47Y/VariantEncumbrance",
+  "manifest": "https://raw.githubusercontent.com/47Y/VariantEncumbrance/master/dist/module.json",
+  "download": "https://github.com/47Y/VariantEncumbrance/raw/master/VariantEncumbrance.zip"
 }
