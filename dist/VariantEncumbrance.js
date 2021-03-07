@@ -312,6 +312,17 @@ async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) 
 			priority: 1000
 		};
 	});
+	if (encumbranceData.encumbranceTier >= 2) {
+		changes = changes.concat(['attack.mwak', 'attack.rawk', 'ability.save.con', 'ability.save.str', 'ability.save.dex', 'ability.check.con', 'ability.check.str', 'ability.check.dex'].map((mod) => {
+			const changeKey = 'flags.midi-qol.disadvantage.' + mod;
+			return {
+				key: changeKey,
+				value: 1,
+				mode: 0,
+				priority: 1000
+			}
+		}));
+	}
 
 	let effectChange = {
 		disabled: encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.NONE,
