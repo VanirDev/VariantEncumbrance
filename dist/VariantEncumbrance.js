@@ -303,7 +303,7 @@ async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) 
 			}
 		});
 	}
-	const changes = movementSet.map((movementType) => {
+	let changes = movementSet.map((movementType) => {
 		const changeKey = "data.attributes.movement." + movementType;
 		return {
 			key: changeKey,
