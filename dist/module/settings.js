@@ -1,7 +1,7 @@
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
 export const registerSettings = function () {
-	game.settings.refister("VariantEncumbrance", "enabled", {
+	game.settings.register("VariantEncumbrance", "enabled", {
 		name: "Enabled",
 		hint: "Enable or disable the module's functions.",
 		scope: "world",
