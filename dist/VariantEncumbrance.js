@@ -225,7 +225,7 @@ function convertEffectSet(actorEntity) {
 }
 
 async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) {
-	if (game.actors.get(actorEntity.data._id).data.type !== "character") {
+	if (game.actors.get(actorEntity.data._id).data.type !== "character" || !game.settings.get("VariantEncumbrance", "enabled")) {
 		return;
 	}
 	const itemSet = convertItemSet(actorEntity);
