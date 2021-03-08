@@ -5,8 +5,8 @@
   "systems": [
     "dnd5e"
   ],
-  "version": "0.3.2.48",
-  "author": "Vanir#0001 (discord)",
+  "version": "0.3.2.49",
+  "author": "Vanir#0001 (discord), 47Y",
   "esmodules": [
     "VariantEncumbrance.js"
   ],
