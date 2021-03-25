@@ -291,6 +291,11 @@ async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) 
 			return;
 	}
 
+	// Skip if name is the same.
+	if (effectName === effectEntityPresent.data.label) {
+		return;
+	}
+
 	let movementSet = ['walk', 'swim', 'fly', 'climb', 'burrow'];
 	if (actorEntity._data?.data?.attributes?.movement) {
 		movementSet = [];
