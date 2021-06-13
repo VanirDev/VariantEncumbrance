@@ -1,6 +1,3 @@
-<details>
-  <summary>Click to Expand</summary>
-
   ### Update 0.3.3
   
   * Bugfixes for foundryvtt 0.8.6
@@ -32,4 +29,3 @@
   * Support for Tidy5e dark theme character sheet
   * [Improved weight calculations to support creature size and powerful build](#sizeAndBuild)
   * [Added flags to support 3rd party module integration](#variantFlags)
-</details>
