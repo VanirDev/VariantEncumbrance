@@ -43,7 +43,7 @@
   "minimumCoreVersion": "0.7.10",
   "compatibleCoreVersion": "0.8.6",
   "url": "https://github.com/VanirDev/VariantEncumbrance",
-  "manifest": "https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/dist/module.json",
+  "manifest": "https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/src/module.json",
   "download": "https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/package/VariantEncumbrance-v0.3.3.zip",
   "changelog": "https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/changelog.md",
 	"bugs": "https://github.com/VanirDev/VariantEncumbrance/issues",

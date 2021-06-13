@@ -1,9 +1,28 @@
 ![](https://img.shields.io/badge/Foundry-v0.7.9-blue) ![](https://img.shields.io/badge/D&D5e-v1.2.2-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) ![](https://img.shields.io/badge/Inventory+-v0.3.1-red) ![](https://img.shields.io/badge/DAE-v0.2.34-red)
 
+![](https://img.shields.io/badge/Foundry-v0.8.6-informational)
+
 # Variant Encumbrance
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
+
+## Installation
+
+It's always easiest to install modules from the in game add-on browser.
+
+To install this module manually:
+1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
+2.  Click "Install Module"
+3.  In the "Manifest URL" field, paste the following url:
+`https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/src/module.json`
+4.  Click 'Install' and wait for installation to complete
+5.  Don't forget to enable the module in game using the "Manage Module" button
+
+### midi-qol
+
+This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
 
 ### Compatability
 
@@ -82,12 +101,6 @@ VariantEncumbrance:
     weight: 21.25
 }
 ```
-
-## Installation
-
-1. Open the "Add-On Modules" tab inside the FoundryVTT setup section.
-2. Click "Install Module" and paste this link into the "Manifest URL" box: https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/dist/module.json
-3. Click "Install", and once the module has finished installing enable the module in "Manage Modules" in the "Game Settings" tab.
 
 ## License
 
