@@ -7,7 +7,15 @@ The effects of this module are currently purely visual, although restricting mov
 
 ### Compatability
 
-Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. Support has now been added for Inventory+ and all of its features.
+Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. 
+
+Support has now been added for Inventory+ and all of its features.
+
+### Compatability (0.3.3 and next)
+
+Version >= 0.3.3 has been designed to run with FoundryVTT v0.8.6 and the D&D5e v1.3.3 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. 
+
+Support has now been added for Inventory+ and all of its features.
 
 #### Character Sheets
 

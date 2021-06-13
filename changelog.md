@@ -1,35 +1,35 @@
-## 0.2.3
+<details>
+  <summary>Click to Expand</summary>
 
-- Preparation for foundry 0.8.0
-- Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types)
-- Added [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/)
-- [New Feature: Configurable option to use the player's color as blended background color of the message. by @Biggles](https://github.com/MOAM-Biggles/FoundryVTT-Chat-Portrait/) 
-- [Translation: Updated German translation by @Biggles](https://github.com/MOAM-Biggles/FoundryVTT-Chat-Portrait/) 
-- [Added option to use player's color as blended background color of the](https://github.com/MOAM-Biggles/FoundryVTT-Chat-Portrait/commit/420f018bdcb5a37cf0e5e3ad5a61e6dccc318abd)
+  ### Update 0.3.3
+  
+  * Bugfixes for foundryvtt 0.8.6
+  * Setup npm for better build the project in the future
+  
+  ### Update 0.3.2
+  
+  * Bugfixes for inventory+ support
+  * Added support for Dynamic Active Effects
 
-## 0.2.2
+  ### Update 0.3
 
-- Integration with [Nick's East foundry-pc-types](https://gitlab.com/foundry-projects/foundry-pc/foundry-pc-types/-/tree/master)
-- Some minor upgrade of the structure of the project
-- [Fix: no token img if no token selected](https://github.com/ShoyuVanilla/FoundryVTT-Chat-Portrait/pull/22)
+  * Complete support for the Inventory+ mod
+  * Major bugfixes for the effects-based system involving unwanted stacked effects, and permission errors. Major thanks to [Paul Lessing](https://github.com/paullessing) for his contributions here.
+  * Support for custom units and speed decreases in the module settings.
+  * Improved weight calculation to support active effects that affect the data.attributes.encumbrance.value value.
 
-## 0.2.1
+  ### Update 0.2
 
-- Fix: Fixed the bug that the configuration window is not opened
-- Translation: Spanish translation by @lozalojo
-- Translation: German translation by @envy
+  * [Reworked weight reduction to use the new Active Effects system.](#ActiveEffects)
+  * Refactored weight calculations to happen on inventory update, instead of only re-calculating weight when opening the character sheet.
 
-## 0.2.0
-
-- Migrated to TypeScript
-- New Feature: Separated configuration window
-- New Feature: Configurable option for portrait border's color and width
-- New Feature: Configurable option for placing chat flavor text next to portrait
-- Fixed various issues
-- Translation: Castilian translation by @HonzoNebro
-
-## 0.1.4
-
-- New Feature: Configurable option for using the player's color on chat message border. by @gatesvp
-- New Feature: Configurable option for portrait image size
-- Fix: Fixed the problem that non-square images are squeezed. by @megastruktur
+  ### Update 0.1.5
+  
+  * Added weight multiplier for unequipped items
+  
+  ### Update 0.1.4
+  
+  * Support for Tidy5e dark theme character sheet
+  * [Improved weight calculations to support creature size and powerful build](#sizeAndBuild)
+  * [Added flags to support 3rd party module integration](#variantFlags)
+</details>

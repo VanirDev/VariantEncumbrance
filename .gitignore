@@ -4,3 +4,4 @@ gulpfile.js
 package.json
 package-lock.json
 .jshintrc
+/dist
