@@ -1,36 +1,38 @@
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
+export const VARIANT_ENCUMBRANCE_MODULE_NAME = VARIANT_ENCUMBRANCE_MODULE_NAME;
+
 export const registerSettings = function () {
-	game.settings.register("VariantEncumbrance", "enabled", {
-		name: "Enabled",
-		hint: "Enable or disable the module's functions.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.enabled.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.enabled.hint"),
 		scope: "world",
 		config: true,
 		type: Boolean,
 		default: true
 	});
 
-	game.settings.register("VariantEncumbrance", "lightMultiplier", {
-		name: "Unencumbered Strength Multiplier",
-		hint: "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "lightMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.lightMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.lightMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: 5
 	});
 
-	game.settings.register("VariantEncumbrance", "mediumMultiplier", {
-		name: "Encumbered Strength Multiplier",
-		hint: "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "mediumMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.mediumMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.mediumMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: 10
 	});
 
-	game.settings.register("VariantEncumbrance", "heavyMultiplier", {
-		name: "Heavily Enc. Strength Multiplier",
-		hint: "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "heavyMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.heavyMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.heavyMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
@@ -40,45 +42,45 @@ export const registerSettings = function () {
 		}
 	});
 
-	game.settings.register("VariantEncumbrance", "useVariantEncumbrance", {
-		name: "Variant Encumbrance Speed Penalties",
-		hint: "Enable automatic speed penalties from carry weight.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "useVariantEncumbrance", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.useVariantEncumbrance.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.useVariantEncumbrance.hint"),
 		scope: "world",
 		config: true,
 		type: Boolean,
 		default: true
 	});
 
-	game.settings.register("VariantEncumbrance", "unequippedMultiplier", {
-		name: "Unequipped Item Weight Multiplier",
-		hint: "Multiplier for items when not equipped.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "unequippedMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.unequippedMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.unequippedMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: "1"
 	});
 
-	game.settings.register("VariantEncumbrance", "equippedMultiplier", {
-		name: "Equipped Item Weight Multiplier",
-		hint: "Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "equippedMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.equippedMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.equippedMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: "1"
 	});
 
-	game.settings.register("VariantEncumbrance", "profEquippedMultiplier", {
-		name: "Proficient Equipped Item Weight Multiplier",
-		hint: "Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "profEquippedMultiplier", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.profEquippedMultiplier.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.profEquippedMultiplier.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: "1"
 	});
 
-	game.settings.register("VariantEncumbrance", "currencyWeight", {
-		name: "Currency Per Weight Unit",
-		hint: "Define the number of coins required to equal 1 unit of weight.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.currencyWeight.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.currencyWeight.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
@@ -88,36 +90,36 @@ export const registerSettings = function () {
 		}
 	});
 
-	game.settings.register("VariantEncumbrance", "sizeMultipliers", {
-		name: "Variant Encumbrance Size Modifiers",
-		hint: "Enable multipliers from creature size.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "sizeMultipliers", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.sizeMultipliers.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.sizeMultipliers.hint"),
 		scope: "world",
 		config: true,
 		type: Boolean,
 		default: true
 	});
 
-	game.settings.register("VariantEncumbrance", "units", {
-		name: "Weight Units",
-		hint: "Units displayed in the encumbrance bar.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "units", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.units.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.units.hint"),
 		scope: "world",
 		config: true,
 		type: String,
 		default: "lbs."
 	});
 
-	game.settings.register("VariantEncumbrance", "lightWeightDecrease", {
-		name: "Lightly Encumbered Speed Decrease",
-		hint: "The number of speed units subtracted when lightly encumbered.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "lightWeightDecrease", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.lightWeightDecrease.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.lightWeightDecrease.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
 		default: 10
 	});
 
-	game.settings.register("VariantEncumbrance", "heavyWeightDecrease", {
-		name: "Encumbered Speed Decrease",
-		hint: "The number of speed units subtracted when heavily encumbered.",
+	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "heavyWeightDecrease", {
+		name : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.heavyWeightDecrease.name"),
+		hint : game.i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME+".setting.heavyWeightDecrease.hint"),
 		scope: "world",
 		config: true,
 		type: Number,
