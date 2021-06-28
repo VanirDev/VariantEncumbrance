@@ -321,8 +321,8 @@ async function updateEncumbrance(actorEntity, updatedItem, updatedEffect, mode) 
 	});
 	if (encumbranceData.encumbranceTier >= 2) {
     const invMidiQol = game.modules.get('midi-qol')?.active;
-    const hasMidiQol = scopes.includes('midi-qol');
-    if (hasMidiQol && invMidiQol) {
+    //const hasMidiQol = scopes.includes('midi-qol');
+    if (invMidiQol) {
       changes = changes.concat(['attack.mwak', 'attack.rawk', 'ability.save.con', 'ability.save.str', 'ability.save.dex', 'ability.check.con', 'ability.check.str', 'ability.check.dex'].map((mod) => {
         const changeKey = 'flags.midi-qol.disadvantage.' + mod;
         return {

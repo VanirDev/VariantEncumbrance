@@ -1,6 +1,6 @@
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
-export const VARIANT_ENCUMBRANCE_MODULE_NAME = VARIANT_ENCUMBRANCE_MODULE_NAME;
+export const VARIANT_ENCUMBRANCE_MODULE_NAME = "VariantEncumbrance";
 
 export const registerSettings = function () {
 	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled", {
