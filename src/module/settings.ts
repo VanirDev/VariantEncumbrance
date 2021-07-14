@@ -1,6 +1,9 @@
+//@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
 export const VARIANT_ENCUMBRANCE_MODULE_NAME = "VariantEncumbrance";
+export const INVENTORY_PLUS_MODULE_NAME = 'inventory-plus';
+export const MIDI_QOL_MODULE_NAME = 'midi-qol';
 
 export const registerSettings = function () {
 	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled", {
@@ -57,7 +60,7 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		type: Number,
-		default: "1"
+		default: 1
 	});
 
 	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "equippedMultiplier", {
@@ -66,7 +69,7 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		type: Number,
-		default: "1"
+		default: 1
 	});
 
 	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "profEquippedMultiplier", {
@@ -75,7 +78,7 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		type: Number,
-		default: "1"
+		default: 1
 	});
 
 	game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight", {

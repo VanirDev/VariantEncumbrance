@@ -1,11 +1,17 @@
-![](https://img.shields.io/badge/Foundry-v0.7.9-blue) ![](https://img.shields.io/badge/D&D5e-v1.2.2-blue) ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) ![](https://img.shields.io/badge/Inventory+-v0.3.1-red) ![](https://img.shields.io/badge/DAE-v0.2.34-red)
-
-![](https://img.shields.io/badge/Foundry-v0.8.6-informational)
+![](https://img.shields.io/badge/Foundry-v0.8.8-blue)
+![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
+![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
+![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
+![](https://img.shields.io/badge/Inventory+-v0.3.1-red) 
+![](https://img.shields.io/badge/DAE-v0.2.34-red)
+![](https://img.shields.io/badge/Foundry-v0.8.8-informational)
 
 # Variant Encumbrance
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
+
+### If you are not a "Typescript developer" you can simply rename all the "ts" files in "js" and developing in javascript
 
 ## Installation
 
@@ -21,8 +27,7 @@ To install this module manually:
 
 ### midi-qol
 
-This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
-
+This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
 
 ### Compatability
 
