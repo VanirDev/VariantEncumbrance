@@ -2,7 +2,7 @@
   "private": true,
   "name": "VariantEncumbrance",
   "version": "0.3.5",
-  "description": "",
+  "description": "VariantEncumbrance+Midi",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",

@@ -11,6 +11,8 @@
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
 
+### This is just a personal fork for this module , hoping to see back VanirDev because i don't hav so much time for this
+
 ### If you are not a "Typescript developer" you can simply rename all the "ts" files in "js" and developing in javascript
 
 ## Installation
@@ -21,7 +23,7 @@ To install this module manually:
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
-`https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/src/module.json`
+`https://raw.githubusercontent.com/p4535992/VariantEncumbrance/master/src/module.json`
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
@@ -111,3 +113,16 @@ VariantEncumbrance:
 
 This module is licensed using the Creative Commons Attributions International License, any adaptations must provide both credit and indication of changes made.
 
+## Known issue
+
+## [Changelog](./changelog.md)
+
+## Issues
+
+Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/p4535992/VariantEncumbrance/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+
+## Acknowledgements
+
+Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
+
+Mad props to the 'League of Extraordinary FoundryVTT Developers' community which helped me figure out a lot.
