@@ -1,5 +1,5 @@
   
-  ### Update 0.3.5
+  ### Update 0.3.5 [BREAKING CHANGE]
 
   - Converted to typescript (because i iike it better than javascript) and some bug fix
   
@@ -8,7 +8,7 @@
   * Update for 0.8.8
   * Add internazionalization
   * Add fix from [hmqgg fork](https://github.com/hmqgg/VariantEncumbrance/commit/27004558654bbd28eeb419c35d8f88093fbb7605)
-  * Add optional use of the module midi (if the module is installed or not) request from tgp (unkwnon discord name)
+  * Add optional use of the module midi (if the module is installed or not) request from tgp (unknown discord name)
   * Minor bug fix
   
   ### Update 0.3.3
