@@ -40,21 +40,24 @@ export let readyHooks = async () => {
             encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
         }
     });
-    Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    //Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
             return;
         }
         updateEncumbrance(actorEntity, updatedItem, undefined, "add");
     });
-    Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+    //Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+    Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
             return;
         }
         updateEncumbrance(actorEntity, undefined, undefined, "add");
     });
-    Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+    //Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+    Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
             return;
