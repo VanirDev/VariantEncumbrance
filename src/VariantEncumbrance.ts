@@ -12,7 +12,7 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { registerSettings } from './module/settings';
+import { getGame, registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { VARIANT_ENCUMBRANCE_MODULE_NAME } from './module/settings';
 import { initHooks, readyHooks, setupHooks } from './module/Hooks';
@@ -27,10 +27,10 @@ export let error = (...args) => console.error(`${VARIANT_ENCUMBRANCE_MODULE_NAME
 export let timelog = (...args) => warn(`${VARIANT_ENCUMBRANCE_MODULE_NAME} | `, Date.now(), ...args);
 
 export let i18n = key => {
-  return game.i18n.localize(key);
+  return getGame().i18n.localize(key);
 };
 export let i18nFormat = (key, data = {}) => {
-  return game.i18n.format(key, data);
+  return getGame().i18n.format(key, data);
 }
 
 export let setDebugLevel = (debugText: string) => {
@@ -80,7 +80,7 @@ Hooks.once('setup', function () {
 Hooks.once('ready', () => {
 
 	// Do anything once the module is ready
-	// if (!game.modules.get("lib-wrapper")?.active && game.user.isGM){
+	// if (!getGame().modules.get("lib-wrapper")?.active && getGame().user.isGM){
    	// 	ui.notifications.error(`The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`);
 	// 	return;
 	// }

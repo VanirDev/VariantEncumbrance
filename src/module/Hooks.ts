@@ -1,5 +1,5 @@
 import { warn, error, debug, i18n } from "../VariantEncumbrance";
-import { VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings";
+import { getGame, VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings";
 //@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 import { calculateEncumbrance, ENCUMBRANCE_TIERS, updateEncumbrance } from "./VariantEncumbranceImpl";
@@ -8,7 +8,7 @@ export let readyHooks = async () => {
 
   Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
     if (actorObject.isCharacter) {
-      let actorEntity = game.actors.get(actorObject.actor._id);
+      let actorEntity = getGame().actors?.get(actorObject.actor._id);
       let encumbranceData = calculateEncumbrance(actorEntity, null, null);
 
       let encumbranceElements;
@@ -23,7 +23,7 @@ export let readyHooks = async () => {
       encumbranceElements[4].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
       encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
       encumbranceElements[0].style.cssText = "width: " + Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax * 100), 0), 99.8) + "%;";
-      encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");;
+      encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");;
 
       encumbranceElements[0].classList.remove("medium");
       encumbranceElements[0].classList.remove("heavy");
@@ -47,8 +47,8 @@ export let readyHooks = async () => {
   });
 
   //Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
-  Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
-    if (game.userId !== userId) {
+    Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    if (getGame().userId !== userId) {
       // Only act if we initiated the update ourselves
       return;
     }
@@ -56,9 +56,9 @@ export let readyHooks = async () => {
     updateEncumbrance(actorEntity, updatedItem, undefined, "add");
   });
 
-  //Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
-  Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
-    if (game.userId !== userId) {
+    //Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+      Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
+    if (getGame().userId !== userId) {
       // Only act if we initiated the update ourselves
       return;
     }
@@ -66,9 +66,9 @@ export let readyHooks = async () => {
     updateEncumbrance(actorEntity, undefined, undefined, "add");
   });
 
-  //Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
-  Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
-    if (game.userId !== userId) {
+    //Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+      Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
+    if (getGame().userId !== userId) {
       // Only act if we initiated the update ourselves
       return;
     }
@@ -77,7 +77,7 @@ export let readyHooks = async () => {
   });
 
   Hooks.on('updateActiveEffect', function (actorEntity, changedEffect, _, __, userId) {
-    if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
@@ -88,7 +88,7 @@ export let readyHooks = async () => {
   });
 
   Hooks.on('createActiveEffect', function (actorEntity, changedEffect, _, userId) {
-    if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
@@ -99,7 +99,7 @@ export let readyHooks = async () => {
   });
 
   Hooks.on('deleteActiveEffect', function (actorEntity, changedEffect, _, userId) {
-    if (game.userId !== userId || actorEntity.constructor.name != "Actor5e") {
+    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
@@ -107,6 +107,33 @@ export let readyHooks = async () => {
     if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
       updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
     }
+  });
+
+  Hooks.on('preUpdateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    if (getGame().userId !== userId) {
+      // Only act if we initiated the update ourselves
+      return;
+    }
+
+    updateEncumbrance(actorEntity, updatedItem, undefined, "add");
+  });
+
+  Hooks.on('preCreateOwnedItem', function (actorEntity, createdItem, _, userId) {
+    if (getGame().userId !== userId) {
+      // Only act if we initiated the update ourselves
+      return;
+    }
+
+    updateEncumbrance(actorEntity, undefined, undefined, "add");
+  });
+
+  Hooks.on('preDeleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+    if (getGame().userId !== userId) {
+      // Only act if we initiated the update ourselves
+      return;
+    }
+
+    updateEncumbrance(actorEntity, undefined, undefined, "delete");
   });
 
 }
@@ -122,8 +149,8 @@ export const initHooks = () => {
   warn("Init Hooks processing");
 
 
-	DND5E.encumbrance.strMultiplier = game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "heavyMultiplier");
-	DND5E.encumbrance.currencyPerWeight = game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight");
+	DND5E.encumbrance.strMultiplier = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "heavyMultiplier");
+	DND5E.encumbrance.currencyPerWeight = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight");
 	// CONFIG.debug.hooks = true; // For debugging only
 
 }

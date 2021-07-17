@@ -13,7 +13,7 @@ The effects of this module are currently purely visual, although restricting mov
 
 ### This is just a personal fork for this module , hoping to see back VanirDev because i don't hav so much time for this
 
-### If you are not a "Typescript developer" you can simply rename all the "ts" files in "js" and developing in javascript
+## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder or rename the file from .ts to .js
 
 ## Installation
 

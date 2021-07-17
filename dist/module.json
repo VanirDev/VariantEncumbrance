@@ -1,0 +1,61 @@
+{
+  "name": "VariantEncumbrance",
+  "title": "Variant Encumbrance+Midi",
+  "description": "A module for D&D 5th Edition, to automatically modify character carry weights to match the Variant Encumbrance optional rule set.",
+  "version": "0.3.5",
+  "author": "Vanir#0001 (discord), 47Y, p4535992",
+  "type": "module",
+	"socket": true,
+  "includes": [
+	  "./assets/**",
+	  "./lang/**",
+	  "./scripts/**",
+	  "./styles/**",
+	  "./templates/**",
+	  "./module.json",
+	  "./README.md",
+	  "./icons/**",
+	  "./packs/**"
+	],
+	"media": [
+	  {
+		"type": "icon",
+		"location": ""
+	  },
+	  {
+		"type": "cover",
+		"location": ""
+	  },
+	  {
+		"type": "screenshot",
+		"location": ""
+	  }
+	],
+  "languages": [
+    {
+        "lang": "en",
+        "name": "English",
+        "path": "lang/en.json"
+    }
+  ],
+  "systems": [
+    "dnd5e"
+  ],
+  "esmodules": [
+    "VariantEncumbrance.js"
+  ],
+  "styles": [
+    "styles/VariantEncumbrance.css"
+  ],
+  "minimumCoreVersion": "0.7.10",
+  "compatibleCoreVersion": "0.8.8",
+  "url": "https://github.com/p4535992/VariantEncumbrance",
+  "manifest": "https://raw.githubusercontent.com/p4535992/VariantEncumbrance/master/src/module.json",
+  "download": "https://raw.githubusercontent.com/p4535992/VariantEncumbrance/master/package/VariantEncumbrance-v0.3.5.zip",
+  "changelog": "https://raw.githubusercontent.com/p4535992/VariantEncumbrance/master/changelog.md",
+	"bugs": "https://github.com/p4535992/VariantEncumbrance/issues",
+	"allowBugReporter": true,
+	"manifestPlusVersion": "1.2.0",
+  "dependencies": [
+	]
+}
