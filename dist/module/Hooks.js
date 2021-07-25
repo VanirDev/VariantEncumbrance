@@ -40,7 +40,13 @@ export let readyHooks = async () => {
             encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
         }
     });
-    //Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+        if (getGame().userId !== userId) {
+            // Only act if we initiated the update ourselves
+            return;
+        }
+        updateEncumbrance(actorEntity, updatedItem, undefined, "add");
+    });
     Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
@@ -48,7 +54,13 @@ export let readyHooks = async () => {
         }
         updateEncumbrance(actorEntity, updatedItem, undefined, "add");
     });
-    //Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+    Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+        if (getGame().userId !== userId) {
+            // Only act if we initiated the update ourselves
+            return;
+        }
+        updateEncumbrance(actorEntity, undefined, undefined, "add");
+    });
     Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
@@ -56,7 +68,13 @@ export let readyHooks = async () => {
         }
         updateEncumbrance(actorEntity, undefined, undefined, "add");
     });
-    //Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+    Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+        if (getGame().userId !== userId) {
+            // Only act if we initiated the update ourselves
+            return;
+        }
+        updateEncumbrance(actorEntity, undefined, undefined, "delete");
+    });
     Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
         if (getGame().userId !== userId) {
             // Only act if we initiated the update ourselves
@@ -91,27 +109,33 @@ export let readyHooks = async () => {
             updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
         }
     });
-    Hooks.on('preUpdateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
-        if (getGame().userId !== userId) {
-            // Only act if we initiated the update ourselves
-            return;
-        }
-        updateEncumbrance(actorEntity, updatedItem, undefined, "add");
-    });
-    Hooks.on('preCreateOwnedItem', function (actorEntity, createdItem, _, userId) {
-        if (getGame().userId !== userId) {
-            // Only act if we initiated the update ourselves
-            return;
-        }
-        updateEncumbrance(actorEntity, undefined, undefined, "add");
-    });
-    Hooks.on('preDeleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
-        if (getGame().userId !== userId) {
-            // Only act if we initiated the update ourselves
-            return;
-        }
-        updateEncumbrance(actorEntity, undefined, undefined, "delete");
-    });
+    // Hooks.on('preUpdateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+    //   if (getGame().userId !== userId) {
+    //     // Only act if we initiated the update ourselves
+    //     return;
+    //   }
+    //   updateEncumbrance(actorEntity, updatedItem, undefined, "add");
+    // });
+    // Hooks.on('preCreateOwnedItem', function (actorEntity, createdItem, _, userId) {
+    //   if (getGame().userId !== userId) {
+    //     // Only act if we initiated the update ourselves
+    //     return;
+    //   }
+    //   updateEncumbrance(actorEntity, undefined, undefined, "add");
+    // });
+    // Hooks.on('preDeleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+    //   if (getGame().userId !== userId) {
+    //     // Only act if we initiated the update ourselves
+    //     return;
+    //   }
+    //   updateEncumbrance(actorEntity, undefined, undefined, "delete");
+    // });
+    // //@ts-ignore
+    // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onUpdateDocuments', ItemsPrototypeOnUpdateDocumentsHandler, 'MIXED');
+    // //@ts-ignore
+    // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onCreateDocuments', ItemsPrototypeOnCreateDocumentsHandler, 'MIXED');
+    // //@ts-ignore
+    // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onDeleteDocuments', ItemsPrototypeOnDeleteDocumentsHandler, 'MIXED');
 };
 export const setupHooks = async () => {
     // setup all the hooks
@@ -121,4 +145,34 @@ export const initHooks = () => {
     DND5E.encumbrance.strMultiplier = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "heavyMultiplier");
     DND5E.encumbrance.currencyPerWeight = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight");
     // CONFIG.debug.hooks = true; // For debugging only
+};
+export const ItemsPrototypeOnUpdateDocumentsHandler = async function (wrapped, ...args) {
+    const [documents, result, options, userId] = args;
+    const actorEntity = this;
+    if (getGame().userId !== userId) {
+        // Only act if we initiated the update ourselves
+        return;
+    }
+    updateEncumbrance(actorEntity, undefined, undefined, "add");
+    return wrapped(...args);
+};
+export const ItemsPrototypeOnCreateDocumentsHandler = async function (wrapped, ...args) {
+    const [documents, result, options, userId] = args;
+    const actorEntity = this;
+    if (getGame().userId !== userId) {
+        // Only act if we initiated the update ourselves
+        return;
+    }
+    updateEncumbrance(actorEntity, undefined, undefined, "add");
+    return wrapped(...args);
+};
+export const ItemsPrototypeOnDeleteDocumentsHandler = async function (wrapped, ...args) {
+    const [documents, result, options, userId] = args;
+    const actorEntity = this;
+    if (getGame().userId !== userId) {
+        // Only act if we initiated the update ourselves
+        return;
+    }
+    updateEncumbrance(actorEntity, undefined, undefined, "delete");
+    return wrapped(...args);
 };
