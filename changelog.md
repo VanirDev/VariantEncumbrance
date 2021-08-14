@@ -1,4 +1,8 @@
   
+  ### Update 0.3.6
+
+- Many bug fix and update
+
   ### Update 0.3.5
 
   - Converted to typescript (because i iike it better than javascript) and some bug fix

@@ -149,7 +149,7 @@ export const updateEncumbrance = async function (actorEntity, updatedItem, updat
             return;
     }
     // Skip if name is the same.
-    if (effectName === effectEntityPresent.data.label) {
+    if (effectName === effectEntityPresent?.data.label) {
         return;
     }
     let movementSet = ['walk', 'swim', 'fly', 'climb', 'burrow'];

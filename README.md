@@ -27,21 +27,13 @@ To install this module manually:
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
+### libWrapper
+
+This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
 ### midi-qol
 
 This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
-
-### Compatability
-
-Version 0.3 has been designed to run with FoundryVTT v0.7.9 and the D&D5e v1.2.2 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. 
-
-Support has now been added for Inventory+ and all of its features.
-
-### Compatability (0.3.3 and next)
-
-Version >= 0.3.3 has been designed to run with FoundryVTT v0.8.6 and the D&D5e v1.3.3 system. As this module heavily relies on modifying character sheets, it has been built with compatability for the following character sheet modules. Other sheets may work, but have not been tested. 
-
-Support has now been added for Inventory+ and all of its features.
 
 #### Character Sheets
 
@@ -50,7 +42,7 @@ Support has now been added for Inventory+ and all of its features.
 * [Sky's Alternate 5th Edition Dungeons & Dragons Sheet](https://github.com/Sky-Captain-13/foundry/tree/master/alt5e)
 * [Tidy5e Sheet (Both light & dark themes)](https://github.com/sdenec/tidy5e-sheet)
 
-#### Other Modules
+#### Other Modules Compatability
 
 * [Inventory +](https://github.com/syl3r86/inventory-plus)
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
@@ -85,7 +77,6 @@ The default character weight bar has received a lick of paint, giving labels for
 
 Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (For 0.1.5, the speed value must be separated by a space from its units).
 
-
 ### Character Size & Powerful Build (Optional)
 <a name="sizeAndBuild"/>
 
@@ -111,7 +102,7 @@ VariantEncumbrance:
 
 ## License
 
-This module is licensed using the Creative Commons Attributions International License, any adaptations must provide both credit and indication of changes made.
+This module is licensed using the MIT License, any adaptations must provide both credit and indication of changes made.
 
 ## Known issue
 

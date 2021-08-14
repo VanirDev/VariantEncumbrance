@@ -9,7 +9,7 @@ import { preloadTemplates } from './preloadTemplates';
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config';
 import { log } from '../VariantEncumbrance';
-import { VariantEncumbranceEffectData, VariantEncumbranceItemData } from './models';
+import { VariantEncumbranceEffectData, VariantEncumbranceItemData } from './VariantEncumbranceModels';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -108,7 +108,7 @@ export const updateEncumbrance = async function (actorEntity:Actor, updatedItem:
 	if (updatedItem) {
 		// On update operations, the actorEntity's items have not been updated.
 		// Override the entry for this item using the updatedItem data.
-		if (mode == "add") {
+		if (mode == "add" && !!updatedItem.data.weight) { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
 			itemSet[updatedItem.id] = veItem(updatedItem);
 		} else if (mode == "delete") {
 			delete itemSet[updatedItem.id];
@@ -168,7 +168,7 @@ export const updateEncumbrance = async function (actorEntity:Actor, updatedItem:
 	}
 
 	// Skip if name is the same.
-	if (effectName === effectEntityPresent.data.label) {
+	if (effectName === effectEntityPresent?.data.label) {
 		return;
 	}
 
@@ -196,20 +196,20 @@ export const updateEncumbrance = async function (actorEntity:Actor, updatedItem:
 		};
 	});
 	if (encumbranceData.encumbranceTier >= 2) {
-    const invMidiQol = getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
-    //const hasMidiQol = scopes.includes(MIDI_QOL_MODULE_NAME);
-    if (invMidiQol) {
-      //@ts-ignore
-      changes = changes.concat(['attack.mwak', 'attack.rawk', 'ability.save.con', 'ability.save.str', 'ability.save.dex', 'ability.check.con', 'ability.check.str', 'ability.check.dex'].map((mod) => {
-        const changeKey = 'flags.midi-qol.disadvantage.' + mod;
-        return {
-          key: changeKey,
-          value: 1,
-          mode: 0, // should be 1 | 2
-          priority: 1000
-        }
-      }));
-    }
+		const invMidiQol = getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
+		//const hasMidiQol = scopes.includes(MIDI_QOL_MODULE_NAME);
+		if (invMidiQol) {
+		//@ts-ignore
+		changes = changes.concat(['attack.mwak', 'attack.rawk', 'ability.save.con', 'ability.save.str', 'ability.save.dex', 'ability.check.con', 'ability.check.str', 'ability.check.dex'].map((mod) => {
+			const changeKey = 'flags.midi-qol.disadvantage.' + mod;
+			return {
+			key: changeKey,
+			value: 1,
+			mode: 0, // should be 1 | 2
+			priority: 1000
+			}
+		}));
+		}
 	}
 
 	let effectChange = {
