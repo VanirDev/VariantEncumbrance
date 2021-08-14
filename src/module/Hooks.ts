@@ -2,14 +2,14 @@ import { warn, error, debug, i18n } from "../VariantEncumbrance";
 import { getGame, VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings";
 //@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
-import { calculateEncumbrance, ENCUMBRANCE_TIERS, updateEncumbrance } from "./VariantEncumbranceImpl";
+import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl} from "./VariantEncumbranceImpl";
 
 export let readyHooks = async () => {
 
   Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
     if (actorObject.isCharacter) {
       let actorEntity = getGame().actors?.get(actorObject.actor._id);
-      let encumbranceData = calculateEncumbrance(actorEntity, null, null);
+      let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, null);
 
       let encumbranceElements;
       if (htmlElement[0].tagName === "FORM" && htmlElement[0].id === "") {
@@ -47,59 +47,59 @@ export let readyHooks = async () => {
   });
 
   // DO NOT SEEM TO WORK ?????
-  Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('updateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, updatedItem, undefined, "add");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, updatedItem, undefined, "add");
+  // });
 
-  Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('updateEmbeddedDocuments', function (actorEntity, updatedItem, updateChanges, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, updatedItem, undefined, "add");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, updatedItem, undefined, "add");
+  // });
 
-  Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('createOwnedItem', function (actorEntity, createdItem, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, undefined, undefined, "add");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  // });
 
-  Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('createEmbeddedDocuments', function (actorEntity, createdItem, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, undefined, undefined, "add");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  // });
 
-  Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('deleteOwnedItem', function (actorEntity, deletedItem, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, undefined, undefined, "delete");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  // });
 
-  Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
-    if (getGame().userId !== userId) {
-      // Only act if we initiated the update ourselves
-      return;
-    }
+  // Hooks.on('deleteEmbeddedDocuments', function (actorEntity, deletedItem, _, userId) {
+  //   if (getGame().userId !== userId) {
+  //     // Only act if we initiated the update ourselves
+  //     return;
+  //   }
 
-    updateEncumbrance(actorEntity, undefined, undefined, "delete");
-  });
+  //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  // });
 
   Hooks.on('updateActiveEffect', function (actorEntity, changedEffect, _, __, userId) {
     if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
@@ -108,7 +108,7 @@ export let readyHooks = async () => {
     }
 
     if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      updateEncumbrance(actorEntity, undefined, changedEffect, "add");
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "add");
     }
   });
 
@@ -119,7 +119,7 @@ export let readyHooks = async () => {
     }
 
     if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      updateEncumbrance(actorEntity, undefined, changedEffect, "add");
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "add");
     }
   });
 
@@ -130,7 +130,7 @@ export let readyHooks = async () => {
     }
 
     if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
     }
   });
 
@@ -188,20 +188,20 @@ export const setupHooks = async () => {
   //@ts-ignore
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareEmbeddedEntities", prepareEmbeddedEntities, "WRAPPER");
   //@ts-ignore
-  libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.getEmbeddedCollection", getEmbeddedCollection, "MIXED")
+  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.getEmbeddedCollection", getEmbeddedCollection, "MIXED")
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareDerivedData", prepareDerivedData, "WRAPPER");
 
   //@ts-ignore
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE") 
   //@ts-ignore
-  libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
+  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
   //@ts-ignore
-  libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.delete", _delete, "MIXED")
+  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.delete", _delete, "MIXED")
   //@ts-ignore
   // libWrapper.register(MODULE_NAME, "CONFIG.Item.documentClass.prototype.isEmbedded", isEmbedded, "OVERRIDE")
 
   //@ts-ignore
-  libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
+  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
   //@ts-ignore
   libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.createDocuments", createDocuments, "MIXED")
   //@ts-ignore
@@ -221,7 +221,7 @@ export const initHooks = () => {
 
 }
 
-
+// DEPRECATED
 // export const ItemsPrototypeOnUpdateDocumentsHandler = async function (wrapped, ...args) {
 //   const [documents, result, options, userId] = args;
 //   const actorEntity = this;
@@ -260,78 +260,78 @@ export const initHooks = () => {
 
 export function getEmbeddedDocument(wrapped, embeddedName, id, {strict=false} = {}) {
   const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
   return wrapped(embeddedName, id, {strict});
 }
 
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
   const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
   return wrapped(embeddedName, data, context);
 }
 
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids=[], options={}) {
   const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
   return wrapped(embeddedName, ids, options)
 }
 
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options)  {
   const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
   return wrapped(embeddedName, data, options);
 }
 
 export  async function createDocuments(wrapped, data=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
   return wrapped(data, context);
 }
 
 export async function updateDocuments(wrapped, updates=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
   return wrapped(updates, context);
 }
 
 export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
   return wrapped(ids, context);
 }
 
-// export function prepareEmbeddedEntities(wrapped) {
+//// export function prepareEmbeddedEntities(wrapped) {
+////   const actorEntity:Actor = this.actor;
+////   updateEncumbrance(actorEntity, undefined, undefined, "add");
+////   wrapped();
+////   return;  
+//// }
+
+// export function getEmbeddedCollection(wrapped, type) {
 //   const actorEntity:Actor = this.actor;
-//   updateEncumbrance(actorEntity, undefined, undefined, "add");
-//   wrapped();
-//   return;  
+//   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+//   return wrapped(type); 
 // }
 
-export function getEmbeddedCollection(wrapped, type) {
-  const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
-  return wrapped(type); 
-}
+// export async function _onCreateDocuments(wrapped, items, context) {
+//   for ( let item of items ) {
+//     const actorEntity:Actor = item.actor;
+//     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+//   }
+//   return wrapped(items, context);
+// }
 
-export async function _onCreateDocuments(wrapped, items, context) {
-  for ( let item of items ) {
-    const actorEntity:Actor = item.actor;
-    updateEncumbrance(actorEntity, undefined, undefined, "add");
-  }
-  return wrapped(items, context);
-}
+// export async function _update(wrapped, data) {
+//   const actorEntity:Actor = this.actor;
+//   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+//   return wrapped(data);
+// }
 
-export async function _update(wrapped, data) {
-  const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "add");
-  return wrapped(data);
-}
-
-export async function _delete(wrapped, data) {
-  const actorEntity:Actor = this.actor;
-  updateEncumbrance(actorEntity, undefined, undefined, "delete");
-  return wrapped(data);
-}
+// export async function _delete(wrapped, data) {
+//   const actorEntity:Actor = this.actor;
+//   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
+//   return wrapped(data);
+// }
