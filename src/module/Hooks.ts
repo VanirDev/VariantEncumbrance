@@ -3,10 +3,11 @@ import { getGame, VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings";
 //@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl} from "./VariantEncumbranceImpl";
+import { ActorData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
 
 export let readyHooks = async () => {
 
-  Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
+  Hooks.on('renderActorSheet', function (actorSheet:ActorSheet, htmlElement:JQuery<HTMLElement>, actorObject:any) {
     if (actorObject.isCharacter) {
       let actorEntity = getGame().actors?.get(actorObject.actor._id);
       let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, null);
@@ -101,38 +102,91 @@ export let readyHooks = async () => {
   //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
   // });
 
-  Hooks.on('updateActiveEffect', function (actorEntity, changedEffect, _, __, userId) {
+
+  // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
+  //   if (!activeEffect?.data?.flags?.isConvenient) return;
+  
+  //   const actorEntity:any  = activeEffect.parent;
+  //   if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+  //     // Only act if we initiated the update ourselves, and the effect is a child of a character
+  //     return;
+  //   }
+
+  //   // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+  //     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+  //   // }
+  // });
+  
+  Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
+    if (!activeEffect?.data?.flags?.isConvenient) return;
+  
+    const actorEntity:any  = activeEffect.parent;
     if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
 
-    if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "add");
-    }
+    // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+    // }
   });
+  
+  // Hooks.on('preDeleteActiveEffect', (activeEffect, config, userId) => {
+  //   if (!activeEffect?.data?.flags?.isConvenient) return;
+  
+  //   const actorEntity:any  = activeEffect.parent;
+  //   if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+  //     // Only act if we initiated the update ourselves, and the effect is a child of a character
+  //     return;
+  //   }
 
-  Hooks.on('createActiveEffect', function (actorEntity, changedEffect, _, userId) {
+  //   // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+  //     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "delete");
+  //   // }
+  // });
+  
+  Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
+    if (!activeEffect?.data?.flags?.isConvenient) return;
+  
+    const actorEntity:any  = activeEffect.parent;
     if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
 
-    if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "add");
-    }
+    // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "delete");
+    // }
   });
 
-  Hooks.on('deleteActiveEffect', function (actorEntity, changedEffect, _, userId) {
+  Hooks.on('updateActiveEffect', function (activeEffect, config, userId) {
+    if (!activeEffect?.data?.flags?.isConvenient) return;
+
+    const actorEntity:any  = activeEffect.parent;
     if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
       // Only act if we initiated the update ourselves, and the effect is a child of a character
       return;
     }
 
-    if (!changedEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_MODULE_NAME)) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, changedEffect, "delete");
-    }
+    // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+    // }
   });
+
+  // Hooks.on('preUpdateActiveEffect', function (activeEffect, config, userId) {
+  //   if (!activeEffect?.data?.flags?.isConvenient) return;
+    
+  //   const actorEntity:any  = activeEffect.parent;
+  //   if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+  //     // Only act if we initiated the update ourselves, and the effect is a child of a character
+  //     return;
+  //   }
+
+  //   // if (!activeEffect?.flags.hasOwnProperty(VARIANT_ENCUMBRANCE_FLAG)) {
+  //     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+  //   // }
+  // });
+
 
   // DEPRECATED
   // Hooks.on('preUpdateOwnedItem', function (actorEntity, updatedItem, updateChanges, _, userId) {
@@ -266,40 +320,40 @@ export function getEmbeddedDocument(wrapped, embeddedName, id, {strict=false} = 
 
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
   return wrapped(embeddedName, data, context);
 }
 
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids=[], options={}) {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
   return wrapped(embeddedName, ids, options)
 }
 
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options)  {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
   return wrapped(embeddedName, data, options);
 }
 
-export  async function createDocuments(wrapped, data=[], context={parent: {}, pack: {}, options: {}}) {
+export  async function createDocuments(wrapped, data, context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
   return wrapped(data, context);
 }
 
 export async function updateDocuments(wrapped, updates=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, "add");
   return wrapped(updates, context);
 }
 
 export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
+  VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
   return wrapped(ids, context);
 }
 
