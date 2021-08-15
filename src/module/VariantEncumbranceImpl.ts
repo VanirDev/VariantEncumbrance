@@ -163,9 +163,13 @@ export const VariantEncumbranceImpl = {
 		}
 		let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, itemSet, effectSet);
 
-		let effectEntityPresent:any = null;
+		let effectEntityPresent:ActiveEffect = new ActiveEffect();
 
 		for (const effectEntity of actorEntity.effects) {
+			const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+			if(!effectNameToSet){
+				continue;
+			}
 			if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') === 'number') {
 				if (!effectEntityPresent) {
 					effectEntityPresent = effectEntity;
@@ -173,8 +177,26 @@ export const VariantEncumbranceImpl = {
 					// Cannot have more than one effect tier present at any one time
 					log("deleting duplicate effect", effectEntity);
 					//await effectEntity.delete();
+					await VariantEncumbranceImpl.removeEffect(effectNameToSet,actorEntity)
+				}
+			}else if(effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier')){
+				if (!effectEntityPresent) {
 					effectEntityPresent = effectEntity;
-					await VariantEncumbranceImpl.removeEffect(effectEntity.name,actorEntity)
+				} else {
+					// Cannot have more than one effect tier present at any one time
+					log("deleting duplicate effect", effectEntity);
+					//await effectEntity.delete();
+					await VariantEncumbranceImpl.removeEffect(effectNameToSet,actorEntity)
+				}
+			}else {
+				// We shouldn't go here never!!!
+				if (effectEntityPresent) {
+					if(effectNameToSet === "Unencumbered"
+						|| effectNameToSet === "Encumbered" 
+						|| effectNameToSet === "Heavily Encumbered"
+						|| effectNameToSet === "Overburdened"){
+						await VariantEncumbranceImpl.removeEffect(effectNameToSet,actorEntity)
+					}
 				}
 			}
 		}
@@ -209,95 +231,11 @@ export const VariantEncumbranceImpl = {
 			return;
 		}
 
-		// effectName = effectEntityPresent?.data.label;
-
-		// DEPRECATED
-
-		// let [changeMode, changeValue] = encumbranceData.encumbranceTier >= ENCUMBRANCE_TIERS.MAX ?
-		// 	[CONST.ACTIVE_EFFECT_MODES.MULTIPLY, 0] :
-		// 	[CONST.ACTIVE_EFFECT_MODES.ADD, encumbranceData.speedDecrease * -1];
-
-		// if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "useVariantEncumbrance")) {
-		// 	changeMode = CONST.ACTIVE_EFFECT_MODES.ADD;
-		// 	changeValue = 0;
-		// }
-
-		// let movementSet = ['walk', 'swim', 'fly', 'climb', 'burrow'];
-		// //@ts-ignore
-		// if (actorEntity.data?.data?.attributes?.movement) {
-		// 	movementSet = [];
-		// 	//@ts-ignore
-		// 	Object.entries(actorEntity.data?.data?.attributes?.movement).forEach((speed:any) => {
-		// 		if (speed[0] == "hover" || speed[0] == "units") {
-		// 			return;
-		// 		}
-		// 		if (speed[1] > 0) {
-		// 			movementSet.push(speed[0]);
-		// 		}
-		// 	});
-		// }
-
-		// let changes = movementSet.map((movementType) => {
-		// 	const changeKey = "data.attributes.movement." + movementType;
-		// 	return {
-		// 		key: changeKey,
-		// 		value: changeValue,
-		// 		mode: changeMode,
-		// 		priority: 1000
-		// 	};
-		// });
-
-		// if (encumbranceData.encumbranceTier >= 2) {
-		// 	const invMidiQol = getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
-		// 	//const hasMidiQol = scopes.includes(MIDI_QOL_MODULE_NAME);
-		// 	if (invMidiQol) {
-		// 	//@ts-ignore
-		// 	changes = changes.concat(['attack.mwak', 'attack.rawk', 'ability.save.con', 'ability.save.str', 'ability.save.dex', 'ability.check.con', 'ability.check.str', 'ability.check.dex'].map((mod) => {
-		// 		const changeKey = 'flags.midi-qol.disadvantage.' + mod;
-		// 		return {
-		// 		key: changeKey,
-		// 		value: 1,
-		// 		mode: 0, // should be 1 | 2
-		// 		priority: 1000
-		// 		}
-		// 	}));
-		// 	}
-		// }
-
-		// let effectChange = {
-		// 	disabled: encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.NONE,
-		// 	label: effectName,
-		// 	icon: "icons/tools/smithing/anvil.webp",
-		// 	changes: changes,
-		// 	flags: {
-		// 		VariantEncumbrance: {
-		// 			tier: encumbranceData.encumbranceTier
-		// 		}
-		// 	},
-		// 	origin: `Actor.${actorEntity.data._id}`
-		// };
-
-		// if (effectChange) {
-		// 	if (effectEntityPresent) {
-		// 		await effectEntityPresent.update(effectChange);
-		// 	} else {
-		// 		await actorEntity.createEmbeddedEntity("ActiveEffect", effectChange);
-		// 	}
-		// }
-
-		// await actorEntity.applyActiveEffects();
-
 		let origin = `Actor.${actorEntity.data._id}`;
 		await VariantEncumbranceImpl.addEffect(effectName,actorEntity,origin,encumbranceData);
-
 		
-		const tier = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'tier') || {};
-		if (tier !== encumbranceData.encumbranceTier) {
-			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "tier", encumbranceData.encumbranceTier);
-		}
-
 		// SEEM NOT NECESSARY
-
+		// const tier = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'tier') || {};
 		// const weight = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'weight') || {};
 		// const speed = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'speed') || {};
 		// const burrow = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'burrow') || {};
@@ -305,6 +243,10 @@ export const VariantEncumbranceImpl = {
 		// const fly = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'fly') || {};
 		// const swim = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'swim') || {};
 		// const walk = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'walk') || {};
+
+		// if (tier !== encumbranceData.encumbranceTier) {
+		// 	actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "tier", encumbranceData.encumbranceTier);
+		// }
 
 		// //@ts-ignore
 		// if (speed !== actorEntity.data.data.attributes.movement.walk) {
@@ -741,26 +683,5 @@ export const VariantEncumbranceImpl = {
 		
 			log(`Added effect ${effect.name} to ${actor.name} - ${actor.id}`);
 		}
-	},
-	
-	// _handleIntegrations(effect) {
-	// 	if (this._settings.integrateWithAtl && effect.atlChanges.length > 0) {
-	// 		this._addAtlChangesToEffect(effect);
-	// 	}
-	
-	// 	if (
-	// 		this._settings.integrateWithTokenMagic &&
-	// 		effect.tokenMagicChanges.length > 0
-	// 	) {
-	// 		this._addTokenMagicChangesToEffect(effect);
-	// 	}
-	// },
-	
-	// _addAtlChangesToEffect(effect) {
-	// 	effect.changes.push(...effect.atlChanges);
-	// },
-	
-	// _addTokenMagicChangesToEffect(effect) {
-	// 	effect.changes.push(...effect.tokenMagicChanges);
-	// }
+	}
 }
