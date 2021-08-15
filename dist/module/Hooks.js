@@ -20,8 +20,8 @@ export let readyHooks = async () => {
             encumbranceElements[4].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
             encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax * 100) + "%";
             encumbranceElements[0].style.cssText = "width: " + Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax * 100), 0), 99.8) + "%;";
-            encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
-            ;
+            // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
+            encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + "/" + encumbranceData.heavyMax + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
             encumbranceElements[0].classList.remove("medium");
             encumbranceElements[0].classList.remove("heavy");
             if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
@@ -46,7 +46,7 @@ export let readyHooks = async () => {
         if (!activeEffect?.data?.flags?.isConvenient)
             return;
         const actorEntity = activeEffect.parent;
-        if (actorEntity) {
+        if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
                 // Only act if we initiated the update ourselves, and the effect is a child of a character
                 return;
@@ -62,7 +62,7 @@ export let readyHooks = async () => {
         if (!activeEffect?.data?.flags?.isConvenient)
             return;
         const actorEntity = activeEffect.parent;
-        if (actorEntity) {
+        if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
                 // Only act if we initiated the update ourselves, and the effect is a child of a character
                 return;
@@ -78,7 +78,7 @@ export let readyHooks = async () => {
         if (!activeEffect?.data?.flags?.isConvenient)
             return;
         const actorEntity = activeEffect.parent;
-        if (actorEntity) {
+        if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
                 // Only act if we initiated the update ourselves, and the effect is a child of a character
                 return;
@@ -136,28 +136,28 @@ export const initHooks = () => {
 };
 export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
     const actorEntity = this.actor;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
     }
     return wrapped(embeddedName, id, { strict });
 }
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
     const actorEntity = this.actor;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
     }
     return wrapped(embeddedName, data, context);
 }
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], options = {}) {
     const actorEntity = this.actor;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
     }
     return wrapped(embeddedName, ids, options);
 }
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options) {
     const actorEntity = this.actor;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
     }
     return wrapped(embeddedName, data, options);
@@ -165,7 +165,7 @@ export async function updateEmbeddedDocuments(wrapped, embeddedName, data, optio
 export async function createDocuments(wrapped, data, context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
     const actorEntity = parent;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
     }
     return wrapped(data, context);
@@ -173,7 +173,7 @@ export async function createDocuments(wrapped, data, context = { parent: {}, pac
 export async function updateDocuments(wrapped, updates = [], context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
     const actorEntity = parent;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, "add");
     }
     return wrapped(updates, context);
@@ -181,7 +181,7 @@ export async function updateDocuments(wrapped, updates = [], context = { parent:
 export async function deleteDocuments(wrapped, ids = [], context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
     const actorEntity = parent;
-    if (actorEntity) {
+    if (actorEntity && actorEntity.data.type === "character") {
         VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
     }
     return wrapped(ids, context);

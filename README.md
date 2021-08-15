@@ -33,7 +33,7 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 ### midi-qol
 
-This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
+This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency but it is recommended for the best experience and compatibility with other modules.
 
 #### Character Sheets compatibility
 
@@ -99,7 +99,11 @@ Should you wish to integrate some of Variant Encumbrance's calculations into you
 ```javascript
 VariantEncumbrance:
 {
-    speed: 30,
+		burrow: 0,
+		climb: 0,
+		fly: 0,
+		swim: 0,
+		walk: 30,
     tier: 0,
     weight: 21.25
 }

@@ -65,9 +65,9 @@ export const VariantEncumbranceImpl = {
 			effect.changes.forEach(change => {
 				if (change.key === "data.attributes.encumbrance.value") {
 					if (change.mode == 1) {
-						result.multiply.push(Number(change.value));
+						result.multiply.push(<number>change.value);
 					} else if (change.mode == 2) {
-						result.add.push(Number(<number>change.value));
+						result.add.push(<number>change.value);
 					}
 				}
 			});
@@ -121,7 +121,11 @@ export const VariantEncumbranceImpl = {
 	},
 
 	updateEncumbrance : async function (actorEntity:Actor, updatedItems:any[]|undefined, updatedEffect:ActiveEffect|undefined, mode:string) {
-		if (getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" || !getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled")) {
+		//getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" || 
+		if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled")) {		
+			if(hasProperty(actorEntity.data, 'flags.'+VARIANT_ENCUMBRANCE_FLAG)) {
+				actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
+			}
 			return;
 		}
 		if(updatedItems && (<any[]>updatedItems)?.length > 1){
@@ -208,10 +212,10 @@ export const VariantEncumbranceImpl = {
 			}else {
 				// We shouldn't go here never!!!
 				if (effectEntityPresent && effectEntity?.data?.label) {
-					if(effectNameToSet === "Unencumbered"
-						|| effectNameToSet === "Encumbered" 
-						|| effectNameToSet === "Heavily Encumbered"
-						|| effectNameToSet === "Overburdened"){
+					if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED
+						|| effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED
+						|| effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED
+						|| effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED){
 						
 						if (!effectEntityPresent) {
 							effectEntityPresent = effectEntity;
@@ -256,38 +260,68 @@ export const VariantEncumbranceImpl = {
 		await VariantEncumbranceImpl.addEffect(effectName,actorEntity,origin,encumbranceData);
 		
 		// SEEM NOT NECESSARY
-		// const tier = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'tier') || {};
-		// const weight = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'weight') || {};
+
+		const tier = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'tier') || {};
+		const weight = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'weight') || {};
 		// const speed = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'speed') || {};
-		// const burrow = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'burrow') || {};
-		// const climb = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'climb') || {};
-		// const fly = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'fly') || {};
-		// const swim = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'swim') || {};
-		// const walk = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'walk') || {};
+		
+		const burrow = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'burrow') || {};
+		const climb = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'climb') || {};
+		const fly = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'fly') || {};
+		const swim = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'swim') || {};
+		const walk = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'walk') || {};
 
-		// if (tier !== encumbranceData.encumbranceTier) {
-		// 	actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "tier", encumbranceData.encumbranceTier);
-		// }
-
+		if (tier !== encumbranceData.encumbranceTier) {
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "tier", encumbranceData.encumbranceTier);
+		}
+		if (weight !== encumbranceData.totalWeight) {
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "weight", encumbranceData.totalWeight);
+		}
 		// //@ts-ignore
 		// if (speed !== actorEntity.data.data.attributes.movement.walk) {
 		// 	//@ts-ignore
 		// 	actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "speed", actorEntity.data.data.attributes.movement.walk);
 		// }
 
-		// // 'data.attributes.movement.burrow',
-		// // 'data.attributes.movement.climb',
-		// // 'data.attributes.movement.fly',
-		// // 'data.attributes.movement.swim',
-		// // 'data.attributes.movement.walk',
-		// if (weight !== encumbranceData.totalWeight) {
-		// 	actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "weight", encumbranceData.totalWeight);
+		//@ts-ignore
+		if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
+			//@ts-ignore
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "burrow", actorEntity.data.data.attributes.movement.burrow);
+		}
+		//@ts-ignore
+		if (climb !== actorEntity.data.data.attributes.movement.climb) {
+			//@ts-ignore
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "climb", actorEntity.data.data.attributes.movement.climb);
+		}
+		//@ts-ignore
+		if (fly !== actorEntity.data.data.attributes.movement.fly) {
+			//@ts-ignore
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "fly", actorEntity.data.data.attributes.movement.fly);
+		}
+		//@ts-ignore
+		if (swim !== actorEntity.data.data.attributes.movement.swim) {
+			//@ts-ignore
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "swim", actorEntity.data.data.attributes.movement.swim);
+		}
+		//@ts-ignore
+		if (walk !== actorEntity.data.data.attributes.movement.walk) {
+			//@ts-ignore
+			actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "walk", actorEntity.data.data.attributes.movement.walk);
+		}
+
+
+		// FINAL SET ENCUMBRANCE ????
+		// data.data.attributes.encumbrance {
+		// 	"value": null,
+		// 	"max": null,
+		// 	"pct": null,
+		// 	"encumbered": false
 		// }
 	},
 
 	calculateEncumbrance : function(actorEntity, itemSet, effectSet):any {
 		if (actorEntity.data.type !== "character") {
-			console.log("ERROR: NOT A CHARACTER");
+			log("ERROR: NOT A CHARACTER");
 			return null;
 		}
 
@@ -314,7 +348,7 @@ export const VariantEncumbranceImpl = {
 			} else {
 				strengthScore *= 1;
 			}
-
+			// Powerful build support
 			if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) { //jshint ignore:line
 				strengthScore *= 2;
 			}
@@ -466,15 +500,6 @@ export const VariantEncumbranceImpl = {
 			isDynamic: true,
 		});
 	},
-
-	// _lightlyEncumbered : function() {
-	// 	return new Effect({
-	// 		name: 'Lightly Encumbered',
-	// 		description: 'Lowers movement by 10 ft.',
-	// 		icon: 'icons/svg/down.svg',
-	// 		isDynamic: true,
-	// 	});
-	// },
 
 	_heavilyEncumbered : function():Effect {
 		return new Effect({

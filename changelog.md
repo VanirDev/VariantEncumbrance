@@ -1,7 +1,12 @@
   
+  ### Update 0.3.7
+
+- Many bug fix and updates
+- Finally integration with Active effects for encumbrance
+  
   ### Update 0.3.6
 
-- Many bug fix and update
+- Many bug fix and updates
 
   ### Update 0.3.5
 
