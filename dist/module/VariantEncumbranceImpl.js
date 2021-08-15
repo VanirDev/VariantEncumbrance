@@ -15,6 +15,12 @@ export const ENCUMBRANCE_TIERS = {
     HEAVY: 2,
     MAX: 3,
 };
+export const ENCUMBRANCE_STATE = {
+    UNENCUMBERED: "Unencumbered",
+    ENCUMBERED: "Encumbered",
+    HEAVILY_ENCUMBERED: "Heavily Encumbered",
+    OVERBURDENED: "Overburdened"
+};
 export const VariantEncumbranceImpl = {
     veItem: function (item) {
         return {
@@ -126,8 +132,14 @@ export const VariantEncumbranceImpl = {
                     itemSet[updatedItem._id] = VariantEncumbranceImpl.veItem(updatedItem);
                 }
                 else if (mode == "delete") {
-                    //@ts-ignore
-                    delete itemSet[updatedItem._id];
+                    if (typeof updatedItem === 'string' || updatedItem instanceof String) {
+                        //@ts-ignore
+                        delete itemSet[updatedItem];
+                    }
+                    else {
+                        //@ts-ignore
+                        delete itemSet[updatedItem._id];
+                    }
                 }
             }
         }
@@ -140,47 +152,60 @@ export const VariantEncumbranceImpl = {
                 effectSet[updatedEffect.data._id] = VariantEncumbranceImpl.veEffect(updatedEffect);
             }
             else if (mode == "delete") {
-                //@ts-ignore
-                delete effectSet[updatedEffect.data._id];
+                if (typeof updatedEffect === 'string' || updatedEffect instanceof String) {
+                    //@ts-ignore
+                    delete itemSet[updatedEffect];
+                }
+                else {
+                    //@ts-ignore
+                    delete effectSet[updatedEffect.data._id];
+                }
             }
         }
         let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, itemSet, effectSet);
-        let effectEntityPresent = new ActiveEffect();
+        let effectEntityPresent;
         for (const effectEntity of actorEntity.effects) {
             const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
             if (!effectNameToSet) {
                 continue;
             }
             if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') === 'number') {
-                if (!effectEntityPresent) {
+                if (!effectEntityPresent && effectEntity?.data?.label) {
                     effectEntityPresent = effectEntity;
                 }
                 else {
                     // Cannot have more than one effect tier present at any one time
-                    log("deleting duplicate effect", effectEntity);
-                    //await effectEntity.delete();
-                    await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                        await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    }
                 }
             }
             else if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier')) {
-                if (!effectEntityPresent) {
+                if (!effectEntityPresent && effectEntity?.data?.label) {
                     effectEntityPresent = effectEntity;
                 }
                 else {
                     // Cannot have more than one effect tier present at any one time
-                    log("deleting duplicate effect", effectEntity);
-                    //await effectEntity.delete();
-                    await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                        await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    }
                 }
             }
             else {
                 // We shouldn't go here never!!!
-                if (effectEntityPresent) {
+                if (effectEntityPresent && effectEntity?.data?.label) {
                     if (effectNameToSet === "Unencumbered"
                         || effectNameToSet === "Encumbered"
                         || effectNameToSet === "Heavily Encumbered"
                         || effectNameToSet === "Overburdened") {
-                        await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                        if (!effectEntityPresent) {
+                            effectEntityPresent = effectEntity;
+                        }
+                        else {
+                            if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                                await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                            }
+                        }
                     }
                 }
             }
@@ -188,25 +213,22 @@ export const VariantEncumbranceImpl = {
         let effectName;
         switch (encumbranceData.encumbranceTier) {
             case ENCUMBRANCE_TIERS.NONE:
-                effectName = "Unencumbered";
+                effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
                 break;
             case ENCUMBRANCE_TIERS.LIGHT:
-                effectName = "Encumbered";
+                effectName = ENCUMBRANCE_STATE.ENCUMBERED;
                 break;
-            // case ENCUMBRANCE_TIERS.LIGHT:
-            // 	effectName = "Lightly Encumbered";
-            // 	break;
             case ENCUMBRANCE_TIERS.HEAVY:
-                effectName = "Heavily Encumbered";
+                effectName = ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED;
                 break;
             case ENCUMBRANCE_TIERS.MAX:
-                effectName = "Overburdened";
+                effectName = ENCUMBRANCE_STATE.OVERBURDENED;
                 break;
             default:
                 return;
         }
         if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "useVariantEncumbrance")) {
-            effectName = "Unencumbered";
+            effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
         }
         // Skip if name is the same.
         if (effectName === effectEntityPresent?.data.label) {
@@ -344,31 +366,25 @@ export const VariantEncumbranceImpl = {
     addDynamicEffects: async function (effectName, actor) {
         const invMidiQol = getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
         switch (effectName.toLowerCase()) {
-            case 'encumbered':
+            case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase():
                 {
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Heavily Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Heavily Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
                     }
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Overburdened', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Overburdened', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
                     }
                     let effect = VariantEncumbranceImpl._encumbered();
                     VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: 10 });
                     return effect;
                 }
-            // case 'lightly encumbered':
-            // 	{
-            // 		let effect = VariantEncumbranceImpl._lightlyEncumbered();
-            // 		VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: 10 });
-            // 		return effect;
-            // 	}
-            case 'heavily encumbered':
+            case ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED.toLowerCase():
                 {
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
                     }
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Overburdened', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Overburdened', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
                     }
                     let effect;
                     if (invMidiQol) {
@@ -380,31 +396,26 @@ export const VariantEncumbranceImpl = {
                     VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: 20 });
                     return effect;
                 }
-            case 'unencumbered':
+            case ENCUMBRANCE_STATE.UNENCUMBERED.toLowerCase():
                 {
-                    //let effect = VariantEncumbranceImpl._unEncumbered();
-                    //VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: 0 });
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
                     }
-                    // if(await VariantEncumbranceImpl.hasEffectApplied('Lightly Encumbered',actor)){
-                    // 	VariantEncumbranceImpl.removeEffect('Lightly Encumbered',actor);
-                    // }
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Heavily Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Heavily Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
                     }
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Overburdened', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Overburdened', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
                     }
                     return null;
                 }
-            case 'overburdened':
+            case ENCUMBRANCE_STATE.OVERBURDENED.toLowerCase():
                 {
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
                     }
-                    if (await VariantEncumbranceImpl.hasEffectApplied('Heavily Encumbered', actor)) {
-                        await VariantEncumbranceImpl.removeEffect('Heavily Encumbered', actor);
+                    if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
+                        await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
                     }
                     let effect;
                     if (invMidiQol) {
@@ -423,7 +434,7 @@ export const VariantEncumbranceImpl = {
     },
     _encumbered: function () {
         return new Effect({
-            name: 'Encumbered',
+            name: ENCUMBRANCE_STATE.ENCUMBERED,
             description: 'Lowers movement by 10 ft.',
             icon: 'icons/svg/down.svg',
             isDynamic: true,
@@ -439,7 +450,7 @@ export const VariantEncumbranceImpl = {
     // },
     _heavilyEncumbered: function () {
         return new Effect({
-            name: 'Heavily Encumbered',
+            name: ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,
             description: 'Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves',
             icon: 'icons/svg/downgrade.svg',
             isDynamic: true,
@@ -469,8 +480,8 @@ export const VariantEncumbranceImpl = {
     },
     _heavilyEncumberedNoMidi: function () {
         return new Effect({
-            name: 'Heavily Encumbered',
-            description: 'Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves',
+            name: ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,
+            description: 'Lowers movement by 20 ft.',
             icon: 'icons/svg/downgrade.svg',
             isDynamic: true,
             changes: [],
@@ -478,7 +489,7 @@ export const VariantEncumbranceImpl = {
     },
     _overburdenedEncumbered: function () {
         return new Effect({
-            name: 'Overburdened',
+            name: ENCUMBRANCE_STATE.OVERBURDENED,
             description: 'Lowers movement to 0 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves',
             // icon: 'icons/svg/hazard.svg',
             icon: 'icons/tools/smithing/anvil.webp',
@@ -509,8 +520,8 @@ export const VariantEncumbranceImpl = {
     },
     _overburdenedEncumberedNoMidi: function () {
         return new Effect({
-            name: 'Overburdened',
-            description: 'Lowers movement to 0 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves',
+            name: ENCUMBRANCE_STATE.OVERBURDENED,
+            description: 'Lowers movement to 0 ft.',
             // icon: 'icons/svg/hazard.svg',
             icon: 'icons/tools/smithing/anvil.webp',
             isDynamic: true,
@@ -549,28 +560,28 @@ export const VariantEncumbranceImpl = {
         const movement = actor.data.data.attributes.movement;
         effect.changes.push({
             key: 'data.attributes.movement.burrow',
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: 0,
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: "0",
         });
         effect.changes.push({
             key: 'data.attributes.movement.climb',
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: 0,
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: "0",
         });
         effect.changes.push({
             key: 'data.attributes.movement.fly',
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: 0,
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: "0",
         });
         effect.changes.push({
             key: 'data.attributes.movement.swim',
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: 0,
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: "0",
         });
         effect.changes.push({
             key: 'data.attributes.movement.walk',
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: 0,
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: "0",
         });
     },
     /**

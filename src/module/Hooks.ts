@@ -55,13 +55,15 @@ export let readyHooks = async () => {
     if (!activeEffect?.data?.flags?.isConvenient) return;
   
     const actorEntity:any  = activeEffect.parent;
-    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
-      // Only act if we initiated the update ourselves, and the effect is a child of a character
-      return;
-    }
+    if(actorEntity){
+      if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+        // Only act if we initiated the update ourselves, and the effect is a child of a character
+        return;
+      }
 
-    if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+      if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+        VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+      }
     }
   });
   
@@ -73,13 +75,15 @@ export let readyHooks = async () => {
     if (!activeEffect?.data?.flags?.isConvenient) return;
   
     const actorEntity:any  = activeEffect.parent;
-    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
-      // Only act if we initiated the update ourselves, and the effect is a child of a character
-      return;
-    }
+    if(actorEntity){
+      if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+        // Only act if we initiated the update ourselves, and the effect is a child of a character
+        return;
+      }
 
-    if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "delete");
+      if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+        VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "delete");
+      }
     }
   });
 
@@ -91,13 +95,15 @@ export let readyHooks = async () => {
     if (!activeEffect?.data?.flags?.isConvenient) return;
 
     const actorEntity:any  = activeEffect.parent;
-    if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
-      // Only act if we initiated the update ourselves, and the effect is a child of a character
-      return;
-    }
+    if(actorEntity){
+      if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
+        // Only act if we initiated the update ourselves, and the effect is a child of a character
+        return;
+      }
 
-    if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-      VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+      if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+        VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, "add");
+      }
     }
   });
 
@@ -162,46 +168,60 @@ export const initHooks = () => {
 
 export function getEmbeddedDocument(wrapped, embeddedName, id, {strict=false} = {}) {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+  }
   return wrapped(embeddedName, id, {strict});
 }
 
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  }
   return wrapped(embeddedName, data, context);
 }
 
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids=[], options={}) {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
+  }
   return wrapped(embeddedName, ids, options)
 }
 
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options)  {
   const actorEntity:Actor = this.actor;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  }
   return wrapped(embeddedName, data, options);
 }
 
 export  async function createDocuments(wrapped, data, context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, "add");
+  }
   return wrapped(data, context);
 }
 
 export async function updateDocuments(wrapped, updates=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, "add");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, "add");
+  }
   return wrapped(updates, context);
 }
 
 export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack: {}, options: {}}) {
   const {parent, pack, options} = context;
   const actorEntity:Actor = <Actor>parent;
-  VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
+  if(actorEntity){
+    VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, "delete");
+  }
   return wrapped(ids, context);
 }
 

@@ -35,7 +35,7 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
 
-#### Character Sheets
+#### Character Sheets compatibility
 
 * D&D5e Default Character Sheet
 
@@ -46,6 +46,7 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 * [Inventory +](https://github.com/syl3r86/inventory-plus)
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
+* [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 
 ## [Update Changelogs](./changelog.md)
 
@@ -69,15 +70,18 @@ The default character weight bar has received a lick of paint, giving labels for
 ### Speed Reduction (Optional)
 
 #### Effect-based Speed Reduction (0.2+)
+
 ![](https://i.imgur.com/ztcUqfU.png)
 <a name="ActiveEffects"/>
 
 #### Old Speed Reduction (Pre 0.1.5)
+
 ![](https://i.imgur.com/DCfGuUJ.png)
 
 Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (For 0.1.5, the speed value must be separated by a space from its units).
 
 ### Character Size & Powerful Build (Optional)
+
 <a name="sizeAndBuild"/>
 
 Enabled by default, the module will modify your maximum carry weight according to your character's size, and whether you have the powerful build special trait. This feature can be disabled in the module settings. (Credit to [Eruestani](https://github.com/Eruestani) for implementing this).
@@ -87,6 +91,7 @@ Enabled by default, the module will modify your maximum carry weight according t
 In the module settings, custom multipliers are available for unequipped, equipped, and proficiently equipped items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them, but this lends some flexibility to the system for anyone to use.
 
 ### Variant Encumbrance Flag
+
 <a name="variantFlags"/>
 
 Should you wish to integrate some of Variant Encumbrance's calculations into your own modules, there is now a flag which stores the actor's encumbrance tier, weight, and modified speed. Encumbrance tier is presented as 0, 1, 2, 3, as Unencumbered, Encumbered, Heavily Encumbered, Over Encumbered, respectively.
