@@ -11,6 +11,8 @@
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
 
+For 0.8.8 foundryvtt support a core implementation of this rule, but there is no problem the module should be synchronized with the core fucntionality, but you need the module if you want to apply some customized rule
+
 ### This is just a personal fork for this module , hoping to see back VanirDev because i don't hav so much time for this
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder or rename the file from .ts to .js
@@ -99,13 +101,13 @@ Should you wish to integrate some of Variant Encumbrance's calculations into you
 ```javascript
 VariantEncumbrance:
 {
-		burrow: 0,
-		climb: 0,
-		fly: 0,
-		swim: 0,
-		walk: 30,
-    tier: 0,
-    weight: 21.25
+  burrow: 0,
+  climb: 0,
+  fly: 0,
+  swim: 0,
+  walk: 30,
+  tier: 0,
+  weight: 21.25
 }
 ```
 

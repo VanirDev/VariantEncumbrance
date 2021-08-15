@@ -1,4 +1,7 @@
-  
+  ### Update 0.3.8
+
+  - Add implementation with the core foundry 0.8.8 and D&D5e 1.4.2 for encumbrance rule
+
   ### Update 0.3.7
 
 - Many bug fix and updates

@@ -7,7 +7,7 @@ export let readyHooks = async () => {
     Hooks.on('renderActorSheet', function (actorSheet, htmlElement, actorObject) {
         if (actorObject.isCharacter) {
             let actorEntity = getGame().actors?.get(actorObject.actor._id);
-            let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, null);
+            let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity);
             let encumbranceElements;
             if (htmlElement[0].tagName === "FORM" && htmlElement[0].id === "") {
                 encumbranceElements = htmlElement.find('.encumbrance')[0].children;
