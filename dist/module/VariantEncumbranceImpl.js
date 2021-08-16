@@ -22,26 +22,26 @@ export const ENCUMBRANCE_STATE = {
     OVERBURDENED: "Overburdened"
 };
 export const VariantEncumbranceImpl = {
-    // veItem : function(item:any):VariantEncumbranceItemData {
-    // 	return {
-    // 		_id: item._id,
-    // 		weight: item.data.weight,
-    // 		count: item.data.quantity,
-    // 		totalWeight: item.data.weight * item.data.quantity,
-    // 		proficient: item.data.proficient,
-    // 		equipped: item.data.equipped
-    // 	}
-    // },
-    // veItemString : function(item:any):VariantEncumbranceItemData {
-    // 	return {
-    // 		_id: item._id,
-    // 		weight: item['data.weight'],
-    // 		count: item['data.quantity'],
-    // 		totalWeight: item['data.weight'] * item['data.quantity'],
-    // 		proficient: item['data.proficient'],
-    // 		equipped: item['data.equipped']
-    // 	}
-    // },
+    veItem: function (item) {
+        return {
+            _id: item._id,
+            weight: item.data.weight,
+            quantity: item.data.quantity,
+            totalWeight: item.data.weight * item.data.quantity,
+            proficient: item.data.proficient,
+            equipped: item.data.equipped
+        };
+    },
+    veItemString: function (item) {
+        return {
+            _id: item._id,
+            weight: item['data.weight'],
+            quantity: item['data.quantity'],
+            totalWeight: item['data.weight'] * item['data.quantity'],
+            proficient: item['data.proficient'],
+            equipped: item['data.equipped']
+        };
+    },
     // veEffect : function(effect):VariantEncumbranceEffectData {
     // 	let result:VariantEncumbranceEffectData = {
     // 		multiply: [],
@@ -159,7 +159,34 @@ export const VariantEncumbranceImpl = {
         // 		}
         // 	}
         // }
-        let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity); //, itemSet, effectSet
+        const updatedItem = updatedItems ? updatedItems[0] : undefined;
+        let veitem = null;
+        if (updatedItem) {
+            // On update operations, the actorEntity's items have not been updated.
+            // Override the entry for this item using the updatedItem data.
+            if (Object.keys(updatedItem).indexOf('data.weight') !== -1) {
+                if (mode == "add") { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
+                    veitem = VariantEncumbranceImpl.veItemString(updatedItem);
+                }
+                else if (mode == "delete") {
+                    veitem = null;
+                }
+            }
+            else {
+                if (mode == "add") { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
+                    veitem = VariantEncumbranceImpl.veItemString(updatedItem);
+                }
+                else if (mode == "delete") {
+                    if (typeof updatedItem === 'string' || updatedItem instanceof String) {
+                        veitem = null;
+                    }
+                    else {
+                        veitem = null;
+                    }
+                }
+            }
+        }
+        let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veitem); //, itemSet, effectSet
         let effectEntityPresent;
         for (const effectEntity of actorEntity.effects) {
             const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
@@ -227,8 +254,10 @@ export const VariantEncumbranceImpl = {
         if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "useVariantEncumbrance")) {
             effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
         }
+        if (effectName != ENCUMBRANCE_STATE.UNENCUMBERED && !await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity)) {
+        }
         // Skip if name is the same and the active effect is already present.
-        if (effectName === effectEntityPresent?.data.label && await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity)) {
+        else if (effectName === effectEntityPresent?.data.label) {
             return;
         }
         let origin = `Actor.${actorEntity.data._id}`;
@@ -285,6 +314,7 @@ export const VariantEncumbranceImpl = {
         // 	"pct": null,
         // 	"encumbered": false
         // }
+        return encumbranceData;
     },
     /*
      _computeEncumbrance(actorData) {
@@ -342,7 +372,7 @@ export const VariantEncumbranceImpl = {
      * @returns {{max: number, value: number, pct: number}}  An object describing the character's encumbrance level
      * @private
      */
-    calculateEncumbrance: function (actorEntity) {
+    calculateEncumbrance: function (actorEntity, veitem) {
         // if (actorEntity.data.type !== "character") {
         // 	log("ERROR: NOT A CHARACTER");
         // 	return null;
@@ -425,9 +455,15 @@ export const VariantEncumbranceImpl = {
                 return weight;
             }
             //@ts-ignore
-            const q = item.data.data.quantity || 0;
+            let q = item.data.data.quantity || 0;
+            if (veitem && veitem?.quantity && item.id === veitem._id) {
+                q = veitem?.quantity;
+            }
             //@ts-ignore
             let w = item.data.data.weight || 0;
+            if (veitem && veitem?.weight && item.id === veitem._id) {
+                w = veitem?.weight;
+            }
             if (invPlusActive) {
                 const inventoryPlusCategories = actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys');
                 if (inventoryPlusCategories) {
@@ -452,9 +488,17 @@ export const VariantEncumbranceImpl = {
             // return weight + (q * w);
             let appliedWeight = (q * w);
             //@ts-ignore
-            if (item.data.data.equipped) {
+            let isEquipped = item.data.data.equipped;
+            if (veitem && item.id === veitem._id) {
+                isEquipped = veitem.equipped;
+            }
+            if (isEquipped) {
                 //@ts-ignore
-                if (item.data.data.proficient) {
+                let isProficient = item.data.data.proficient;
+                if (veitem && item.id === veitem._id) {
+                    isProficient = veitem.proficient;
+                }
+                if (isProficient) {
                     appliedWeight *= getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "profEquippedMultiplier");
                 }
                 else {

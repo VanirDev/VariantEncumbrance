@@ -3,15 +3,16 @@ import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } fr
 //@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl} from "./VariantEncumbranceImpl";
+import { EncumbranceData } from "./VariantEncumbranceModels";
 
 
 export let readyHooks = async () => {
 
-  Hooks.on('renderActorSheet', function (actorSheet:ActorSheet, htmlElement:JQuery<HTMLElement>, actorObject:any) {
+  Hooks.on('renderActorSheet', async function (actorSheet:ActorSheet, htmlElement:JQuery<HTMLElement>, actorObject:any) {
     if (actorObject.isCharacter) {
       let actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
-      let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity);
-
+      let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null);
+      // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
       let encumbranceElements;
       if (htmlElement[0].tagName === "FORM" && htmlElement[0].id === "") {
         encumbranceElements = htmlElement.find('.encumbrance')[0].children;
@@ -254,7 +255,10 @@ export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack
 
 // export async function _update(wrapped, data) {
 //   const actorEntity:Actor = this.actor;
-//   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+//   const isequipped = data.equipped;
+//   if(actorEntity && actorEntity.data.type === "character"){
+//     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+//   }
 //   return wrapped(data);
 // }
 

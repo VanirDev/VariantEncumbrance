@@ -1,4 +1,8 @@
 
+### Update 0.4.1
+
+- BUg fixing euiped and unequiped listener
+
 ### Update 0.4.0
 
 - Bug fix compatibility with invenotry + module
