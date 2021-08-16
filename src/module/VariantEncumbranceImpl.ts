@@ -9,7 +9,7 @@ import { preloadTemplates } from './preloadTemplates';
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config';
 import { log } from '../VariantEncumbrance';
-import { EncumbranceData, VariantEncumbranceEffectData, VariantEncumbranceItemData } from './VariantEncumbranceModels';
+import { EncumbranceData } from './VariantEncumbranceModels';
 import Effect from './Effect';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
@@ -33,96 +33,96 @@ export const ENCUMBRANCE_STATE = {
 
 export const VariantEncumbranceImpl = {
 
-	veItem : function(item:any):VariantEncumbranceItemData {
-		return {
-			_id: item._id,
-			weight: item.data.weight,
-			count: item.data.quantity,
-			totalWeight: item.data.weight * item.data.quantity,
-			proficient: item.data.proficient,
-			equipped: item.data.equipped
-		}
-	},
+	// veItem : function(item:any):VariantEncumbranceItemData {
+	// 	return {
+	// 		_id: item._id,
+	// 		weight: item.data.weight,
+	// 		count: item.data.quantity,
+	// 		totalWeight: item.data.weight * item.data.quantity,
+	// 		proficient: item.data.proficient,
+	// 		equipped: item.data.equipped
+	// 	}
+	// },
 
-	veItemString : function(item:any):VariantEncumbranceItemData {
-		return {
-			_id: item._id,
-			weight: item['data.weight'],
-			count: item['data.quantity'],
-			totalWeight: item['data.weight'] * item['data.quantity'],
-			proficient: item['data.proficient'],
-			equipped: item['data.equipped']
-		}
-	},
+	// veItemString : function(item:any):VariantEncumbranceItemData {
+	// 	return {
+	// 		_id: item._id,
+	// 		weight: item['data.weight'],
+	// 		count: item['data.quantity'],
+	// 		totalWeight: item['data.weight'] * item['data.quantity'],
+	// 		proficient: item['data.proficient'],
+	// 		equipped: item['data.equipped']
+	// 	}
+	// },
 
-	veEffect : function(effect):VariantEncumbranceEffectData {
-		let result:VariantEncumbranceEffectData = {
-			multiply: [],
-			add: []
-		}
+	// veEffect : function(effect):VariantEncumbranceEffectData {
+	// 	let result:VariantEncumbranceEffectData = {
+	// 		multiply: [],
+	// 		add: []
+	// 	}
 
-		if (!effect.disabled && effect.changes) {
-			effect.changes.forEach(change => {
-				if (change.key === "data.attributes.encumbrance.value") {
-					if (change.mode == 1) {
-						result.multiply.push(<number>change.value);
-					} else if (change.mode == 2) {
-						result.add.push(<number>change.value);
-					}
-				}
-			});
-		}
-		return result;
-	},
+	// 	if (!effect.disabled && effect.changes) {
+	// 		effect.changes.forEach(change => {
+	// 			if (change.key === "data.attributes.encumbrance.value") {
+	// 				if (change.mode == 1) {
+	// 					result.multiply.push(<number>change.value);
+	// 				} else if (change.mode == 2) {
+	// 					result.add.push(<number>change.value);
+	// 				}
+	// 			}
+	// 		});
+	// 	}
+	// 	return result;
+	// },
 
-	convertItemSet : function(actorEntity) {
-		let itemSet:any = {};
-		const weightlessCategoryIds:string[] = [];
-		const scopes = getGame().getPackageScopes();
+	// convertItemSet : function(actorEntity) {
+	// 	let itemSet:any = {};
+	// 	const weightlessCategoryIds:string[] = [];
+	// 	const scopes = getGame().getPackageScopes();
 
-		// Check for inventory-plus module
-		const invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
-		const hasInvPlus = scopes.includes(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME);
-		if (hasInvPlus && invPlusActive) {
-			const inventoryPlusCategories = actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'category');
-			if (inventoryPlusCategories) {
-				for (const categoryId in inventoryPlusCategories) {
-					if (inventoryPlusCategories[categoryId]?.ownWeight != 0) {
-						itemSet["i+" + categoryId] = {
-							_id: "i+" + categoryId,
-							totalWeight: inventoryPlusCategories[categoryId]?.ownWeight
-						};
-					}
-					if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
-						weightlessCategoryIds.push(categoryId);
-					}
-				}
-			}
-		}
-		actorEntity.items.forEach((item:Item) => {
-			//@ts-ignore
-			const hasWeight = !!item.data.data.weight;
-			const category:string = <string>item.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'category');
-			const isNotInWeightlessCategory = hasInvPlus && invPlusActive ? weightlessCategoryIds.indexOf(category) < 0 : true;
-			if (hasWeight && isNotInWeightlessCategory) {
-				itemSet[<string>item.data._id] = VariantEncumbranceImpl.veItem(item.data);
-			}
-		});
+	// 	// Check for inventory-plus module
+	// 	const invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
+	// 	const hasInvPlus = scopes.includes(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME);
+	// 	if (hasInvPlus && invPlusActive) {
+	// 		const inventoryPlusCategories = actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'category');
+	// 		if (inventoryPlusCategories) {
+	// 			for (const categoryId in inventoryPlusCategories) {
+	// 				if (inventoryPlusCategories[categoryId]?.ownWeight != 0) {
+	// 					itemSet["i+" + categoryId] = {
+	// 						_id: "i+" + categoryId,
+	// 						totalWeight: inventoryPlusCategories[categoryId]?.ownWeight
+	// 					};
+	// 				}
+	// 				if (inventoryPlusCategories.hasOwnProperty(categoryId) && inventoryPlusCategories[categoryId]?.ignoreWeight) {
+	// 					weightlessCategoryIds.push(categoryId);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	actorEntity.items.forEach((item:Item) => {
+	// 		//@ts-ignore
+	// 		const hasWeight = !!item.data.data.weight;
+	// 		const category:string = <string>item.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'category');
+	// 		const isNotInWeightlessCategory = hasInvPlus && invPlusActive ? weightlessCategoryIds.indexOf(category) < 0 : true;
+	// 		if (hasWeight && isNotInWeightlessCategory) {
+	// 			itemSet[<string>item.data._id] = VariantEncumbranceImpl.veItem(item.data);
+	// 		}
+	// 	});
 
-		return itemSet;
-	},
+	// 	return itemSet;
+	// },
 
-	convertEffectSet : function(actorEntity) {
-		let result = {}
-		actorEntity.effects.forEach(effect => {
-			result[effect.data._id] = VariantEncumbranceImpl.veEffect(effect.data);
-		})
-		return result;
-	},
+	// convertEffectSet : function(actorEntity) {
+	// 	let result = {}
+	// 	actorEntity.effects.forEach(effect => {
+	// 		result[effect.data._id] = VariantEncumbranceImpl.veEffect(effect.data);
+	// 	})
+	// 	return result;
+	// },
 
-	updateEncumbrance : async function (actorEntity:Actor, updatedItems:any[]|undefined, updatedEffect:ActiveEffect|undefined, mode:string) {
-		//getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" || 
-		if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled")) {		
+	updateEncumbrance : async function (actorEntity:Actor, updatedItems:any[]|undefined, updatedEffect?:ActiveEffect|undefined, mode?:string) {
+		//getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
+		if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "enabled")) {
 			if(hasProperty(actorEntity.data, 'flags.'+VARIANT_ENCUMBRANCE_FLAG)) {
 				actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
 			}
@@ -132,56 +132,56 @@ export const VariantEncumbranceImpl = {
 			throw new Error("Variant encumbrance not work with multiple item");
 		}
 
-		const itemSet = VariantEncumbranceImpl.convertItemSet(actorEntity);
+		// const itemSet = VariantEncumbranceImpl.convertItemSet(actorEntity);
 
-		const updatedItem:any = updatedItems ? (<any[]>updatedItems)[0]: undefined;
-		if (updatedItem) {
-			// On update operations, the actorEntity's items have not been updated.
-			// Override the entry for this item using the updatedItem data.
-			if(Object.keys(updatedItem).indexOf('data.weight') !== -1){
-				//@ts-ignore
-				if (mode == "add" && !!updatedItem['data.weight'] && <number>updatedItem['data.weight'] > 0 ) { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
-					//@ts-ignore
-					itemSet[<string>updatedItem._id] = VariantEncumbranceImpl.veItemString(updatedItem);
-				} else if (mode == "delete") {
-					//@ts-ignore
-					delete itemSet[updatedItem._id];
-				}
-			}else{
-				//@ts-ignore
-				if (mode == "add" && !!updatedItem.data.weight && <number>updatedItem.data.weight > 0 ) { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
-					//@ts-ignore
-					itemSet[<string>updatedItem._id] = VariantEncumbranceImpl.veItem(updatedItem);
-				} else if (mode == "delete") {
-					if (typeof updatedItem === 'string' || updatedItem instanceof String){
-						//@ts-ignore
-						delete itemSet[updatedItem];
-					}else{
-						//@ts-ignore
-						delete itemSet[updatedItem._id];
-					}
-				}
-			}
-			
-		}
+		// const updatedItem:any = updatedItems ? (<any[]>updatedItems)[0]: undefined;
+		// if (updatedItem) {
+		// 	// On update operations, the actorEntity's items have not been updated.
+		// 	// Override the entry for this item using the updatedItem data.
+		// 	if(Object.keys(updatedItem).indexOf('data.weight') !== -1){
+		// 		//@ts-ignore
+		// 		if (mode == "add" && !!updatedItem['data.weight'] && <number>updatedItem['data.weight'] > 0 ) { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
+		// 			//@ts-ignore
+		// 			itemSet[<string>updatedItem._id] = VariantEncumbranceImpl.veItemString(updatedItem);
+		// 		} else if (mode == "delete") {
+		// 			//@ts-ignore
+		// 			delete itemSet[updatedItem._id];
+		// 		}
+		// 	}else{
+		// 		//@ts-ignore
+		// 		if (mode == "add" && !!updatedItem.data.weight && <number>updatedItem.data.weight > 0 ) { // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
+		// 			//@ts-ignore
+		// 			itemSet[<string>updatedItem._id] = VariantEncumbranceImpl.veItem(updatedItem);
+		// 		} else if (mode == "delete") {
+		// 			if (typeof updatedItem === 'string' || updatedItem instanceof String){
+		// 				//@ts-ignore
+		// 				delete itemSet[updatedItem];
+		// 			}else{
+		// 				//@ts-ignore
+		// 				delete itemSet[updatedItem._id];
+		// 			}
+		// 		}
+		// 	}
 
-		const effectSet = VariantEncumbranceImpl.convertEffectSet(actorEntity);
-		if (updatedEffect) {
-			// On update operations, the actorEntity's effects have not been updated.
-			// Override the entry for this effect using the updatedActiveEffect data.
-			if (mode == "add") {
-				//@ts-ignore
-				effectSet[updatedEffect.data._id] = VariantEncumbranceImpl.veEffect(updatedEffect);
-			} else if (mode == "delete") {
-				if (typeof updatedEffect === 'string' || updatedEffect instanceof String){
-					//@ts-ignore
-					delete itemSet[updatedEffect];
-				}else{
-					//@ts-ignore
-					delete effectSet[updatedEffect.data._id];
-				}	
-			}
-		}
+		// }
+
+		// const effectSet = VariantEncumbranceImpl.convertEffectSet(actorEntity);
+		// if (updatedEffect) {
+		// 	// On update operations, the actorEntity's effects have not been updated.
+		// 	// Override the entry for this effect using the updatedActiveEffect data.
+		// 	if (mode == "add") {
+		// 		//@ts-ignore
+		// 		effectSet[updatedEffect.data._id] = VariantEncumbranceImpl.veEffect(updatedEffect);
+		// 	} else if (mode == "delete") {
+		// 		if (typeof updatedEffect === 'string' || updatedEffect instanceof String){
+		// 			//@ts-ignore
+		// 			delete itemSet[updatedEffect];
+		// 		}else{
+		// 			//@ts-ignore
+		// 			delete effectSet[updatedEffect.data._id];
+		// 		}
+		// 	}
+		// }
 		let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity); //, itemSet, effectSet
 
 		let effectEntityPresent:ActiveEffect|undefined;
@@ -216,7 +216,7 @@ export const VariantEncumbranceImpl = {
 						|| effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED
 						|| effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED
 						|| effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED){
-						
+
 						if (!effectEntityPresent) {
 							effectEntityPresent = effectEntity;
 						}else{
@@ -251,20 +251,20 @@ export const VariantEncumbranceImpl = {
 			effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
 		}
 
-		// Skip if name is the same.
-		if (effectName === effectEntityPresent?.data.label) {
+		// Skip if name is the same and the active effect is already present.
+		if (effectName === effectEntityPresent?.data.label && await VariantEncumbranceImpl.hasEffectApplied(effectName,actorEntity)) {
 			return;
 		}
 
 		let origin = `Actor.${actorEntity.data._id}`;
 		await VariantEncumbranceImpl.addEffect(effectName,actorEntity,origin,encumbranceData);
-		
+
 		// SEEM NOT NECESSARY
 
 		const tier = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'tier') || {};
 		const weight = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'weight') || {};
 		// const speed = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'speed') || {};
-		
+
 		const burrow = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'burrow') || {};
 		const climb = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'climb') || {};
 		const fly = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG,'fly') || {};
@@ -317,9 +317,6 @@ export const VariantEncumbranceImpl = {
 		// 	"pct": null,
 		// 	"encumbered": false
 		// }
-		// Inventory encumbrance
-		//@ts-ignore
-		actorEntity.data.data.attributes.encumbrance = this._computeEncumbrance(actorEntity.data);
 
 	},
 
@@ -564,7 +561,7 @@ export const VariantEncumbranceImpl = {
 	addDynamicEffects : async  function(effectName, actor, encumbranceData:EncumbranceData):Promise<Effect|null> {
 		const invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
 		switch (effectName.toLowerCase()) {
-			case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase():	
+			case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase():
 				{
 					if(await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,actor)){
 						await VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,actor);
@@ -841,7 +838,7 @@ export const VariantEncumbranceImpl = {
 	async addEffect(effectName:string, actor:Actor, origin, encumbranceData:EncumbranceData) {
 		// let effect = VariantEncumbranceImpl.findEffectByName(effectName);
 		//const actor = await VariantEncumbranceImpl._foundryHelpers.getActorByUuid(uuid);
-	
+
 		// if (effect.isDynamic) {
 		let effect:Effect|null = await VariantEncumbranceImpl.addDynamicEffects(effectName, actor, encumbranceData);
 		// }
@@ -854,7 +851,7 @@ export const VariantEncumbranceImpl = {
 			}
 			const activeEffectData = effect.convertToActiveEffectData(origin);
 			await actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
-		
+
 			log(`Added effect ${effect.name} to ${actor.name} - ${actor.id}`);
 		}
 	}
