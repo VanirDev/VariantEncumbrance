@@ -2,7 +2,7 @@
   "name": "VariantEncumbrance",
   "title": "Variant Encumbrance+Midi",
   "description": "A module for D&D 5th Edition, to automatically modify character carry weights to match the Variant Encumbrance optional rule set.",
-  "version": "0.3.9",
+  "version": "0.4.0",
   "author": "Vanir#0001 (discord), 47Y, p4535992",
   "type": "module",
 	"socket": true,

@@ -43,8 +43,9 @@ export let readyHooks = async () => {
     // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
     // });
     Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
-        if (!activeEffect?.data?.flags?.isConvenient)
+        if (!activeEffect?.data?.flags?.isConvenient) {
             return;
+        }
         const actorEntity = activeEffect.parent;
         if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
@@ -59,8 +60,9 @@ export let readyHooks = async () => {
     // Hooks.on('preDeleteActiveEffect', (activeEffect, config, userId) => {
     // });
     Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
-        if (!activeEffect?.data?.flags?.isConvenient)
+        if (!activeEffect?.data?.flags?.isConvenient) {
             return;
+        }
         const actorEntity = activeEffect.parent;
         if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
@@ -75,8 +77,9 @@ export let readyHooks = async () => {
     // Hooks.on('preUpdateActiveEffect', function (activeEffect, config, userId) {
     // });
     Hooks.on('updateActiveEffect', function (activeEffect, config, userId) {
-        if (!activeEffect?.data?.flags?.isConvenient)
+        if (!activeEffect?.data?.flags?.isConvenient) {
             return;
+        }
         const actorEntity = activeEffect.parent;
         if (actorEntity && actorEntity.data.type === "character") {
             if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {

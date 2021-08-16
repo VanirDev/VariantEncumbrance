@@ -9,7 +9,7 @@ export let readyHooks = async () => {
 
   Hooks.on('renderActorSheet', function (actorSheet:ActorSheet, htmlElement:JQuery<HTMLElement>, actorObject:any) {
     if (actorObject.isCharacter) {
-      let actorEntity = getGame().actors?.get(actorObject.actor._id);
+      let actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
       let encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity);
 
       let encumbranceElements;
@@ -53,8 +53,9 @@ export let readyHooks = async () => {
   // });
   
   Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
-    if (!activeEffect?.data?.flags?.isConvenient) return;
-  
+    if (!activeEffect?.data?.flags?.isConvenient){
+      return;
+    }
     const actorEntity:any  = activeEffect.parent;
     if(actorEntity && actorEntity.data.type === "character"){
       if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
@@ -73,7 +74,9 @@ export let readyHooks = async () => {
   // });
   
   Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
-    if (!activeEffect?.data?.flags?.isConvenient) return;
+    if (!activeEffect?.data?.flags?.isConvenient){
+      return;
+    }
   
     const actorEntity:any  = activeEffect.parent;
     if(actorEntity && actorEntity.data.type === "character"){
@@ -93,7 +96,9 @@ export let readyHooks = async () => {
   // });
 
   Hooks.on('updateActiveEffect', function (activeEffect, config, userId) {
-    if (!activeEffect?.data?.flags?.isConvenient) return;
+    if (!activeEffect?.data?.flags?.isConvenient){
+      return;
+    }
 
     const actorEntity:any  = activeEffect.parent;
     if(actorEntity && actorEntity.data.type === "character"){

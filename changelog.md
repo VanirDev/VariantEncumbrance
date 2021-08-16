@@ -1,8 +1,15 @@
+
+### Update 0.4.0
+
+- Bug fix compatibility with invenotry + module
+- Bug fix unequipped mutliplier set 0 still get weight and broke encumbrance calculation
+
 ### Update 0.3.9
 
     - Stupid , Stupid bug
     - Clean up code
     - Add check for active effect present when ecumerance leevel not change
+
 ### Update 0.3.8
 
   - Add implementation with the core foundry 0.8.8 and D&D5e 1.4.2 for encumbrance rule

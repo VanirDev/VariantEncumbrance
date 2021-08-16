@@ -3,7 +3,7 @@
  * Software License: Creative Commons Attributions International License
  */
 // Import JavaScript modules
-import { VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME, VARIANT_ENCUMBRANCE_MODULE_NAME, getGame, VARIANT_ENCUMBRANCE_FLAG } from "./settings.js";
+import { VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME, VARIANT_ENCUMBRANCE_MODULE_NAME, getGame, VARIANT_ENCUMBRANCE_FLAG } from "./settings.js";
 import { log } from "../VariantEncumbrance.js";
 import Effect from "./Effect.js";
 /* ------------------------------------ */
@@ -366,6 +366,7 @@ export const VariantEncumbranceImpl = {
         // }[actorEntity.data.data.traits.size] || 1;
         let mod = 1; //actorEntity.data.data.abilities.str.value;
         if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "sizeMultipliers")) {
+            //@ts-ignore
             const size = actorEntity.data.data.traits.size;
             if (size === "tiny") {
                 mod *= 0.5;
@@ -389,11 +390,13 @@ export const VariantEncumbranceImpl = {
                 mod *= 1;
             }
             // Powerful build support
+            //@ts-ignore
             if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) { //jshint ignore:line
                 // mod *= 2;
                 mod = Math.min(mod * 2, 8);
             }
         }
+        //@ts-ignore
         let strengthScore = actorEntity.data.data.abilities.str.value * mod;
         const lightMax = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "lightMultiplier") * strengthScore;
         const mediumMax = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "mediumMultiplier") * strengthScore;
@@ -413,18 +416,45 @@ export const VariantEncumbranceImpl = {
         // 	}
         // 	totalWeight += appliedWeight;
         // });
+        const invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
+        //const hasInvPlus = scopes.includes(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME);
         // Get the total weight from items
         const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
         let totalWeight = actorEntity.data.items.reduce((weight, item) => {
             if (!physicalItems.includes(item.type)) {
                 return weight;
             }
+            //@ts-ignore
             const q = item.data.data.quantity || 0;
-            const w = item.data.data.weight || 0;
+            //@ts-ignore
+            let w = item.data.data.weight || 0;
+            if (invPlusActive) {
+                const inventoryPlusCategories = actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys');
+                if (inventoryPlusCategories) {
+                    // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+                    for (const categoryId in inventoryPlusCategories) {
+                        if (item.type === categoryId) {
+                            // ignore weight
+                            let section = inventoryPlusCategories[categoryId];
+                            if (section?.ignoreWeight) {
+                                w = 0;
+                            }
+                            // Inerith weight
+                            if (Number(section?.ownWeight) > 0) {
+                                w = Number(section?.ownWeight);
+                            }
+                            // EXIT FOR
+                            break;
+                        }
+                    }
+                }
+            }
             // return weight + (q * w);
-            let appliedWeight = weight + (q * w);
-            if (item.equipped) {
-                if (item.proficient) {
+            let appliedWeight = (q * w);
+            //@ts-ignore
+            if (item.data.data.equipped) {
+                //@ts-ignore
+                if (item.data.data.proficient) {
                     appliedWeight *= getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "profEquippedMultiplier");
                 }
                 else {
@@ -432,12 +462,9 @@ export const VariantEncumbranceImpl = {
                 }
             }
             else {
-                // Manage inventory-plus category weigthless
-                if (!item._id.startsWith("i+")) {
-                    appliedWeight *= getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "unequippedMultiplier");
-                }
+                appliedWeight *= getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "unequippedMultiplier");
             }
-            return appliedWeight;
+            return weight + appliedWeight;
         }, 0);
         // if (getGame().settings.get("dnd5e", "currencyWeight")) {
         // 	let totalCoins = 0;
@@ -447,7 +474,9 @@ export const VariantEncumbranceImpl = {
         // 	totalWeight += totalCoins / <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "currencyWeight");
         // }
         // [Optional] add Currency Weight (for non-transformed actors)
+        //@ts-ignore
         if (getGame().settings.get("dnd5e", "currencyWeight") && actorEntity.data.data.currency) {
+            //@ts-ignore
             const currency = actorEntity.data.data.currency;
             const numCoins = Object.values(currency).reduce((val, denom) => val += Math.max(denom, 0), 0);
             //@ts-ignore
@@ -472,6 +501,7 @@ export const VariantEncumbranceImpl = {
             strengthMultiplier = CONFIG.DND5E.encumbrance.strMultiplier ? CONFIG.DND5E.encumbrance.strMultiplier : 15;
         }
         // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
+        //@ts-ignore
         const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
         const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
         // let weightMultipliers = [];
@@ -500,6 +530,7 @@ export const VariantEncumbranceImpl = {
         }
         // Inventory encumbrance
         // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
+        //@ts-ignore
         actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE };
         return {
             totalWeight: totalWeight,
