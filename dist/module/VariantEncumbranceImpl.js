@@ -6,6 +6,7 @@
 import { VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME, VARIANT_ENCUMBRANCE_MODULE_NAME, getGame, VARIANT_ENCUMBRANCE_FLAG } from "./settings.js";
 import { log } from "../VariantEncumbrance.js";
 import Effect from "./Effect.js";
+import { ENCUMBRANCE_STATE } from "./Hooks.js";
 /* ------------------------------------ */
 /* Constants         					*/
 /* ------------------------------------ */
@@ -14,12 +15,6 @@ export const ENCUMBRANCE_TIERS = {
     LIGHT: 1,
     HEAVY: 2,
     MAX: 3,
-};
-export const ENCUMBRANCE_STATE = {
-    UNENCUMBERED: "Unencumbered",
-    ENCUMBERED: "Encumbered",
-    HEAVILY_ENCUMBERED: "Heavily Encumbered",
-    OVERBURDENED: "Overburdened"
 };
 export const VariantEncumbranceImpl = {
     veItem: function (item) {

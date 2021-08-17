@@ -1,9 +1,21 @@
-import { warn } from "../VariantEncumbrance.js";
+import { warn, i18n } from "../VariantEncumbrance.js";
 import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings.js";
 //@ts-ignore
 import { DND5E } from "../../../systems/dnd5e/module/config.js";
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from "./VariantEncumbranceImpl.js";
+export let ENCUMBRANCE_STATE = {
+    UNENCUMBERED: "",
+    ENCUMBERED: "",
+    HEAVILY_ENCUMBERED: "",
+    OVERBURDENED: "" // "Overburdened"
+};
 export let readyHooks = async () => {
+    ENCUMBRANCE_STATE = {
+        UNENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + ".effect.name.unencumbered"),
+        ENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + ".effect.name.encumbered"),
+        HEAVILY_ENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + ".effect.name.heavily_encumbered"),
+        OVERBURDENED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + ".effect.name.overburdened") // "Overburdened"
+    };
     Hooks.on('renderActorSheet', async function (actorSheet, htmlElement, actorObject) {
         if (actorObject.isCharacter) {
             let actorEntity = getGame().actors?.get(actorObject.actor._id);
@@ -116,7 +128,7 @@ export const setupHooks = async () => {
     // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.getEmbeddedCollection", getEmbeddedCollection, "MIXED")
     // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareDerivedData", prepareDerivedData, "WRAPPER");
     //@ts-ignore
-    // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE") 
+    // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE")
     //@ts-ignore
     // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
     //@ts-ignore
@@ -194,12 +206,12 @@ export async function deleteDocuments(wrapped, ids = [], context = { parent: {},
 ////   const actorEntity:Actor = this.actor;
 ////   updateEncumbrance(actorEntity, undefined, undefined, "add");
 ////   wrapped();
-////   return;  
+////   return;
 //// }
 // export function getEmbeddedCollection(wrapped, type) {
 //   const actorEntity:Actor = this.actor;
 //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
-//   return wrapped(type); 
+//   return wrapped(type);
 // }
 // export async function _onCreateDocuments(wrapped, items, context) {
 //   for ( let item of items ) {

@@ -12,6 +12,7 @@ import { log } from '../VariantEncumbrance';
 import { EncumbranceData, VariantEncumbranceItemData } from './VariantEncumbranceModels';
 import Effect from './Effect';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import { ENCUMBRANCE_STATE } from './Hooks';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -22,14 +23,6 @@ export const ENCUMBRANCE_TIERS = {
 	HEAVY: 2,
 	MAX: 3,
 };
-
-export const ENCUMBRANCE_STATE = {
-	UNENCUMBERED : "Unencumbered",
-	ENCUMBERED : "Encumbered",
-	HEAVILY_ENCUMBERED : "Heavily Encumbered",
-	OVERBURDENED : "Overburdened"
-}
-
 
 export const VariantEncumbranceImpl = {
 
@@ -182,7 +175,7 @@ export const VariantEncumbranceImpl = {
 		// 		}
 		// 	}
 		// }
-		
+
 		const updatedItem:any = updatedItems ? (<any[]>updatedItems)[0]: undefined;
 		let veitem:VariantEncumbranceItemData|null = null;
 		if (updatedItem) {
@@ -532,7 +525,7 @@ export const VariantEncumbranceImpl = {
 				let isProficient:boolean = item.data.data.proficient;
 				if(veitem && item.id === veitem._id){
 					isProficient = veitem.proficient;
-				}	
+				}
 				if (isProficient) {
 					appliedWeight *= <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "profEquippedMultiplier");
 				} else {

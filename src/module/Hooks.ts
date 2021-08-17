@@ -6,7 +6,21 @@ import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl} from "./VariantEncumbranceIm
 import { EncumbranceData } from "./VariantEncumbranceModels";
 
 
+export let ENCUMBRANCE_STATE = {
+	UNENCUMBERED : "", // "Unencumbered",
+	ENCUMBERED : "", // "Encumbered",
+	HEAVILY_ENCUMBERED : "",  // "Heavily Encumbered",
+	OVERBURDENED : "" // "Overburdened"
+}
+
 export let readyHooks = async () => {
+
+  ENCUMBRANCE_STATE = {
+    UNENCUMBERED : i18n(VARIANT_ENCUMBRANCE_MODULE_NAME+".effect.name.unencumbered"), // "Unencumbered",
+    ENCUMBERED : i18n(VARIANT_ENCUMBRANCE_MODULE_NAME+".effect.name.encumbered"), // "Encumbered",
+    HEAVILY_ENCUMBERED : i18n(VARIANT_ENCUMBRANCE_MODULE_NAME+".effect.name.heavily_encumbered"),  // "Heavily Encumbered",
+    OVERBURDENED : i18n(VARIANT_ENCUMBRANCE_MODULE_NAME+".effect.name.overburdened") // "Overburdened"
+  }
 
   Hooks.on('renderActorSheet', async function (actorSheet:ActorSheet, htmlElement:JQuery<HTMLElement>, actorObject:any) {
     if (actorObject.isCharacter) {
@@ -52,7 +66,7 @@ export let readyHooks = async () => {
   // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
 
   // });
-  
+
   Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
     if (!activeEffect?.data?.flags?.isConvenient){
       return;
@@ -69,16 +83,16 @@ export let readyHooks = async () => {
       }
     }
   });
-  
+
   // Hooks.on('preDeleteActiveEffect', (activeEffect, config, userId) => {
 
   // });
-  
+
   Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
     if (!activeEffect?.data?.flags?.isConvenient){
       return;
     }
-  
+
     const actorEntity:any  = activeEffect.parent;
     if(actorEntity && actorEntity.data.type === "character"){
       if (getGame().userId !== userId || actorEntity.constructor.name != "Actor5e") {
@@ -144,7 +158,7 @@ export const setupHooks = async () => {
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareDerivedData", prepareDerivedData, "WRAPPER");
 
   //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE") 
+  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE")
   //@ts-ignore
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
   //@ts-ignore
@@ -236,13 +250,13 @@ export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack
 ////   const actorEntity:Actor = this.actor;
 ////   updateEncumbrance(actorEntity, undefined, undefined, "add");
 ////   wrapped();
-////   return;  
+////   return;
 //// }
 
 // export function getEmbeddedCollection(wrapped, type) {
 //   const actorEntity:Actor = this.actor;
 //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
-//   return wrapped(type); 
+//   return wrapped(type);
 // }
 
 // export async function _onCreateDocuments(wrapped, items, context) {
