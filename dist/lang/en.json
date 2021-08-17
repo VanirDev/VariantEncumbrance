@@ -38,7 +38,7 @@
 	"VariantEncumbrance.setting.heavyWeightDecrease.name": "Encumbered Speed Decrease",
 	"VariantEncumbrance.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered.",
 
-  "VariantEncumbrance.effect.name.unencumbered": "Unencumbered",
+	"VariantEncumbrance.effect.name.unencumbered": "Unencumbered",
 	"VariantEncumbrance.effect.name.encumbered": "Encumbered",
 	"VariantEncumbrance.effect.name.heavily_encumbered": "Heavily Encumbered",
 	"VariantEncumbrance.effect.name.overburdened": "Overburdened"
