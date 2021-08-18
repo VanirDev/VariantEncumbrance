@@ -206,6 +206,19 @@ export const VariantEncumbranceImpl = {
 
 		for (const effectEntity of actorEntity.effects) {
 			const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+			// Remove all encumbrance effect renamed from the player
+			if(effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') &&
+				(effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED
+				&& effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED
+				&& effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED
+				&& effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
+				)
+			){
+				if(await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity,actorEntity)){
+					await VariantEncumbranceImpl.removeEffectFromId(effectEntity,actorEntity);
+				}
+        continue;
+			}
 			if(!effectNameToSet){
 				continue;
 			}
@@ -698,7 +711,7 @@ export const VariantEncumbranceImpl = {
 		}
     },
 
-	_encumbered : function() {
+	_encumbered : function():Effect {
 		return new Effect({
 			name: ENCUMBRANCE_STATE.ENCUMBERED,
 			description: 'Lowers movement by 10 ft.',
@@ -868,12 +881,30 @@ export const VariantEncumbranceImpl = {
 	 * applied to
 	 * @returns {boolean} true if the effect is applied, false otherwise
 	 */
-	async hasEffectApplied(effectName, actor):Promise<boolean> {
+	async hasEffectApplied(effectName:string, actor:Actor):Promise<boolean> {
 		// const actor = await this._foundryHelpers.getActorByUuid(uuid);
 		return actor?.data?.effects?.some(
 			(activeEffect) =>
-			activeEffect?.data?.flags?.isConvenient &&
-			activeEffect?.data?.label == effectName
+			<boolean>activeEffect?.data?.flags?.isConvenient &&
+			<string>activeEffect?.data?.label == effectName
+		);
+	},
+
+	/**
+	 * Checks to see if any of the current active effects applied to the actor
+	 * with the given UUID match the effect name and are a convenient effect
+	 *
+	 * @param {string} effectName - the name of the effect to check
+	 * @param {string} uuid - the uuid of the actor to see if the effect is
+	 * applied to
+	 * @returns {boolean} true if the effect is applied, false otherwise
+	 */
+	async hasEffectAppliedFromId(effect:ActiveEffect, actor:Actor):Promise<boolean> {
+		// const actor = await this._foundryHelpers.getActorByUuid(uuid);
+		return actor?.data?.effects?.some(
+			(activeEffect) =>
+			<boolean>activeEffect?.data?.flags?.isConvenient &&
+			<string>activeEffect?.data?._id == effect.id
 		);
 	},
 
@@ -884,17 +915,31 @@ export const VariantEncumbranceImpl = {
 	 * @param {string} effectName - the name of the effect to remove
 	 * @param {string} uuid - the uuid of the actor to remove the effect from
 	 */
-	async removeEffect(effectName, actor) {
+	async removeEffect(effectName:string, actor:Actor) {
 		// const actor = await this._foundryHelpers.getActorByUuid(uuid);
 		const effectToRemove = actor.data.effects.find(
 			(activeEffect) =>
-			activeEffect?.data?.flags?.isConvenient &&
-			activeEffect?.data?.label == effectName
+			<boolean>activeEffect?.data?.flags?.isConvenient &&
+			<string>activeEffect?.data?.label == effectName
 		);
 
 		if (effectToRemove) {
-			await actor.deleteEmbeddedDocuments('ActiveEffect', [effectToRemove.id]);
+			await actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
 			log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
+		}
+	},
+
+	/**
+	 * Removes the effect with the provided name from an actor matching the
+	 * provided UUID
+	 *
+	 * @param {string} effectName - the name of the effect to remove
+	 * @param {string} uuid - the uuid of the actor to remove the effect from
+	 */
+	 async removeEffectFromId(effectToRemove:ActiveEffect, actor:Actor) {
+		if (effectToRemove) {
+			await actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
+			log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
 		}
 	},
 
@@ -905,7 +950,7 @@ export const VariantEncumbranceImpl = {
 	 * @param {string} effectName - the name of the effect to add
 	 * @param {string} uuid - the uuid of the actor to add the effect to
 	 */
-	async addEffect(effectName:string, actor:Actor, origin, encumbranceData:EncumbranceData) {
+	async addEffect(effectName:string, actor:Actor, origin:string, encumbranceData:EncumbranceData) {
 		// let effect = VariantEncumbranceImpl.findEffectByName(effectName);
 		//const actor = await VariantEncumbranceImpl._foundryHelpers.getActorByUuid(uuid);
 

@@ -1,4 +1,8 @@
 
+
+### Update 0.4.3
+
+- Bug fix make sure to remove active effect if you rename the active effect
 ### Update 0.4.2
 
 - Add more i18n support

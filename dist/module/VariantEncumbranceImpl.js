@@ -185,6 +185,17 @@ export const VariantEncumbranceImpl = {
         let effectEntityPresent;
         for (const effectEntity of actorEntity.effects) {
             const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+            // Remove all encumbrance effect renamed from the player
+            if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') &&
+                (effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED
+                    && effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED
+                    && effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED
+                    && effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED)) {
+                if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
+                    await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+                }
+                continue;
+            }
             if (!effectNameToSet) {
                 continue;
             }
@@ -816,6 +827,20 @@ export const VariantEncumbranceImpl = {
             activeEffect?.data?.label == effectName);
     },
     /**
+     * Checks to see if any of the current active effects applied to the actor
+     * with the given UUID match the effect name and are a convenient effect
+     *
+     * @param {string} effectName - the name of the effect to check
+     * @param {string} uuid - the uuid of the actor to see if the effect is
+     * applied to
+     * @returns {boolean} true if the effect is applied, false otherwise
+     */
+    async hasEffectAppliedFromId(effect, actor) {
+        // const actor = await this._foundryHelpers.getActorByUuid(uuid);
+        return actor?.data?.effects?.some((activeEffect) => activeEffect?.data?.flags?.isConvenient &&
+            activeEffect?.data?._id == effect.id);
+    },
+    /**
      * Removes the effect with the provided name from an actor matching the
      * provided UUID
      *
@@ -829,6 +854,19 @@ export const VariantEncumbranceImpl = {
         if (effectToRemove) {
             await actor.deleteEmbeddedDocuments('ActiveEffect', [effectToRemove.id]);
             log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
+        }
+    },
+    /**
+     * Removes the effect with the provided name from an actor matching the
+     * provided UUID
+     *
+     * @param {string} effectName - the name of the effect to remove
+     * @param {string} uuid - the uuid of the actor to remove the effect from
+     */
+    async removeEffectFromId(effectToRemove, actor) {
+        if (effectToRemove) {
+            await actor.deleteEmbeddedDocuments('ActiveEffect', [effectToRemove.id]);
+            log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
         }
     },
     /**
