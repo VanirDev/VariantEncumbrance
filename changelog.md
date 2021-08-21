@@ -1,5 +1,10 @@
 
 
+### Update 0.4.4
+
+- Some minor bug fix,
+- Applied prettier
+
 ### Update 0.4.3
 
 - Bug fix make sure to remove active effect if you rename the active effect

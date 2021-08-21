@@ -3,7 +3,7 @@ import { getGame } from "./settings.js";
  * Data class for defining an effect
  */
 export default class Effect {
-    constructor({ name = "", description = "", icon = "", seconds = NaN, turns = NaN, isDynamic = false, isViewable = true, flags = {}, changes = [], atlChanges = [], tokenMagicChanges = [], nestedEffects = [], }) {
+    constructor({ name = '', description = '', icon = '', seconds = NaN, turns = NaN, isDynamic = false, isViewable = true, flags = {}, changes = [], atlChanges = [], tokenMagicChanges = [], nestedEffects = [], }) {
         this.isDynamic = false;
         this.isViewable = true;
         this.changes = [];
