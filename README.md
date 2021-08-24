@@ -1,10 +1,10 @@
-![](https://img.shields.io/badge/Foundry-v0.8.8-blue)
+![](https://img.shields.io/badge/Foundry-v0.8.9-blue)
 ![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
 ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
 ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
 ![](https://img.shields.io/badge/Inventory+-v0.3.1-red) 
 ![](https://img.shields.io/badge/DAE-v0.2.34-red)
-![](https://img.shields.io/badge/Foundry-v0.8.8-informational)
+![](https://img.shields.io/badge/Foundry-v0.8.9-informational)
 
 # Variant Encumbrance
 
@@ -15,7 +15,7 @@ For 0.8.8 foundryvtt support a core implementation of this rule, but there is no
 
 ### This is just a personal fork for this module , hoping to see back VanirDev because i don't hav so much time for this
 
-## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder or rename the file from .ts to .js
+## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
 ## Installation
 
@@ -25,7 +25,7 @@ To install this module manually:
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
-`https://raw.githubusercontent.com/p4535992/VariantEncumbrance/master/src/module.json`
+`https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/src/module.json`
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
@@ -194,7 +194,7 @@ npm run-script package
 
 ## Issues
 
-Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/p4535992/VariantEncumbrance/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/VanirDev/VariantEncumbrance/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
 
 ## Acknowledgements
 

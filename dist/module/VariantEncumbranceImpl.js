@@ -537,16 +537,16 @@ export const VariantEncumbranceImpl = {
             const numCoins = Object.values(currency).reduce((val, denom) => (val += Math.max(denom, 0)), 0);
             //@ts-ignore
             let currencyPerWeight = getGame().settings.get('dnd5e', 'metricWeightUnits')
-                //@ts-ignore
-                ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
-                //@ts-ignore
-                : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+                ? //@ts-ignore
+                    CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+                : //@ts-ignore
+                    CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
             // BUG FOUNDRY ????? currencyPerweight is undefined
             if (!currencyPerWeight) {
                 //@ts-ignore
                 currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight
-                    //@ts-ignore
-                    ? CONFIG.DND5E.encumbrance.currencyPerWeight
+                    ? //@ts-ignore
+                        CONFIG.DND5E.encumbrance.currencyPerWeight
                     : 50;
             }
             if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight')) {
@@ -558,10 +558,10 @@ export const VariantEncumbranceImpl = {
         totalWeight = totalWeight.toNearest(0.1);
         //@ts-ignore
         let strengthMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-            //@ts-ignore
-            ? CONFIG.DND5E.encumbrance.strMultiplier.metric
-            //@ts-ignore
-            : CONFIG.DND5E.encumbrance.strMultiplier.imperial;
+            ? //@ts-ignore
+                CONFIG.DND5E.encumbrance.strMultiplier.metric
+            : //@ts-ignore
+                CONFIG.DND5E.encumbrance.strMultiplier.imperial;
         // BUG FOUNDRY ????? strengthMultiplier is undefined
         if (!strengthMultiplier) {
             //@ts-ignore
