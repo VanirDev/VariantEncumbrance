@@ -11,9 +11,7 @@
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
 
-For 0.8.8 foundryvtt support a core implementation of this rule, but there is no problem the module should be synchronized with the core fucntionality, but you need the module if you want to apply some customized rule
-
-### This is just a personal fork for this module , hoping to see back VanirDev because i don't hav so much time for this
+For D&D5e 1.4.2 and newer the system supports a core implementation of this encumbrance rule. The module should be synchronized with the core functionality, but this module will permit more customised rules for your weight calculations/thresholds and the speed penalties are integrated with active effect.
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
@@ -25,7 +23,9 @@ To install this module manually:
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
+
 `https://raw.githubusercontent.com/VanirDev/VariantEncumbrance/master/src/module.json`
+
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
