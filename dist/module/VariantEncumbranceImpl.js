@@ -157,6 +157,11 @@ export const VariantEncumbranceImpl = {
         const updatedItem = updatedItems ? updatedItems[0] : undefined;
         let veitem = null;
         if (updatedItem) {
+            const itemID = updatedItem?.id ? updatedItem?.id : updatedItem._id;
+            const type = itemID ? actorEntity.items.get(itemID).type : undefined;
+            if (type == 'feat' || type == 'spell') {
+                return;
+            }
             // On update operations, the actorEntity's items have not been updated.
             // Override the entry for this item using the updatedItem data.
             if (Object.keys(updatedItem).indexOf('data.weight') !== -1) {

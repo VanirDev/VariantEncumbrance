@@ -1,5 +1,8 @@
 
 
+### Update 0.4.6
+
+- Add check for "feat" and "spell" type for a more performance update of the sheet
 
 ### Update 0.4.5
 
