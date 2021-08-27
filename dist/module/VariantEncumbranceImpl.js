@@ -100,7 +100,7 @@ export const VariantEncumbranceImpl = {
         //getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
         if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled')) {
             if (hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
-                actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
+                await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
             }
             return;
         }
@@ -287,40 +287,40 @@ export const VariantEncumbranceImpl = {
         const swim = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'swim') || {};
         const walk = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'walk') || {};
         if (tier !== encumbranceData.encumbranceTier) {
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier', encumbranceData.encumbranceTier);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier', encumbranceData.encumbranceTier);
         }
         if (weight !== encumbranceData.totalWeight) {
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'weight', encumbranceData.totalWeight);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'weight', encumbranceData.totalWeight);
         }
         // //@ts-ignore
         // if (speed !== actorEntity.data.data.attributes.movement.walk) {
         // 	//@ts-ignore
-        // 	actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "speed", actorEntity.data.data.attributes.movement.walk);
+        // 	await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "speed", actorEntity.data.data.attributes.movement.walk);
         // }
         //@ts-ignore
         if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
             //@ts-ignore
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'burrow', actorEntity.data.data.attributes.movement.burrow);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'burrow', actorEntity.data.data.attributes.movement.burrow);
         }
         //@ts-ignore
         if (climb !== actorEntity.data.data.attributes.movement.climb) {
             //@ts-ignore
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'climb', actorEntity.data.data.attributes.movement.climb);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'climb', actorEntity.data.data.attributes.movement.climb);
         }
         //@ts-ignore
         if (fly !== actorEntity.data.data.attributes.movement.fly) {
             //@ts-ignore
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'fly', actorEntity.data.data.attributes.movement.fly);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'fly', actorEntity.data.data.attributes.movement.fly);
         }
         //@ts-ignore
         if (swim !== actorEntity.data.data.attributes.movement.swim) {
             //@ts-ignore
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'swim', actorEntity.data.data.attributes.movement.swim);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'swim', actorEntity.data.data.attributes.movement.swim);
         }
         //@ts-ignore
         if (walk !== actorEntity.data.data.attributes.movement.walk) {
             //@ts-ignore
-            actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'walk', actorEntity.data.data.attributes.movement.walk);
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'walk', actorEntity.data.data.attributes.movement.walk);
         }
         // FINAL SET ENCUMBRANCE ????
         // data.data.attributes.encumbrance {
