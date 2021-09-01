@@ -36,8 +36,10 @@ export const readyHooks = async () => {
 
         if (
           !encumbranceElements &&
-          getGame().modules.get('compact-beyond-5e-sheet')?.active &&
-          actorSheet.template.includes('compact-beyond-5e-sheet')
+          ((getGame().modules.get('compact-beyond-5e-sheet')?.active &&
+            actorSheet.template.includes('compact-beyond-5e-sheet')) ||
+            (getGame().modules.get('dndbeyond-character-sheet')?.active &&
+              actorSheet.template.includes('dndbeyond-character-sheet')))
         ) {
           // TODO visual integration with compact-beyond-5e-sheet
           //const div = document.createElement('div');
