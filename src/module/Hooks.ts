@@ -29,52 +29,112 @@ export const readyHooks = async () => {
         // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
-          encumbranceElements = htmlElement.find('.encumbrance')[0].children;
+          encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
         } else {
-          encumbranceElements = htmlElement.find('.encumbrance')[0].children;
+          encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
         }
 
-        encumbranceElements[2].style.left = (encumbranceData.lightMax / encumbranceData.heavyMax) * 100 + '%';
-        encumbranceElements[3].style.left = (encumbranceData.lightMax / encumbranceData.heavyMax) * 100 + '%';
-        encumbranceElements[4].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax) * 100 + '%';
-        encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax) * 100 + '%';
-        encumbranceElements[0].style.cssText =
-          'width: ' +
-          Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax) * 100, 0), 99.8) +
-          '%;';
-        // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
-        encumbranceElements[1].textContent =
-          Math.round(encumbranceData.totalWeight * 100) / 100 +
-          '/' +
-          encumbranceData.heavyMax +
-          ' ' +
-          getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+        if (
+          !encumbranceElements &&
+          getGame().modules.get('compact-beyond-5e-sheet')?.active &&
+          actorSheet.template.includes('compact-beyond-5e-sheet')
+        ) {
+          // TODO visual integration with compact-beyond-5e-sheet
+          //const div = document.createElement('div');
+          //div.classList.add('encumbrance');
+          /*
+          const div = htmlElement.find('.encumberance')[0];
 
-        encumbranceElements[0].classList.remove('medium');
-        encumbranceElements[0].classList.remove('heavy');
+          const span1 = document.createElement('span');
+          span1.classList.add('encumbrance-bar');
 
-        if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
-          encumbranceElements[0].classList.add('medium');
-        }
-        if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
-          encumbranceElements[0].classList.add('heavy');
-        }
-        if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
-          encumbranceElements[0].classList.add('max');
+          const span2 = document.createElement('span');
+          span2.classList.add('encumbrance-label');
+
+          const icon1 = document.createElement('icon');
+          icon1.classList.add('encumbrance-breakpoint');
+          icon1.classList.add('encumbrance-33');
+          icon1.classList.add('arrow-up');
+
+          const icon2 = document.createElement('icon');
+          icon2.classList.add('encumbrance-breakpoint');
+          icon2.classList.add('encumbrance-33');
+          icon2.classList.add('arrow-down');
+
+          const icon3 = document.createElement('icon');
+          icon3.classList.add('encumbrance-breakpoint');
+          icon3.classList.add('encumbrance-66');
+          icon3.classList.add('arrow-up');
+
+          const icon4 = document.createElement('icon');
+          icon4.classList.add('encumbrance-breakpoint');
+          icon4.classList.add('encumbrance-66');
+          icon4.classList.add('arrow-down');
+
+          div.appendChild(span1)
+          div.appendChild(span2)
+          div.appendChild(icon1)
+          div.appendChild(icon2)
+          div.appendChild(icon3)
+          div.appendChild(icon4)
+
+          encumbranceElements = htmlElement.find('.encumberance')[0]?.children;
+          */
+          /*
+          <div class="encumbrance ">
+                <span class="encumbrance-bar" style="width:36.166666666666664%"></span>
+                <span class="encumbrance-label">108.5 / 300</span>
+                <i class="encumbrance-breakpoint encumbrance-33 arrow-up"></i>
+                <i class="encumbrance-breakpoint encumbrance-33 arrow-down"></i>
+                <i class="encumbrance-breakpoint encumbrance-66 arrow-up"></i>
+                <i class="encumbrance-breakpoint encumbrance-66 arrow-down"></i>
+          </div>
+          */
         }
 
-        htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-up').parent().css('margin-bottom', '4px');
-        htmlElement
-          .find('.encumbrance-breakpoint.encumbrance-33.arrow-up')
-          .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.lightMax}<div>`);
-        htmlElement
-          .find('.encumbrance-breakpoint.encumbrance-66.arrow-up')
-          .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.mediumMax}<div>`);
-        encumbranceElements[1].insertAdjacentHTML(
-          'afterend',
-          `<span class="VELabel" style="right:0%">${encumbranceData.heavyMax}</span>`,
-        );
-        encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
+        if (encumbranceElements) {
+          encumbranceElements[2].style.left = (encumbranceData.lightMax / encumbranceData.heavyMax) * 100 + '%';
+          encumbranceElements[3].style.left = (encumbranceData.lightMax / encumbranceData.heavyMax) * 100 + '%';
+          encumbranceElements[4].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax) * 100 + '%';
+          encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax) * 100 + '%';
+          encumbranceElements[0].style.cssText =
+            'width: ' +
+            Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax) * 100, 0), 99.8) +
+            '%;';
+          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
+          encumbranceElements[1].textContent =
+            Math.round(encumbranceData.totalWeight * 100) / 100 +
+            '/' +
+            encumbranceData.heavyMax +
+            ' ' +
+            getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+
+          encumbranceElements[0].classList.remove('medium');
+          encumbranceElements[0].classList.remove('heavy');
+
+          if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
+            encumbranceElements[0].classList.add('medium');
+          }
+          if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
+            encumbranceElements[0].classList.add('heavy');
+          }
+          if (encumbranceData.encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
+            encumbranceElements[0].classList.add('max');
+          }
+
+          htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-up').parent().css('margin-bottom', '4px');
+          htmlElement
+            .find('.encumbrance-breakpoint.encumbrance-33.arrow-up')
+            .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.lightMax}<div>`);
+          htmlElement
+            .find('.encumbrance-breakpoint.encumbrance-66.arrow-up')
+            .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.mediumMax}<div>`);
+          encumbranceElements[1].insertAdjacentHTML(
+            'afterend',
+            `<span class="VELabel" style="right:0%">${encumbranceData.heavyMax}</span>`,
+          );
+          encumbranceElements[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
+        }
       }
     },
   );

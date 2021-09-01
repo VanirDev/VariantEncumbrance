@@ -299,28 +299,33 @@ export const VariantEncumbranceImpl = {
         // }
         //@ts-ignore
         if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'burrow', 
             //@ts-ignore
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'burrow', actorEntity.data.data.attributes.movement.burrow);
+            actorEntity.data.data.attributes.movement.burrow);
         }
         //@ts-ignore
         if (climb !== actorEntity.data.data.attributes.movement.climb) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'climb', 
             //@ts-ignore
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'climb', actorEntity.data.data.attributes.movement.climb);
+            actorEntity.data.data.attributes.movement.climb);
         }
         //@ts-ignore
         if (fly !== actorEntity.data.data.attributes.movement.fly) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'fly', 
             //@ts-ignore
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'fly', actorEntity.data.data.attributes.movement.fly);
+            actorEntity.data.data.attributes.movement.fly);
         }
         //@ts-ignore
         if (swim !== actorEntity.data.data.attributes.movement.swim) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'swim', 
             //@ts-ignore
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'swim', actorEntity.data.data.attributes.movement.swim);
+            actorEntity.data.data.attributes.movement.swim);
         }
         //@ts-ignore
         if (walk !== actorEntity.data.data.attributes.movement.walk) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'walk', 
             //@ts-ignore
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'walk', actorEntity.data.data.attributes.movement.walk);
+            actorEntity.data.data.attributes.movement.walk);
         }
         // FINAL SET ENCUMBRANCE ????
         // data.data.attributes.encumbrance {

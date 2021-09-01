@@ -127,7 +127,7 @@ export default class Effect {
 /**
  * Contains any constants for the application
  */
- export class Constants {
+export class Constants {
   static COLORS = {
     COLD_FIRE: '#389888',
     FIRE: '#f98026',

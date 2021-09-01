@@ -1,4 +1,8 @@
 
+### Update 0.5.0
+
+- change module if from "VariantEncumbrance" to "variant-encumbrance-dnd5e" for future management of foundry
+- partial integration for character sheet "compact-beyond-5e-sheet"
 
 ### Update 0.4.6
 

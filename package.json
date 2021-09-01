@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "VariantEncumbrance",
+  "name": "variant-encumbrance-dnd5e",
   "version": "0.4.6",
   "description": "VariantEncumbrance+Midi",
   "scripts": {
