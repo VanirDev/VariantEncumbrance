@@ -1,4 +1,12 @@
 
+### Update 0.5.2
+
+- Bug fix module.json
+
+### Update 0.5.1
+
+- Add check for dndbeyond character sheet
+
 ### Update 0.5.0
 
 - change module if from "VariantEncumbrance" to "variant-encumbrance-dnd5e" for future management of foundry
