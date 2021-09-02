@@ -217,12 +217,14 @@ export const VariantEncumbranceImpl = {
                     }
                 }
                 else {
-                    if (mode == EncumbranceMode.ADD || mode == EncumbranceMode.UPDATE) {
-                        // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
-                        veitem = VariantEncumbranceImpl.veItem(updatedItem);
-                    }
-                    else if (mode == EncumbranceMode.DELETE) {
-                        veitem = VariantEncumbranceImpl.veItem(updatedItem);
+                    if (updatedItem?.data) {
+                        if (mode == EncumbranceMode.ADD || mode == EncumbranceMode.UPDATE) {
+                            // dirty fix https://github.com/VanirDev/VariantEncumbrance/issues/34
+                            veitem = VariantEncumbranceImpl.veItem(updatedItem);
+                        }
+                        else if (mode == EncumbranceMode.DELETE) {
+                            veitem = VariantEncumbranceImpl.veItem(updatedItem);
+                        }
                     }
                 }
             }
@@ -277,13 +279,14 @@ export const VariantEncumbranceImpl = {
                         effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
                         effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
                         effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED) {
-                        // if (!effectEntityPresent) {
-                        //   effectEntityPresent = effectEntity;
-                        // } else {
-                        if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-                            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                        if (!effectEntityPresent) {
+                            effectEntityPresent = effectEntity;
                         }
-                        // }
+                        else {
+                            if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                                await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                            }
+                        }
                     }
                 }
             }

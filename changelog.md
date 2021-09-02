@@ -1,4 +1,8 @@
 
+### Update 0.5.7
+
+- Bug fix for remove effect before the item is check twice for a strange use case
+
 ### Update 0.5.6
 
 - Bug fix DnD beyond Character sheet
