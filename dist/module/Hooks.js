@@ -3,6 +3,7 @@ import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } fr
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from "./VariantEncumbranceImpl.js";
+import { EncumbranceMode } from "./VariantEncumbranceModels.js";
 export let ENCUMBRANCE_STATE = {
     UNENCUMBERED: '',
     ENCUMBERED: '',
@@ -19,7 +20,7 @@ export const readyHooks = async () => {
     Hooks.on('renderActorSheet', async function (actorSheet, htmlElement, actorObject) {
         if (actorObject.isCharacter) {
             const actorEntity = getGame().actors?.get(actorObject.actor._id);
-            const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null);
+            const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
             // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
             let encumbranceElements;
             if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
@@ -137,7 +138,7 @@ export const readyHooks = async () => {
                 return;
             }
             if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, 'add');
+                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.ADD);
             }
         }
     });
@@ -154,7 +155,7 @@ export const readyHooks = async () => {
                 return;
             }
             if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, 'delete');
+                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.DELETE);
             }
         }
     });
@@ -171,7 +172,7 @@ export const readyHooks = async () => {
                 return;
             }
             if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, 'add');
+                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.UPDATE);
             }
         }
     });
@@ -185,8 +186,13 @@ export const setupHooks = async () => {
     // libWrapper.register(VARIANT_ENCUMBRANCE_VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onCreateDocuments', ItemsPrototypeOnCreateDocumentsHandler, 'MIXED');
     // //@ts-ignore
     // libWrapper.register(VARIANT_ENCUMBRANCE_VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onDeleteDocuments', ItemsPrototypeOnDeleteDocumentsHandler, 'MIXED');
-    //@ts-ignore
-    libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'CONFIG.Item.documentClass.prototype.getEmbeddedDocument', getEmbeddedDocument, 'MIXED');
+    // //@ts-ignore
+    // libWrapper.register(
+    //   VARIANT_ENCUMBRANCE_MODULE_NAME,
+    //   'CONFIG.Item.documentClass.prototype.getEmbeddedDocument',
+    //   getEmbeddedDocument,
+    //   'MIXED',
+    // );
     //@ts-ignore
     libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'CONFIG.Item.documentClass.prototype.createEmbeddedDocuments', createEmbeddedDocuments, 'MIXED');
     //@ts-ignore
@@ -221,31 +227,31 @@ export const initHooks = () => {
     DND5E.encumbrance.currencyPerWeight = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
     // CONFIG.debug.hooks = true; // For debugging only
 };
-export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
-    const actorEntity = this.actor;
-    if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, 'add');
-    }
-    return wrapped(embeddedName, id, { strict });
-}
+// export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
+//   const actorEntity: Actor = this.actor;
+//   if (actorEntity && actorEntity.data.type === 'character') {
+//     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+//   }
+//   return wrapped(embeddedName, id, { strict });
+// }
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
     const actorEntity = this.actor;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, 'add');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
     }
     return wrapped(embeddedName, data, context);
 }
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], options = {}) {
     const actorEntity = this.actor;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, 'delete');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
     }
     return wrapped(embeddedName, ids, options);
 }
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options) {
     const actorEntity = this.actor;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, 'add');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.UPDATE);
     }
     return wrapped(embeddedName, data, options);
 }
@@ -253,7 +259,7 @@ export async function createDocuments(wrapped, data, context = { parent: {}, pac
     const { parent, pack, options } = context;
     const actorEntity = parent;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, 'add');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
     }
     return wrapped(data, context);
 }
@@ -261,7 +267,7 @@ export async function updateDocuments(wrapped, updates = [], context = { parent:
     const { parent, pack, options } = context;
     const actorEntity = parent;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, 'add');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, EncumbranceMode.UPDATE);
     }
     return wrapped(updates, context);
 }
@@ -269,7 +275,7 @@ export async function deleteDocuments(wrapped, ids = [], context = { parent: {},
     const { parent, pack, options } = context;
     const actorEntity = parent;
     if (actorEntity && actorEntity.data.type === 'character') {
-        VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, 'delete');
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
     }
     return wrapped(ids, context);
 }
