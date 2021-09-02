@@ -1,4 +1,9 @@
 
+
+### Update 0.5.3
+
+- Bug fix on the new module id
+
 ### Update 0.5.2
 
 - Bug fix module.json
