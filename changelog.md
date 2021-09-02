@@ -1,4 +1,8 @@
 
+### Update 0.5.6
+
+- Bug fix DnD beyond Character sheet
+
 ### Update 0.5.5
 
 - Some other bug fixing

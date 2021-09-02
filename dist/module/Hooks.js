@@ -34,6 +34,14 @@ export const readyHooks = async () => {
                     actorSheet.template.includes('compact-beyond-5e-sheet')) ||
                     (getGame().modules.get('dndbeyond-character-sheet')?.active &&
                         actorSheet.template.includes('dndbeyond-character-sheet')))) {
+                const encumbranceElementsTmp = htmlElement.find('.encumberance')[0]?.children;
+                encumbranceElementsTmp[0].textContent =
+                    'Weight Carried: ' +
+                        Math.round(encumbranceData.totalWeight * 100) / 100 +
+                        ' ' +
+                        getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+                encumbranceElementsTmp[1].textContent =
+                    'Max: ' + encumbranceData.heavyMax + ' ' + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
                 // TODO visual integration with compact-beyond-5e-sheet
                 //const div = document.createElement('div');
                 //div.classList.add('encumbrance');
