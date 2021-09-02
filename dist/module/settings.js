@@ -1,7 +1,7 @@
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 export const VARIANT_ENCUMBRANCE_MODULE_NAME = 'variant-encumbrance-dnd5e';
-export const VARIANT_ENCUMBRANCE_FLAG = 'VariantEncumbrance';
+export const VARIANT_ENCUMBRANCE_FLAG = 'variant-encumbrance-dnd5e';
 export const VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME = 'inventory-plus';
 export const VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME = 'midi-qol';
 /**

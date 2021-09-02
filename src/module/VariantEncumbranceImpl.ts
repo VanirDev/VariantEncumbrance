@@ -140,7 +140,14 @@ export const VariantEncumbranceImpl = {
     //getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
     if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled')) {
       if (hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
-        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
+        // await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'weight');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'burrow');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'climb');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'fly');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'swim');
+        await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'walk');
       }
       return;
     }
@@ -246,9 +253,9 @@ export const VariantEncumbranceImpl = {
       }
     }
 
-    if (!hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
-      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG, {});
-    }
+    // if (!hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
+    //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_FLAG, {});
+    // }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veitem, mode); //, itemSet, effectSet
 
@@ -258,7 +265,7 @@ export const VariantEncumbranceImpl = {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
       // Remove all encumbrance effect renamed from the player
       if (
-        effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') &&
+        effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier') &&
         effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
@@ -272,7 +279,7 @@ export const VariantEncumbranceImpl = {
       if (!effectNameToSet) {
         continue;
       }
-      if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier') === 'number') {
+      if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier') === 'number') {
         if (!effectEntityPresent && effectEntity?.data?.label) {
           effectEntityPresent = effectEntity;
         } else {
@@ -281,7 +288,7 @@ export const VariantEncumbranceImpl = {
             await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
           }
         }
-      } else if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier')) {
+      } else if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier')) {
         if (!effectEntityPresent && effectEntity?.data?.label) {
           effectEntityPresent = effectEntity;
         } else {
@@ -348,6 +355,9 @@ export const VariantEncumbranceImpl = {
     await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
 
     // SEEM NOT NECESSARY
+    // if (!hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
+    //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_FLAG, {});
+    // }
 
     const tier = hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG + '.tier')
       ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier')
@@ -374,21 +384,21 @@ export const VariantEncumbranceImpl = {
       : {};
 
     if (tier !== encumbranceData.encumbranceTier) {
-      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'tier', encumbranceData.encumbranceTier);
+      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, 'tier', encumbranceData.encumbranceTier);
     }
     if (weight !== encumbranceData.totalWeight) {
-      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, 'weight', encumbranceData.totalWeight);
+      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, 'weight', encumbranceData.totalWeight);
     }
     // //@ts-ignore
     // if (speed !== actorEntity.data.data.attributes.movement.walk) {
     // 	//@ts-ignore
-    // 	await actorEntity.setFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, "speed", actorEntity.data.data.attributes.movement.walk);
+    // 	await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, "speed", actorEntity.data.data.attributes.movement.walk);
     // }
 
     //@ts-ignore
     if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
       await actorEntity.setFlag(
-        VARIANT_ENCUMBRANCE_MODULE_NAME,
+        VARIANT_ENCUMBRANCE_FLAG,
         'burrow',
         //@ts-ignore
         actorEntity.data.data.attributes.movement.burrow,
@@ -397,7 +407,7 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     if (climb !== actorEntity.data.data.attributes.movement.climb) {
       await actorEntity.setFlag(
-        VARIANT_ENCUMBRANCE_MODULE_NAME,
+        VARIANT_ENCUMBRANCE_FLAG,
         'climb',
         //@ts-ignore
         actorEntity.data.data.attributes.movement.climb,
@@ -406,7 +416,7 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     if (fly !== actorEntity.data.data.attributes.movement.fly) {
       await actorEntity.setFlag(
-        VARIANT_ENCUMBRANCE_MODULE_NAME,
+        VARIANT_ENCUMBRANCE_FLAG,
         'fly',
         //@ts-ignore
         actorEntity.data.data.attributes.movement.fly,
@@ -415,7 +425,7 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     if (swim !== actorEntity.data.data.attributes.movement.swim) {
       await actorEntity.setFlag(
-        VARIANT_ENCUMBRANCE_MODULE_NAME,
+        VARIANT_ENCUMBRANCE_FLAG,
         'swim',
         //@ts-ignore
         actorEntity.data.data.attributes.movement.swim,
@@ -424,7 +434,7 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     if (walk !== actorEntity.data.data.attributes.movement.walk) {
       await actorEntity.setFlag(
-        VARIANT_ENCUMBRANCE_MODULE_NAME,
+        VARIANT_ENCUMBRANCE_FLAG,
         'walk',
         //@ts-ignore
         actorEntity.data.data.attributes.movement.walk,
