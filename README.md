@@ -39,7 +39,12 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 **NOTE: If "midiqol" is deactivated or not present, the active effects will apply only the speed reduction without the variations of advantage and disadvantage typical of the rule**
 
-#### Character Sheets compatibility
+## Known Issue
+
+- Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Esperot than me to handle this
+- Limitation on some character sheet, open a issue and i'll try to make a fix.
+
+## Character Sheets compatibility
 
 * D&D5e Default Character Sheet
 
@@ -48,13 +53,11 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 * [Compact DnDBeyond-like 5e Character Sheet](https://github.com/ElfFriend-DnD/foundryvtt-compactBeyond5eSheet) Active effect work, but there is no visual bar , the values of the weight are synchronized with the system core
 * [DNDBeyond Character Sheet for 5E](https://github.com/jopeek/fvtt-dndbeyond-character-sheet) Active effect work, but there is no visual bar , the values of the weight are synchronized with the system core
 
-#### Other Modules Compatability
+## Other Modules Compatability
 
 * [Inventory +](https://github.com/syl3r86/inventory-plus)
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
-
-## [Update Changelogs](./changelog.md)
 
 <!--
 <details>
@@ -103,7 +106,7 @@ In the module settings, custom multipliers are available for unequipped, equippe
 Should you wish to integrate some of Variant Encumbrance's calculations into your own modules, there is now a flag which stores the actor's encumbrance tier, weight, and modified speed. Encumbrance tier is presented as 0, 1, 2, 3, as Unencumbered, Encumbered, Heavily Encumbered, Over Encumbered, respectively.
 
 ```javascript
-VariantEncumbrance:
+variant-encumbrance-dnd5e:
 {
   burrow: 0,
   climb: 0,
@@ -112,6 +115,14 @@ VariantEncumbrance:
   walk: 30,
   tier: 0,
   weight: 21.25
+  data: {
+    totalWeight: 0,
+    lightMax: 50,
+    mediumMax: 100,
+    heavyMax: 150,
+    encumbranceTier: 0,
+    speedDecrease: 0
+  }
 }
 ```
 

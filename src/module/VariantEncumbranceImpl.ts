@@ -22,6 +22,7 @@ import {
 } from './VariantEncumbranceModels';
 import Effect from './Effect';
 import { ENCUMBRANCE_STATE } from './Hooks';
+import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -103,9 +104,9 @@ export const VariantEncumbranceImpl = {
         if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)) {
           await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK);
         }
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-          await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
-        }
+        // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+        //   await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+        // }
       }
       return;
     }
@@ -130,9 +131,12 @@ export const VariantEncumbranceImpl = {
         return;
       }
 
-      // On update operations, the actorEntity's items have not been updated.
-      // Override the entry for this item using the updatedItem data.
-      updatedItem = itemCurrent;
+      if (itemCurrent) {
+        // On update operations, the actorEntity's items have not been updated.
+        // Override the entry for this item using the updatedItem data.
+        mergeObject(<ItemData>itemCurrent.data, updatedItem);
+        updatedItem = itemCurrent;
+      }
 
       if (updatedItem) {
         if (Object.keys(updatedItem).indexOf('data.weight') !== -1) {
@@ -284,9 +288,9 @@ export const VariantEncumbranceImpl = {
     const walk = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)
       ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK)
       : {};
-    const data = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)
-      ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
-      : encumbranceData;
+    // const data = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)
+    //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
+    //   : encumbranceData;
 
     if (tier !== encumbranceData.encumbranceTier) {
       await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER, encumbranceData.encumbranceTier);
@@ -340,7 +344,7 @@ export const VariantEncumbranceImpl = {
       );
     }
 
-    await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, data);
+    // await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, data);
 
     return encumbranceData;
   },

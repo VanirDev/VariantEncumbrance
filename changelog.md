@@ -1,4 +1,10 @@
 
+### Update 0.5.8 I'm Soorrry
+
+- Bunch of bug fix (ty gambet)
+- Clean up some code
+- Little performance
+
 ### Update 0.5.7
 
 - Bug fix for remove effect before the item is check twice for a strange use case

@@ -27,12 +27,8 @@ export const readyHooks = async () => {
         const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
         //const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
         // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
-        let encumbranceData: EncumbranceData;
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-          encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
-        } else {
-          encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
-        }
+        const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
+        await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
           encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
