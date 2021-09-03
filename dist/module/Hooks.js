@@ -135,6 +135,20 @@ export const readyHooks = async () => {
             }
         }
     });
+    Hooks.on('updateActor', async (actorEntity, data) => {
+        if (actorEntity && actorEntity.data.type === 'character') {
+            // For our purpose we filter only the STR modifier action
+            //@ts-ignore
+            if (data?.data?.abilities?.str) {
+                //@ts-ignore
+                if (actorEntity.data.data.abilities.str.value !== data?.data?.abilities?.str.value) {
+                    //@ts-ignore
+                    actorEntity.data.data.abilities.str.value = data?.data?.abilities?.str.value;
+                }
+                await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+            }
+        }
+    });
     // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
     // });
     // Hooks.on('createActiveEffect', (activeEffect, config, userId) => {

@@ -1,4 +1,8 @@
 
+### Update 0.5.10
+
+- Bug fix , when update the strentgh of the character the value of the weight carried doesn't update right away
+
 ### Update 0.5.9 I'm so Soorrry
 
 - Bug fix when try to delete a item

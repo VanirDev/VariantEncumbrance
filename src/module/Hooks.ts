@@ -4,6 +4,7 @@ import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } fr
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
+import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -152,6 +153,21 @@ export const readyHooks = async () => {
       }
     },
   );
+
+  Hooks.on('updateActor', async (actorEntity: Actor, data) => {
+    if (actorEntity && actorEntity.data.type === 'character') {
+      // For our purpose we filter only the STR modifier action
+      //@ts-ignore
+      if (data?.data?.abilities?.str) {
+        //@ts-ignore
+        if (actorEntity.data.data.abilities.str.value !== data?.data?.abilities?.str.value) {
+          //@ts-ignore
+          actorEntity.data.data.abilities.str.value = data?.data?.abilities?.str.value;
+        }
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+      }
+    }
+  });
 
   // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
 

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "variant-encumbrance-dnd5e",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "VariantEncumbrance+Midi",
   "scripts": {
     "package": "gulp package",
