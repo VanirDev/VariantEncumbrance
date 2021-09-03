@@ -1,4 +1,8 @@
 
+### Update 0.5.9 I'm so Soorrry
+
+- Bug fix when try to delete a item
+
 ### Update 0.5.8 I'm Soorrry
 
 - Bunch of bug fix (ty gambet)

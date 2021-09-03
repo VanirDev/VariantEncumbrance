@@ -106,9 +106,14 @@ export const VariantEncumbranceImpl = {
                 return;
             }
             if (itemCurrent) {
-                // On update operations, the actorEntity's items have not been updated.
-                // Override the entry for this item using the updatedItem data.
-                mergeObject(itemCurrent.data, updatedItem);
+                if (typeof updatedItem === 'string' || updatedItem instanceof String) {
+                    // Do nothing
+                }
+                else {
+                    // On update operations, the actorEntity's items have not been updated.
+                    // Override the entry for this item using the updatedItem data.
+                    mergeObject(itemCurrent.data, updatedItem);
+                }
                 updatedItem = itemCurrent;
             }
             if (updatedItem) {
