@@ -3,7 +3,7 @@ import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } fr
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from "./VariantEncumbranceImpl.js";
-import { EncumbranceMode } from "./VariantEncumbranceModels.js";
+import { EncumbranceMode, EncumbranceFlags } from "./VariantEncumbranceModels.js";
 export let ENCUMBRANCE_STATE = {
     UNENCUMBERED: '',
     ENCUMBERED: '',
@@ -20,8 +20,15 @@ export const readyHooks = async () => {
     Hooks.on('renderActorSheet', async function (actorSheet, htmlElement, actorObject) {
         if (actorObject.isCharacter) {
             const actorEntity = getGame().actors?.get(actorObject.actor._id);
-            const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
+            //const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
             // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
+            let encumbranceData;
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+                encumbranceData = actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+            }
+            else {
+                encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
+            }
             let encumbranceElements;
             if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
                 encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
@@ -135,65 +142,58 @@ export const readyHooks = async () => {
     });
     // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
     // });
-    Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
-        if (!activeEffect?.data?.flags?.isConvenient) {
-            return;
-        }
-        const actorEntity = activeEffect.parent;
-        if (actorEntity && actorEntity.data.type === 'character') {
-            if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
-                // Only act if we initiated the update ourselves, and the effect is a child of a character
-                return;
-            }
-            if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.ADD);
-            }
-        }
-    });
+    // Hooks.on('createActiveEffect', (activeEffect, config, userId) => {
+    //   if (!activeEffect?.data?.flags?.isConvenient) {
+    //     return;
+    //   }
+    //   const actorEntity: any = activeEffect.parent;
+    //   if (actorEntity && actorEntity.data.type === 'character') {
+    //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+    //       // Only act if we initiated the update ourselves, and the effect is a child of a character
+    //       return;
+    //     }
+    //     if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+    //       VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.ADD);
+    //     }
+    //   }
+    // });
     // Hooks.on('preDeleteActiveEffect', (activeEffect, config, userId) => {
     // });
-    Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
-        if (!activeEffect?.data?.flags?.isConvenient) {
-            return;
-        }
-        const actorEntity = activeEffect.parent;
-        if (actorEntity && actorEntity.data.type === 'character') {
-            if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
-                // Only act if we initiated the update ourselves, and the effect is a child of a character
-                return;
-            }
-            if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.DELETE);
-            }
-        }
-    });
+    // Hooks.on('deleteActiveEffect', (activeEffect, config, userId) => {
+    //   if (!activeEffect?.data?.flags?.isConvenient) {
+    //     return;
+    //   }
+    //   const actorEntity: any = activeEffect.parent;
+    //   if (actorEntity && actorEntity.data.type === 'character') {
+    //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+    //       // Only act if we initiated the update ourselves, and the effect is a child of a character
+    //       return;
+    //     }
+    //     if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+    //       VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.DELETE);
+    //     }
+    //   }
+    // });
     // Hooks.on('preUpdateActiveEffect', function (activeEffect, config, userId) {
     // });
-    Hooks.on('updateActiveEffect', function (activeEffect, config, userId) {
-        if (!activeEffect?.data?.flags?.isConvenient) {
-            return;
-        }
-        const actorEntity = activeEffect.parent;
-        if (actorEntity && actorEntity.data.type === 'character') {
-            if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
-                // Only act if we initiated the update ourselves, and the effect is a child of a character
-                return;
-            }
-            if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
-                VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.UPDATE);
-            }
-        }
-    });
+    // Hooks.on('updateActiveEffect', function (activeEffect, config, userId) {
+    //   if (!activeEffect?.data?.flags?.isConvenient) {
+    //     return;
+    //   }
+    //   const actorEntity: any = activeEffect.parent;
+    //   if (actorEntity && actorEntity.data.type === 'character') {
+    //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+    //       // Only act if we initiated the update ourselves, and the effect is a child of a character
+    //       return;
+    //     }
+    //     if (!activeEffect?.data?.flags[VARIANT_ENCUMBRANCE_FLAG]) {
+    //       VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, activeEffect, EncumbranceMode.UPDATE);
+    //     }
+    //   }
+    // });
 };
 export const setupHooks = async () => {
     // setup all the hooks
-    // DEPRECATED
-    // //@ts-ignore
-    // libWrapper.register(VARIANT_ENCUMBRANCE_VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onUpdateDocuments', ItemsPrototypeOnUpdateDocumentsHandler, 'MIXED');
-    // //@ts-ignore
-    // libWrapper.register(VARIANT_ENCUMBRANCE_VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onCreateDocuments', ItemsPrototypeOnCreateDocumentsHandler, 'MIXED');
-    // //@ts-ignore
-    // libWrapper.register(VARIANT_ENCUMBRANCE_VARIANT_ENCUMBRANCE_MODULE_NAME, 'Items.prototype._onDeleteDocuments', ItemsPrototypeOnDeleteDocumentsHandler, 'MIXED');
     // //@ts-ignore
     // libWrapper.register(
     //   VARIANT_ENCUMBRANCE_MODULE_NAME,

@@ -22,6 +22,17 @@ export class EncumbranceData {
   speedDecrease: number;
 }
 
+export enum EncumbranceFlags {
+  TIER = 'tier',
+  WEIGHT = 'weight',
+  BURROW = 'burrow',
+  CLIMB = 'climb',
+  FLY = 'fly',
+  SWIM = 'swim',
+  WALK = 'walk',
+  DATA = 'data',
+}
+
 // export class EncumbranceFlagData {
 //   tier: number;
 //   weight: number;

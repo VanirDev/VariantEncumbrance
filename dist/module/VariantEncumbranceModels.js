@@ -6,6 +6,17 @@ export class VariantEncumbranceItemData {
 // }
 export class EncumbranceData {
 }
+export var EncumbranceFlags;
+(function (EncumbranceFlags) {
+    EncumbranceFlags["TIER"] = "tier";
+    EncumbranceFlags["WEIGHT"] = "weight";
+    EncumbranceFlags["BURROW"] = "burrow";
+    EncumbranceFlags["CLIMB"] = "climb";
+    EncumbranceFlags["FLY"] = "fly";
+    EncumbranceFlags["SWIM"] = "swim";
+    EncumbranceFlags["WALK"] = "walk";
+    EncumbranceFlags["DATA"] = "data";
+})(EncumbranceFlags || (EncumbranceFlags = {}));
 // export class EncumbranceFlagData {
 //   tier: number;
 //   weight: number;
