@@ -1,4 +1,13 @@
 
+### Update 0.5.11 Gambet performance
+
+- Some performance on the code
+- Update the flags (remove redundant info)
+- bug fix any time you equip an item, it seems to flash the whole inventory list
+- bug fix weight is undefined for some strange use case
+- bug fix solved "Nan/Nan" for item with weight undefined
+- big bug fix on active effect been removed (stupid,stupid,stupid)
+
 ### Update 0.5.10
 
 - Bug fix , when update the strentgh of the character the value of the weight carried doesn't update right away

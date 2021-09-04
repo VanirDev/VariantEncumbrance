@@ -23,8 +23,8 @@ export class EncumbranceData {
 }
 
 export enum EncumbranceFlags {
-  TIER = 'tier',
-  WEIGHT = 'weight',
+  // TIER = 'tier',
+  // WEIGHT = 'weight',
   BURROW = 'burrow',
   CLIMB = 'climb',
   FLY = 'fly',

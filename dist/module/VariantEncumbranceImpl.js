@@ -21,14 +21,13 @@ export const VariantEncumbranceImpl = {
     veItem: function (item) {
         return {
             _id: item._id,
-            weight: item.data.weight ? item.data.weight : item.data.data?.weight,
-            quantity: item.data.quantity ? item.data.quantity : item.data.data?.quantity,
-            totalWeight: item.data.weight
-                ? item.data.weight * item.data.quantity
-                : item.data.data.weight * item.data.data?.quantity,
-            proficient: item.data.proficient ? item.data.proficient : item.data.data?.proficient,
-            equipped: item.data.equipped ? item.data.equipped : item.data.data?.equipped,
-            type: item.type ? item.type : item.data.type ? item.data.type : item.data.data?.type,
+            weight: item.data?.weight ? item.data?.weight : item.data?.data?.weight,
+            quantity: item.data?.quantity ? item.data?.quantity : item.data?.data?.quantity,
+            totalWeight: (item.data?.weight ? item.data?.weight : item.data?.data?.weight) *
+                (item.data?.quantity ? item.data?.quantity : item.data?.data?.quantity),
+            proficient: item.data?.proficient ? item.data?.proficient : item.data?.data?.proficient,
+            equipped: item.data?.equipped ? item.data?.equipped : item.data?.data?.equipped,
+            type: item.type ? item.type : item.data?.type ? item.data?.type : item.data?.data?.type,
         };
     },
     veItemString: function (item) {
@@ -55,36 +54,38 @@ export const VariantEncumbranceImpl = {
     },
     updateEncumbrance: async function (actorEntity, updatedItems, updatedEffect, mode) {
         //getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
+        /*
         if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled')) {
-            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
-                // await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.CLIMB}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.FLY}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.SWIM}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM);
-                }
-                if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)) {
-                    await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK);
-                }
-                // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-                //   await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
-                // }
+          if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
+           
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER);
             }
-            return;
+            // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)) {
+            //   await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT);
+            // }
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW);
+            }
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.CLIMB}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB);
+            }
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.FLY}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY);
+            }
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.SWIM}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM);
+            }
+            if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)) {
+              await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK);
+            }
+            // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+            //   await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+            // }
+          }
+          return;
         }
+        */
         if (updatedItems && updatedItems?.length > 1) {
             throw new Error('Variant encumbrance not work with multiple item');
         }
@@ -149,43 +150,117 @@ export const VariantEncumbranceImpl = {
         //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_FLAG, {});
         // }
         const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veitem, mode); //, itemSet, effectSet
+        // SEEM NOT NECESSARY
+        // const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
+        //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
+        //   : {};
+        // const weight = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)
+        //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT)
+        //   : {};
+        const burrow = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)
+            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW)
+            : {};
+        const climb = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.CLIMB}`)
+            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB)
+            : {};
+        const fly = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.FLY}`)
+            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY)
+            : {};
+        const swim = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.SWIM}`)
+            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM)
+            : {};
+        const walk = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)
+            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK)
+            : {};
+        // const data = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)
+        //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
+        //   : encumbranceData;
+        // if (tier !== encumbranceData.encumbranceTier) {
+        //   await actorEntity.setFlag(
+        //     VARIANT_ENCUMBRANCE_FLAG,
+        //     EncumbranceFlags.TIER,
+        //     encumbranceData.encumbranceTier
+        //   );
+        // }
+        // if (weight !== encumbranceData.totalWeight) {
+        //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT, encumbranceData.totalWeight);
+        // }
+        //@ts-ignore
+        if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW, 
+            //@ts-ignore
+            actorEntity.data.data.attributes.movement.burrow);
+        }
+        //@ts-ignore
+        if (climb !== actorEntity.data.data.attributes.movement.climb) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB, 
+            //@ts-ignore
+            actorEntity.data.data.attributes.movement.climb);
+        }
+        //@ts-ignore
+        if (fly !== actorEntity.data.data.attributes.movement.fly) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY, 
+            //@ts-ignore
+            actorEntity.data.data.attributes.movement.fly);
+        }
+        //@ts-ignore
+        if (swim !== actorEntity.data.data.attributes.movement.swim) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM, 
+            //@ts-ignore
+            actorEntity.data.data.attributes.movement.swim);
+        }
+        //@ts-ignore
+        if (walk !== actorEntity.data.data.attributes.movement.walk) {
+            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK, 
+            //@ts-ignore
+            actorEntity.data.data.attributes.movement.walk);
+        }
+        await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
         let effectEntityPresent;
         for (const effectEntity of actorEntity.effects) {
             const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
             // Remove all encumbrance effect renamed from the player
-            if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER) &&
+            if (encumbranceData.encumbranceTier &&
+                effectEntity.data.flags['variant-encumbrance-dnd5e'] &&
                 effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
                 effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
                 effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
                 effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED) {
-                if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
-                    await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-                }
+                // if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
+                await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+                // }
+                continue;
+            }
+            // Old setting
+            if (effectEntity.data.flags['VariantEncumbrance']) {
+                // if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
+                await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+                // }
                 continue;
             }
             if (!effectNameToSet) {
                 continue;
             }
-            if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER) === 'number') {
+            if (typeof encumbranceData.encumbranceTier === 'number') {
                 if (!effectEntityPresent && effectEntity?.data?.label) {
                     effectEntityPresent = effectEntity;
                 }
                 else {
                     // Cannot have more than one effect tier present at any one time
-                    if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-                        await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-                    }
+                    // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                    await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    // }
                 }
             }
-            else if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)) {
-                if (!effectEntityPresent && effectEntity?.data?.label) {
+            else if (encumbranceData.encumbranceTier) {
+                if (!effectEntityPresent && effectEntity?.data?.label && effectEntity.data.flags['variant-encumbrance-dnd5e']) {
                     effectEntityPresent = effectEntity;
                 }
                 else {
                     // Cannot have more than one effect tier present at any one time
-                    if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-                        await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-                    }
+                    // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                    await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                    // }
                 }
             }
             else {
@@ -199,9 +274,9 @@ export const VariantEncumbranceImpl = {
                             effectEntityPresent = effectEntity;
                         }
                         else {
-                            if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-                                await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-                            }
+                            // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+                            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+                            // }
                         }
                     }
                 }
@@ -237,68 +312,6 @@ export const VariantEncumbranceImpl = {
         }
         const origin = `Actor.${actorEntity.data._id}`;
         await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
-        // SEEM NOT NECESSARY
-        const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
-            : {};
-        const weight = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT)
-            : {};
-        const burrow = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW)
-            : {};
-        const climb = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.CLIMB}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB)
-            : {};
-        const fly = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.FLY}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY)
-            : {};
-        const swim = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.SWIM}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM)
-            : {};
-        const walk = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WALK}`)
-            ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK)
-            : {};
-        // const data = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)
-        //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
-        //   : encumbranceData;
-        if (tier !== encumbranceData.encumbranceTier) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER, encumbranceData.encumbranceTier);
-        }
-        if (weight !== encumbranceData.totalWeight) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT, encumbranceData.totalWeight);
-        }
-        //@ts-ignore
-        if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW, 
-            //@ts-ignore
-            actorEntity.data.data.attributes.movement.burrow);
-        }
-        //@ts-ignore
-        if (climb !== actorEntity.data.data.attributes.movement.climb) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.CLIMB, 
-            //@ts-ignore
-            actorEntity.data.data.attributes.movement.climb);
-        }
-        //@ts-ignore
-        if (fly !== actorEntity.data.data.attributes.movement.fly) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.FLY, 
-            //@ts-ignore
-            actorEntity.data.data.attributes.movement.fly);
-        }
-        //@ts-ignore
-        if (swim !== actorEntity.data.data.attributes.movement.swim) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.SWIM, 
-            //@ts-ignore
-            actorEntity.data.data.attributes.movement.swim);
-        }
-        //@ts-ignore
-        if (walk !== actorEntity.data.data.attributes.movement.walk) {
-            await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WALK, 
-            //@ts-ignore
-            actorEntity.data.data.attributes.movement.walk);
-        }
-        // await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, data);
         return encumbranceData;
     },
     /**
@@ -612,7 +625,7 @@ export const VariantEncumbranceImpl = {
             encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
         };
         return {
-            totalWeight: totalWeight,
+            totalWeight: totalWeight.toNearest(0.1),
             lightMax: lightMax,
             mediumMax: mediumMax,
             heavyMax: heavyMax,
@@ -906,8 +919,13 @@ export const VariantEncumbranceImpl = {
         // }
         if (effect) {
             // VariantEncumbranceImpl._handleIntegrations(effect);
+            // effect.flags = {
+            //   VariantEncumbrance: {
+            //     tier: encumbranceData.encumbranceTier,
+            //   },
+            // };
             effect.flags = {
-                VariantEncumbrance: {
+                'variant-encumbrance-dnd5e': {
                     tier: encumbranceData.encumbranceTier,
                 },
             };

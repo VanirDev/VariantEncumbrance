@@ -8,8 +8,8 @@ export class EncumbranceData {
 }
 export var EncumbranceFlags;
 (function (EncumbranceFlags) {
-    EncumbranceFlags["TIER"] = "tier";
-    EncumbranceFlags["WEIGHT"] = "weight";
+    // TIER = 'tier',
+    // WEIGHT = 'weight',
     EncumbranceFlags["BURROW"] = "burrow";
     EncumbranceFlags["CLIMB"] = "climb";
     EncumbranceFlags["FLY"] = "fly";

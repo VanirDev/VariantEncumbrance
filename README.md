@@ -113,8 +113,6 @@ variant-encumbrance-dnd5e:
   fly: 0,
   swim: 0,
   walk: 30,
-  tier: 0,
-  weight: 21.25
   data: {
     totalWeight: 0,
     lightMax: 50,

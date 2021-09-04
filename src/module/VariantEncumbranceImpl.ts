@@ -38,14 +38,14 @@ export const VariantEncumbranceImpl = {
   veItem: function (item: any): VariantEncumbranceItemData {
     return {
       _id: item._id,
-      weight: item.data.weight ? item.data.weight : item.data.data?.weight,
-      quantity: item.data.quantity ? item.data.quantity : item.data.data?.quantity,
-      totalWeight: item.data.weight
-        ? item.data.weight * item.data.quantity
-        : item.data.data.weight * item.data.data?.quantity,
-      proficient: item.data.proficient ? item.data.proficient : item.data.data?.proficient,
-      equipped: item.data.equipped ? item.data.equipped : item.data.data?.equipped,
-      type: item.type ? item.type : item.data.type ? item.data.type : item.data.data?.type,
+      weight: item.data?.weight ? item.data?.weight : item.data?.data?.weight,
+      quantity: item.data?.quantity ? item.data?.quantity : item.data?.data?.quantity,
+      totalWeight:
+        (item.data?.weight ? item.data?.weight : item.data?.data?.weight) *
+        (item.data?.quantity ? item.data?.quantity : item.data?.data?.quantity),
+      proficient: item.data?.proficient ? item.data?.proficient : item.data?.data?.proficient,
+      equipped: item.data?.equipped ? item.data?.equipped : item.data?.data?.equipped,
+      type: item.type ? item.type : item.data?.type ? item.data?.type : item.data?.data?.type,
     };
   },
 
@@ -80,15 +80,16 @@ export const VariantEncumbranceImpl = {
     mode?: EncumbranceMode,
   ): Promise<EncumbranceData | undefined> {
     //getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
+    /*
     if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled')) {
       if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
-        // await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_MODULE_NAME, VARIANT_ENCUMBRANCE_FLAG);
+       
         if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)) {
           await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER);
         }
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)) {
-          await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT);
-        }
+        // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)) {
+        //   await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT);
+        // }
         if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)) {
           await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW);
         }
@@ -110,6 +111,7 @@ export const VariantEncumbranceImpl = {
       }
       return;
     }
+    */
     if (updatedItems && (<any[]>updatedItems)?.length > 1) {
       throw new Error('Variant encumbrance not work with multiple item');
     }
@@ -173,109 +175,14 @@ export const VariantEncumbranceImpl = {
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veitem, mode); //, itemSet, effectSet
 
-    let effectEntityPresent: ActiveEffect | undefined;
-
-    for (const effectEntity of actorEntity.effects) {
-      const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
-      // Remove all encumbrance effect renamed from the player
-      if (
-        effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER) &&
-        effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
-      ) {
-        if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
-          await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-        }
-        continue;
-      }
-      if (!effectNameToSet) {
-        continue;
-      }
-      if (typeof effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER) === 'number') {
-        if (!effectEntityPresent && effectEntity?.data?.label) {
-          effectEntityPresent = effectEntity;
-        } else {
-          // Cannot have more than one effect tier present at any one time
-          if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-          }
-        }
-      } else if (effectEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)) {
-        if (!effectEntityPresent && effectEntity?.data?.label) {
-          effectEntityPresent = effectEntity;
-        } else {
-          // Cannot have more than one effect tier present at any one time
-          if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-          }
-        }
-      } else {
-        // We shouldn't go here never!!!
-        if (effectEntity?.data?.label) {
-          if (
-            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-          ) {
-            if (!effectEntityPresent) {
-              effectEntityPresent = effectEntity;
-            } else {
-              if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
-                await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    let effectName;
-    switch (encumbranceData.encumbranceTier) {
-      case ENCUMBRANCE_TIERS.NONE:
-        effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
-        break;
-      case ENCUMBRANCE_TIERS.LIGHT:
-        effectName = ENCUMBRANCE_STATE.ENCUMBERED;
-        break;
-      case ENCUMBRANCE_TIERS.HEAVY:
-        effectName = ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED;
-        break;
-      case ENCUMBRANCE_TIERS.MAX:
-        effectName = ENCUMBRANCE_STATE.OVERBURDENED;
-        break;
-      default:
-        return;
-    }
-
-    if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance')) {
-      effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
-    }
-
-    if (
-      effectName != ENCUMBRANCE_STATE.UNENCUMBERED &&
-      !(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))
-    ) {
-      // DO NOTHING
-    }
-    // Skip if name is the same and the active effect is already present.
-    else if (effectName === effectEntityPresent?.data.label) {
-      return;
-    }
-
-    const origin = `Actor.${actorEntity.data._id}`;
-    await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
-
     // SEEM NOT NECESSARY
 
-    const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
-      ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
-      : {};
-    const weight = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)
-      ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT)
-      : {};
+    // const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
+    //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
+    //   : {};
+    // const weight = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.WEIGHT}`)
+    //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT)
+    //   : {};
 
     const burrow = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.BURROW}`)
       ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.BURROW)
@@ -296,12 +203,16 @@ export const VariantEncumbranceImpl = {
     //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
     //   : encumbranceData;
 
-    if (tier !== encumbranceData.encumbranceTier) {
-      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER, encumbranceData.encumbranceTier);
-    }
-    if (weight !== encumbranceData.totalWeight) {
-      await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT, encumbranceData.totalWeight);
-    }
+    // if (tier !== encumbranceData.encumbranceTier) {
+    //   await actorEntity.setFlag(
+    //     VARIANT_ENCUMBRANCE_FLAG,
+    //     EncumbranceFlags.TIER,
+    //     encumbranceData.encumbranceTier
+    //   );
+    // }
+    // if (weight !== encumbranceData.totalWeight) {
+    //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.WEIGHT, encumbranceData.totalWeight);
+    // }
     //@ts-ignore
     if (burrow !== actorEntity.data.data.attributes.movement.burrow) {
       await actorEntity.setFlag(
@@ -348,7 +259,110 @@ export const VariantEncumbranceImpl = {
       );
     }
 
-    // await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, data);
+    await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
+
+    let effectEntityPresent: ActiveEffect | undefined;
+
+    for (const effectEntity of actorEntity.effects) {
+      const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+      // Remove all encumbrance effect renamed from the player
+      if (
+        encumbranceData.encumbranceTier &&
+        effectEntity.data.flags['variant-encumbrance-dnd5e'] &&
+        effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
+      ) {
+        // if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        // }
+        continue;
+      }
+      // Old setting
+      if (effectEntity.data.flags['VariantEncumbrance']) {
+        // if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        // }
+        continue;
+      }
+      if (!effectNameToSet) {
+        continue;
+      }
+      if (typeof encumbranceData.encumbranceTier === 'number') {
+        if (!effectEntityPresent && effectEntity?.data?.label) {
+          effectEntityPresent = effectEntity;
+        } else {
+          // Cannot have more than one effect tier present at any one time
+          // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+          await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          // }
+        }
+      } else if (encumbranceData.encumbranceTier) {
+        if (!effectEntityPresent && effectEntity?.data?.label && effectEntity.data.flags['variant-encumbrance-dnd5e']) {
+          effectEntityPresent = effectEntity;
+        } else {
+          // Cannot have more than one effect tier present at any one time
+          // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+          await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          // }
+        }
+      } else {
+        // We shouldn't go here never!!!
+        if (effectEntity?.data?.label) {
+          if (
+            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+          ) {
+            if (!effectEntityPresent) {
+              effectEntityPresent = effectEntity;
+            } else {
+              // if (await VariantEncumbranceImpl.hasEffectApplied(effectNameToSet, actorEntity)) {
+              await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+              // }
+            }
+          }
+        }
+      }
+    }
+
+    let effectName;
+    switch (encumbranceData.encumbranceTier) {
+      case ENCUMBRANCE_TIERS.NONE:
+        effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
+        break;
+      case ENCUMBRANCE_TIERS.LIGHT:
+        effectName = ENCUMBRANCE_STATE.ENCUMBERED;
+        break;
+      case ENCUMBRANCE_TIERS.HEAVY:
+        effectName = ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED;
+        break;
+      case ENCUMBRANCE_TIERS.MAX:
+        effectName = ENCUMBRANCE_STATE.OVERBURDENED;
+        break;
+      default:
+        return;
+    }
+
+    if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance')) {
+      effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
+    }
+
+    if (
+      effectName != ENCUMBRANCE_STATE.UNENCUMBERED &&
+      !(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))
+    ) {
+      // DO NOTHING
+    }
+    // Skip if name is the same and the active effect is already present.
+    else if (effectName === effectEntityPresent?.data.label) {
+      return;
+    }
+
+    const origin = `Actor.${actorEntity.data._id}`;
+    await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
 
     return encumbranceData;
   },
@@ -679,7 +693,7 @@ export const VariantEncumbranceImpl = {
     };
 
     return {
-      totalWeight: totalWeight,
+      totalWeight: totalWeight.toNearest(0.1),
       lightMax: lightMax,
       mediumMax: mediumMax,
       heavyMax: heavyMax,
@@ -1011,14 +1025,18 @@ export const VariantEncumbranceImpl = {
     // }
     if (effect) {
       // VariantEncumbranceImpl._handleIntegrations(effect);
+      // effect.flags = {
+      //   VariantEncumbrance: {
+      //     tier: encumbranceData.encumbranceTier,
+      //   },
+      // };
       effect.flags = {
-        VariantEncumbrance: {
+        'variant-encumbrance-dnd5e': {
           tier: encumbranceData.encumbranceTier,
         },
       };
       const activeEffectData = effect.convertToActiveEffectData(origin);
       await actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
-
       log(`Added effect ${effect.name} to ${actor.name} - ${actor.id}`);
     }
   },
