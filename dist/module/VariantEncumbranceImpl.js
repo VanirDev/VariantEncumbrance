@@ -28,7 +28,11 @@ export const VariantEncumbranceImpl = {
             proficient: item.data?.proficient ? item.data?.proficient : item.data?.data?.proficient,
             equipped: item.data?.equipped ? item.data?.equipped : item.data?.data?.equipped,
             type: item.type ? item.type : item.data?.type ? item.data?.type : item.data?.data?.type,
-            invPlusCateogryId: item.data?.flags['inventory-plus'] ? item.data?.flags['inventory-plus']?.category : undefined,
+            invPlusCateogryId: item.data?.flags
+                ? item.data?.flags['inventory-plus']
+                    ? item.data?.flags['inventory-plus']?.category
+                    : undefined
+                : undefined,
         };
     },
     veItemString: function (item) {

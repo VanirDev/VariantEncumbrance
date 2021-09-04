@@ -1,3 +1,7 @@
+### Update 0.5.15
+
+- Little bug fix for inventory plus flags not present
+
 ### Update 0.5.14
 
 - Finally solved [compatibility with Inventory + mod](https://github.com/VanirDev/VariantEncumbrance/issues/42)
