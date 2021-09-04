@@ -37,7 +37,7 @@ export const ENCUMBRANCE_TIERS = {
 export const VariantEncumbranceImpl = {
   veItem: function (item: any): VariantEncumbranceItemData {
     return {
-      _id: item._id,
+      _id: item?.id ? item?.id : item?.data?._id ? item?.data?._id : item?._id,
       weight: item.data?.weight ? item.data?.weight : item.data?.data?.weight,
       quantity: item.data?.quantity ? item.data?.quantity : item.data?.data?.quantity,
       totalWeight:
@@ -56,7 +56,7 @@ export const VariantEncumbranceImpl = {
 
   veItemString: function (item: any): VariantEncumbranceItemData {
     return {
-      _id: item._id,
+      _id: item?.id ? item?.id : item?.data?._id ? item?.data?._id : item?._id,
       weight: item['data.weight'],
       quantity: item['data.quantity'],
       totalWeight: item['data.weight'] * item['data.quantity'],
@@ -69,7 +69,7 @@ export const VariantEncumbranceImpl = {
 
   veItemString2: function (item: any): VariantEncumbranceItemData {
     return {
-      _id: item._id,
+      _id: item?.id ? item?.id : item?.data?._id ? item?.data?._id : item?._id,
       weight: item['data.data.weight'],
       quantity: item['data.data.quantity'],
       totalWeight: item['data.data.weight'] * item['data.data.quantity'],

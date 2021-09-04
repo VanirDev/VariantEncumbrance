@@ -1,3 +1,7 @@
+### Update 0.5.16
+
+- Small fixes for avoid warning
+
 ### Update 0.5.15
 
 - Little bug fix for inventory plus flags not present
