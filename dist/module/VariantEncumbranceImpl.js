@@ -28,6 +28,7 @@ export const VariantEncumbranceImpl = {
             proficient: item.data?.proficient ? item.data?.proficient : item.data?.data?.proficient,
             equipped: item.data?.equipped ? item.data?.equipped : item.data?.data?.equipped,
             type: item.type ? item.type : item.data?.type ? item.data?.type : item.data?.data?.type,
+            invPlusCateogryId: item.data?.flags['inventory-plus'] ? item.data?.flags['inventory-plus']?.category : undefined,
         };
     },
     veItemString: function (item) {
@@ -39,6 +40,7 @@ export const VariantEncumbranceImpl = {
             proficient: item['data.proficient'],
             equipped: item['data.equipped'],
             type: item['type'] ? item['type'] : item['data.type'],
+            invPlusCateogryId: item['data.flags.inventory-plus'],
         };
     },
     veItemString2: function (item) {
@@ -50,10 +52,32 @@ export const VariantEncumbranceImpl = {
             proficient: item['data.data.proficient'],
             equipped: item['data.data.equipped'],
             type: item['data.type'] ? item['data.type'] : item['data.data.type'],
+            invPlusCateogryId: item['data.data.flags.inventory-plus'],
         };
     },
     updateEncumbrance: async function (actorEntity, updatedItems, updatedEffect, mode) {
+        // if (updatedItems && (<any[]>updatedItems)?.length > 1) {
+        //   throw new Error('Variant encumbrance not work with multiple item');
+        // }
+        if (updatedItems && updatedItems.length > 0) {
+            for (let i = 0; i < updatedItems.length; i++) {
+                const updatedItem = updatedItems ? updatedItems[i] : undefined;
+                await VariantEncumbranceImpl.updateEncumbranceInternal(actorEntity, updatedItem, updatedEffect, mode);
+            }
+        }
+        else {
+            await VariantEncumbranceImpl.updateEncumbranceInternal(actorEntity, undefined, updatedEffect, mode);
+        }
+    },
+    updateEncumbranceInternal: async function (actorEntity, updatedItem, updatedEffect, mode) {
         //getGame().actors?.get(<string>actorEntity.data._id)?.data.type !== "character" ||
+        // Remove old flags
+        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.weight`)) {
+            await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'weight');
+        }
+        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.VariantEncumbrance`)) {
+            await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
+        }
         /*
         if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled')) {
           if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
@@ -86,10 +110,6 @@ export const VariantEncumbranceImpl = {
           return;
         }
         */
-        if (updatedItems && updatedItems?.length > 1) {
-            throw new Error('Variant encumbrance not work with multiple item');
-        }
-        let updatedItem = updatedItems ? updatedItems[0] : undefined;
         let veitem = null;
         if (updatedItem) {
             let itemID;
@@ -312,7 +332,7 @@ export const VariantEncumbranceImpl = {
         }
         const origin = `Actor.${actorEntity.data._id}`;
         await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
-        return encumbranceData;
+        // return encumbranceData;
     },
     /**
      * Compute the level and percentage of encumbrance for an Actor.
@@ -431,7 +451,11 @@ export const VariantEncumbranceImpl = {
                 if (inventoryPlusCategories) {
                     // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
                     for (const categoryId in inventoryPlusCategories) {
-                        if (item.type === categoryId) {
+                        if (
+                        //@ts-ignore
+                        item.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId ||
+                            //@ts-ignore
+                            item.data?.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) {
                             // ignore weight
                             const section = inventoryPlusCategories[categoryId];
                             if (section?.ignoreWeight) {
@@ -500,7 +524,7 @@ export const VariantEncumbranceImpl = {
                     if (inventoryPlusCategories) {
                         // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
                         for (const categoryId in inventoryPlusCategories) {
-                            if (veitem?.type === categoryId) {
+                            if (veitem.invPlusCateogryId === categoryId) {
                                 // ignore weight
                                 const section = inventoryPlusCategories[categoryId];
                                 if (section?.ignoreWeight) {

@@ -1,3 +1,6 @@
+### Update 0.5.14
+
+- Finally solved [compatibility with Inventory + mod](https://github.com/VanirDev/VariantEncumbrance/issues/42)
 
 ### Update 0.5.13
 

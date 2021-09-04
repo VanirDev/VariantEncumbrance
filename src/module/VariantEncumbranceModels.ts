@@ -6,6 +6,7 @@ export class VariantEncumbranceItemData {
   proficient: boolean;
   equipped: boolean;
   type: string;
+  invPlusCateogryId: string;
 }
 
 // export class VariantEncumbranceEffectData {

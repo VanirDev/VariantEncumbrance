@@ -183,7 +183,11 @@ export const readyHooks = async () => {
         await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
       }
       // For our purpose we filter only the invenctory-plus modifier action
-      if (invPlusActive && data?.flags && data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]) {
+      if (
+        invPlusActive &&
+        data?.flags &&
+        hasProperty(data, `flags.${VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME}`)
+      ) {
         await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
       }
     }
