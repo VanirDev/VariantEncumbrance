@@ -1,4 +1,8 @@
 
+### Update 0.5.12
+
+- Bug fix add hook for intercept update of module inventory+
+
 ### Update 0.5.11 Gambet performance
 
 - Some performance on the code
@@ -80,7 +84,7 @@
 
 ### Update 0.4.0
 
-- Bug fix compatibility with invenotry + module
+- Bug fix compatibility with inventory + module
 - Bug fix unequipped mutliplier set 0 still get weight and broke encumbrance calculation
 
 ### Update 0.3.9

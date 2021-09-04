@@ -1,5 +1,5 @@
 import { warn, i18n } from "../VariantEncumbrance.js";
-import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_MODULE_NAME } from "./settings.js";
+import { getGame, VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME, VARIANT_ENCUMBRANCE_MODULE_NAME, } from "./settings.js";
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from "./VariantEncumbranceImpl.js";
@@ -10,6 +10,8 @@ export let ENCUMBRANCE_STATE = {
     HEAVILY_ENCUMBERED: '',
     OVERBURDENED: '', // "Overburdened"
 };
+export let invPlusActive;
+export let invMidiQol;
 export const readyHooks = async () => {
     ENCUMBRANCE_STATE = {
         UNENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.unencumbered'),
@@ -153,6 +155,10 @@ export const readyHooks = async () => {
                 }
                 await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
             }
+            // For our purpose we filter only the invenctory-plus modifier action
+            if (invPlusActive && data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]) {
+                await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+            }
         }
     });
     // Hooks.on('preCreateActiveEffect', (activeEffect, config, userId) => {
@@ -249,6 +255,8 @@ export const initHooks = () => {
     DND5E.encumbrance.strMultiplier = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
     DND5E.encumbrance.currencyPerWeight = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
     // CONFIG.debug.hooks = true; // For debugging only
+    invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
+    invMidiQol = getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
 };
 // export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
 //   const actorEntity: Actor = this.actor;

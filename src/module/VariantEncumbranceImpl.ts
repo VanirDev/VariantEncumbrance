@@ -21,7 +21,7 @@ import {
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './Effect';
-import { ENCUMBRANCE_STATE } from './Hooks';
+import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
@@ -458,8 +458,7 @@ export const VariantEncumbranceImpl = {
     // 	totalWeight += appliedWeight;
     // });
 
-    const invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
-    //const hasInvPlus = scopes.includes(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME);
+    // const invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
 
     let isFoundItemCurrent = false;
     // START TOTAL WEIGHT
@@ -713,7 +712,7 @@ export const VariantEncumbranceImpl = {
     actor: Actor,
     encumbranceData: EncumbranceData,
   ): Promise<Effect | null> {
-    const invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
+    // const invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
     switch (effectName.toLowerCase()) {
       case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
         if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
