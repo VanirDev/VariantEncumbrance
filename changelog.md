@@ -1,4 +1,8 @@
 
+### Update 0.5.13
+
+- Bug fix add hook for intercept create of module inventory+
+- 
 ### Update 0.5.12
 
 - Bug fix add hook for intercept update of module inventory+
