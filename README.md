@@ -41,8 +41,9 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ## Known Issue
 
-- Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Esperot than me to handle this
+- Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Esxert than me to handle this
 - Limitation on some character sheet, open a issue and i'll try to make a fix.
+- Is not full synchronized with DAE in favor od the active effects mechanism
 
 ## Character Sheets compatibility
 
