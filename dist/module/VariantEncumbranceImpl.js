@@ -248,7 +248,8 @@ export const VariantEncumbranceImpl = {
             const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
             // Remove all encumbrance effect renamed from the player
             if (encumbranceData.encumbranceTier &&
-                effectEntity.data.flags['variant-encumbrance-dnd5e'] &&
+                effectEntity.data.flags &&
+                effectEntity.data.flags[VARIANT_ENCUMBRANCE_MODULE_NAME] &&
                 effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
                 effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
                 effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
@@ -259,7 +260,7 @@ export const VariantEncumbranceImpl = {
                 continue;
             }
             // Old setting
-            if (effectEntity.data.flags['VariantEncumbrance']) {
+            if (effectEntity.data.flags && effectEntity.data.flags['VariantEncumbrance']) {
                 // if (await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity)) {
                 await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
                 // }
