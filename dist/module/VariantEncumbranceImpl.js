@@ -458,6 +458,7 @@ export const VariantEncumbranceImpl = {
                 const inventoryPlusCategories = (actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys'));
                 if (inventoryPlusCategories) {
                     // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+                    let foundedCustomCategory = false;
                     for (const categoryId in inventoryPlusCategories) {
                         if ((item.data?.flags &&
                             //@ts-ignore
@@ -476,7 +477,26 @@ export const VariantEncumbranceImpl = {
                                 w = Number(section?.ownWeight);
                             }
                             // EXIT FOR
+                            foundedCustomCategory = true;
                             break;
+                        }
+                    }
+                    if (!foundedCustomCategory) {
+                        for (const categoryId in inventoryPlusCategories) {
+                            if (item.type === categoryId) {
+                                // ignore weight
+                                const section = inventoryPlusCategories[categoryId];
+                                if (section?.ignoreWeight) {
+                                    w = 0;
+                                }
+                                // Inerith weight
+                                if (Number(section?.ownWeight) > 0) {
+                                    w = Number(section?.ownWeight);
+                                }
+                                // EXIT FOR
+                                foundedCustomCategory = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -533,6 +553,7 @@ export const VariantEncumbranceImpl = {
                     const inventoryPlusCategories = (actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys'));
                     if (inventoryPlusCategories) {
                         // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+                        let foundedCustomCategory = false;
                         for (const categoryId in inventoryPlusCategories) {
                             if (veitem.flags &&
                                 veitem.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) {
@@ -546,7 +567,26 @@ export const VariantEncumbranceImpl = {
                                     w = Number(section?.ownWeight);
                                 }
                                 // EXIT FOR
+                                foundedCustomCategory = true;
                                 break;
+                            }
+                        }
+                        if (!foundedCustomCategory) {
+                            for (const categoryId in inventoryPlusCategories) {
+                                if (veitem.type === categoryId) {
+                                    // ignore weight
+                                    const section = inventoryPlusCategories[categoryId];
+                                    if (section?.ignoreWeight) {
+                                        w = 0;
+                                    }
+                                    // Inerith weight
+                                    if (Number(section?.ownWeight) > 0) {
+                                        w = Number(section?.ownWeight);
+                                    }
+                                    // EXIT FOR
+                                    foundedCustomCategory = true;
+                                    break;
+                                }
                             }
                         }
                     }

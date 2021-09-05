@@ -524,6 +524,7 @@ export const VariantEncumbranceImpl = {
         );
         if (inventoryPlusCategories) {
           // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+          let foundedCustomCategory = false;
           for (const categoryId in inventoryPlusCategories) {
             if (
               (item.data?.flags &&
@@ -544,7 +545,26 @@ export const VariantEncumbranceImpl = {
                 w = Number(section?.ownWeight);
               }
               // EXIT FOR
+              foundedCustomCategory = true;
               break;
+            }
+          }
+          if (!foundedCustomCategory) {
+            for (const categoryId in inventoryPlusCategories) {
+              if (item.type === categoryId) {
+                // ignore weight
+                const section = inventoryPlusCategories[categoryId];
+                if (section?.ignoreWeight) {
+                  w = 0;
+                }
+                // Inerith weight
+                if (Number(section?.ownWeight) > 0) {
+                  w = Number(section?.ownWeight);
+                }
+                // EXIT FOR
+                foundedCustomCategory = true;
+                break;
+              }
             }
           }
         }
@@ -600,6 +620,7 @@ export const VariantEncumbranceImpl = {
           );
           if (inventoryPlusCategories) {
             // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+            let foundedCustomCategory = false;
             for (const categoryId in inventoryPlusCategories) {
               if (
                 veitem.flags &&
@@ -615,7 +636,26 @@ export const VariantEncumbranceImpl = {
                   w = Number(section?.ownWeight);
                 }
                 // EXIT FOR
+                foundedCustomCategory = true;
                 break;
+              }
+            }
+            if (!foundedCustomCategory) {
+              for (const categoryId in inventoryPlusCategories) {
+                if (veitem.type === categoryId) {
+                  // ignore weight
+                  const section = inventoryPlusCategories[categoryId];
+                  if (section?.ignoreWeight) {
+                    w = 0;
+                  }
+                  // Inerith weight
+                  if (Number(section?.ownWeight) > 0) {
+                    w = Number(section?.ownWeight);
+                  }
+                  // EXIT FOR
+                  foundedCustomCategory = true;
+                  break;
+                }
               }
             }
           }

@@ -1,3 +1,7 @@
+### Update 0.5.18
+
+- Try to solve again [compatibility with Inventory + mod](https://github.com/VanirDev/VariantEncumbrance/issues/42)
+
 ### Update 0.5.17
 
 - Add additional check for the property flags for use case with inventory plus
