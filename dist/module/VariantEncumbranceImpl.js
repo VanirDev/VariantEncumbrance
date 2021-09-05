@@ -33,6 +33,7 @@ export const VariantEncumbranceImpl = {
                     ? item.data?.flags['inventory-plus']?.category
                     : undefined
                 : undefined,
+            flags: item.data?.flags ? item.data?.flags : item.data?.data?.flags ? item.data?.data?.flags : {},
         };
     },
     veItemString: function (item) {
@@ -45,6 +46,7 @@ export const VariantEncumbranceImpl = {
             equipped: item['data.equipped'],
             type: item['type'] ? item['type'] : item['data.type'],
             invPlusCateogryId: item['data.flags.inventory-plus'],
+            flags: item['data.flags'],
         };
     },
     veItemString2: function (item) {
@@ -57,6 +59,7 @@ export const VariantEncumbranceImpl = {
             equipped: item['data.data.equipped'],
             type: item['data.type'] ? item['data.type'] : item['data.data.type'],
             invPlusCateogryId: item['data.data.flags.inventory-plus'],
+            flags: item['data.data.flags'],
         };
     },
     updateEncumbrance: async function (actorEntity, updatedItems, updatedEffect, mode) {
@@ -455,11 +458,13 @@ export const VariantEncumbranceImpl = {
                 if (inventoryPlusCategories) {
                     // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
                     for (const categoryId in inventoryPlusCategories) {
-                        if (
-                        //@ts-ignore
-                        item.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId ||
+                        if ((item.data?.flags &&
                             //@ts-ignore
-                            item.data?.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) {
+                            item.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
+                            //@ts-ignore
+                            (item.data?.data?.flags &&
+                                //@ts-ignore
+                                item.data?.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)) {
                             // ignore weight
                             const section = inventoryPlusCategories[categoryId];
                             if (section?.ignoreWeight) {
@@ -528,7 +533,8 @@ export const VariantEncumbranceImpl = {
                     if (inventoryPlusCategories) {
                         // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
                         for (const categoryId in inventoryPlusCategories) {
-                            if (veitem.invPlusCateogryId === categoryId) {
+                            if (veitem.flags &&
+                                veitem.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) {
                                 // ignore weight
                                 const section = inventoryPlusCategories[categoryId];
                                 if (section?.ignoreWeight) {

@@ -1,3 +1,7 @@
+### Update 0.5.17
+
+- Add additional check for the property flags for use case with inventory plus
+
 ### Update 0.5.16
 
 - Small fixes for avoid warning

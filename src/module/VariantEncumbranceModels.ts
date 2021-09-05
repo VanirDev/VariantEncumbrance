@@ -7,6 +7,7 @@ export class VariantEncumbranceItemData {
   equipped: boolean;
   type: string;
   invPlusCateogryId: string;
+  flags: any;
 }
 
 // export class VariantEncumbranceEffectData {
