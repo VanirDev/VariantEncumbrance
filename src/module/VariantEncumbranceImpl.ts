@@ -206,9 +206,9 @@ export const VariantEncumbranceImpl = {
       }
     }
 
-    // if (!hasProperty(actorEntity.data, 'flags.' + VARIANT_ENCUMBRANCE_FLAG)) {
-    //   await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, VARIANT_ENCUMBRANCE_FLAG, {});
-    // }
+    if (hasProperty(actorEntity.data, 'flags.' + 'VariantEncumbrance')) {
+      await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
+    }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veitem, mode); //, itemSet, effectSet
 
@@ -420,7 +420,6 @@ export const VariantEncumbranceImpl = {
     veitem: VariantEncumbranceItemData | null,
     mode?: EncumbranceMode,
   ): EncumbranceData {
-
     let speedDecrease = 0;
     // let totalWeight = 0;
 
@@ -468,7 +467,7 @@ export const VariantEncumbranceImpl = {
       <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier') * strengthScore;
     const heavyMax = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier') * strengthScore;
 
-    const invPLusCategoriesFoundedWithOwnWeight:string[] = [];
+    const invPLusCategoriesFoundedWithOwnWeight: string[] = [];
 
     let isFoundItemCurrent = false;
     // START TOTAL WEIGHT
@@ -520,9 +519,9 @@ export const VariantEncumbranceImpl = {
               // Inerith weight
               if (Number(section?.ownWeight) > 0) {
                 w = Number(section?.ownWeight);
-                if(invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)){
+                if (invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)) {
                   w = 0;
-                }else{
+                } else {
                   invPLusCategoriesFoundedWithOwnWeight.push(categoryId);
                 }
               }
@@ -542,9 +541,9 @@ export const VariantEncumbranceImpl = {
                 // Inerith weight
                 if (Number(section?.ownWeight) > 0) {
                   w = Number(section?.ownWeight);
-                  if(invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)){
+                  if (invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)) {
                     w = 0;
-                  }else{
+                  } else {
                     invPLusCategoriesFoundedWithOwnWeight.push(categoryId);
                   }
                 }
@@ -621,9 +620,9 @@ export const VariantEncumbranceImpl = {
                 // Inerith weight
                 if (Number(section?.ownWeight) > 0) {
                   w = Number(section?.ownWeight);
-                  if(invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)){
+                  if (invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)) {
                     w = 0;
-                  }else{
+                  } else {
                     invPLusCategoriesFoundedWithOwnWeight.push(categoryId);
                   }
                 }
@@ -643,9 +642,9 @@ export const VariantEncumbranceImpl = {
                   // Inerith weight
                   if (Number(section?.ownWeight) > 0) {
                     w = Number(section?.ownWeight);
-                    if(invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)){
+                    if (invPLusCategoriesFoundedWithOwnWeight.includes(categoryId)) {
                       w = 0;
-                    }else{
+                    } else {
                       invPLusCategoriesFoundedWithOwnWeight.push(categoryId);
                     }
                   }

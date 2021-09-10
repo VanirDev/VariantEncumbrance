@@ -155,6 +155,10 @@ export const readyHooks = async () => {
                 }
                 await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
             }
+            // For our purpose we filter only the CURRENCY modifier action
+            if (data?.data?.currency) {
+                await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+            }
             // For our purpose we filter only the invenctory-plus modifier action
             if (invPlusActive &&
                 data?.flags &&

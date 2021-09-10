@@ -1,3 +1,8 @@
+### Update 0.5.19
+
+- Bug fix [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43)
+- Bug fix [Module eliminates calculation of coin weight](https://github.com/VanirDev/VariantEncumbrance/issues/44)
+
 ### Update 0.5.18
 
 - Try to solve again [compatibility with Inventory + mod](https://github.com/VanirDev/VariantEncumbrance/issues/42)

@@ -10,7 +10,6 @@ import {
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
-import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -180,6 +179,10 @@ export const readyHooks = async () => {
           //@ts-ignore
           actorEntity.data.data.abilities.str.value = data?.data?.abilities?.str.value;
         }
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+      }
+      // For our purpose we filter only the CURRENCY modifier action
+      if (data?.data?.currency) {
         await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
       }
       // For our purpose we filter only the invenctory-plus modifier action
