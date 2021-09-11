@@ -171,6 +171,9 @@ export const readyHooks = async () => {
 
   Hooks.on('updateActor', async (actorEntity: Actor, data) => {
     if (actorEntity && actorEntity.data.type === 'character') {
+
+      let doTheUpdate = false;
+
       // For our purpose we filter only the STR modifier action
       //@ts-ignore
       if (data?.data?.abilities?.str) {
@@ -179,11 +182,11 @@ export const readyHooks = async () => {
           //@ts-ignore
           actorEntity.data.data.abilities.str.value = data?.data?.abilities?.str.value;
         }
-        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+        doTheUpdate = true;
       }
       // For our purpose we filter only the CURRENCY modifier action
       if (data?.data?.currency) {
-        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+        doTheUpdate = true;
       }
       // For our purpose we filter only the invenctory-plus modifier action
       if (
@@ -191,6 +194,11 @@ export const readyHooks = async () => {
         data?.flags &&
         hasProperty(data, `flags.${VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME}`)
       ) {
+        doTheUpdate = true;
+      }
+
+      // Do the update
+      if(doTheUpdate){
         await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
       }
     }
