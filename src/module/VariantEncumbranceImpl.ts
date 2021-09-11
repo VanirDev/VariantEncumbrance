@@ -116,6 +116,9 @@ export const VariantEncumbranceImpl = {
     if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.VariantEncumbrance`)) {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
+    if (hasProperty(actorEntity.data, 'flags.' + 'VariantEncumbrance')) {
+      await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
+    }
 
     let veItemData: VariantEncumbranceItemData | null = null;
     if (updatedItem) {
@@ -173,10 +176,6 @@ export const VariantEncumbranceImpl = {
           }
         }
       }
-    }
-
-    if (hasProperty(actorEntity.data, 'flags.' + 'VariantEncumbrance')) {
-      await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, veItemData, mode); //, itemSet, effectSet
