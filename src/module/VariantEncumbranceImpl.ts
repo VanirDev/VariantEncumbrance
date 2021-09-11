@@ -612,7 +612,7 @@ export const VariantEncumbranceImpl = {
           }
         }
         let appliedWeight = itemQuantity * itemWeight;
-        let {equipped, proficient} = veItemData ? veItemData : {equipped: false, proficient: false};
+        const {equipped, proficient} = veItemData ? veItemData : {equipped: false, proficient: false};
         const multiplierSettingName = 
           !equipped ? 
             'unequippedMultiplier' : 
@@ -658,7 +658,7 @@ export const VariantEncumbranceImpl = {
             CONFIG.DND5E.encumbrance.currencyPerWeight
           : 50;
       }
-      if (<number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight')) {
+      if (<number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') > 0) {
         currencyPerWeight = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
       }
       totalWeight += numCoins / currencyPerWeight;
@@ -678,6 +678,10 @@ export const VariantEncumbranceImpl = {
       //@ts-ignore
       strengthMultiplier = CONFIG.DND5E.encumbrance.strMultiplier ? CONFIG.DND5E.encumbrance.strMultiplier : 15;
     }
+    if (<number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier') > 0) {
+      strengthMultiplier = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
+    }
+
     // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
     //@ts-ignore
     const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);

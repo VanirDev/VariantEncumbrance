@@ -1,5 +1,5 @@
 //@ts-ignore
-import { DND5E } from '../../../systems/dnd5e/module/config.js';
+// import { DND5E } from '../../../systems/dnd5e/module/config.js';
 
 export const VARIANT_ENCUMBRANCE_MODULE_NAME = 'variant-encumbrance-dnd5e';
 export const VARIANT_ENCUMBRANCE_FLAG = 'variant-encumbrance-dnd5e';
@@ -73,7 +73,8 @@ export const registerSettings = function () {
     type: Number,
     default: 15,
     onChange: (value) => {
-      DND5E.encumbrance.strMultiplier = value;
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.strMultiplier = value;
     },
   });
 
@@ -121,7 +122,8 @@ export const registerSettings = function () {
     type: Number,
     default: 50,
     onChange: (value) => {
-      DND5E.encumbrance.currencyPerWeight = value;
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.currencyPerWeight = value;
     },
   });
 
