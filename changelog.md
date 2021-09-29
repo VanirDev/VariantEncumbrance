@@ -1,3 +1,11 @@
+
+### Update 0.5.20
+
+- Add github workflow for generation with new release on github
+- Try to fix again [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43)
+- Refactor the code and add some clean on the code
+- Remove the dist
+
 ### Update 0.5.19
 
 - Bug fix [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43)
