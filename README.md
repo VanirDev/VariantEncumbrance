@@ -56,12 +56,14 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ## Other Modules Compatability
 
-* [Inventory +](https://github.com/syl3r86/inventory-plus)
+* [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 * [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
 
 ### I highly recommend avoiding module Inventory Plus in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
+
+### Verified issues with some sheet for [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5, until is not updated i highly recommend to avoiding the use of this module.
 
 <!--
 <details>

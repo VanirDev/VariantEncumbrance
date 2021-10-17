@@ -9,7 +9,7 @@ import {
 //@ts-ignore
 import { DND5E } from '../../../systems/dnd5e/module/config.js';
 import { ENCUMBRANCE_TIERS, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
-import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
+import { EncumbranceData, EncumbranceMode, EncumbranceFlags, EncumbranceActorType } from './VariantEncumbranceModels';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -170,7 +170,7 @@ export const readyHooks = async () => {
   );
 
   Hooks.on('updateActor', async (actorEntity: Actor, data) => {
-    if (actorEntity && actorEntity.data.type === 'character') {
+    if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
 
       let doTheUpdate = false;
 
@@ -213,7 +213,7 @@ export const readyHooks = async () => {
   //     return;
   //   }
   //   const actorEntity: any = activeEffect.parent;
-  //   if (actorEntity && actorEntity.data.type === 'character') {
+  //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
   //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
@@ -235,7 +235,7 @@ export const readyHooks = async () => {
   //   }
 
   //   const actorEntity: any = activeEffect.parent;
-  //   if (actorEntity && actorEntity.data.type === 'character') {
+  //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
   //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
@@ -257,7 +257,7 @@ export const readyHooks = async () => {
   //   }
 
   //   const actorEntity: any = activeEffect.parent;
-  //   if (actorEntity && actorEntity.data.type === 'character') {
+  //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
   //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
@@ -355,7 +355,7 @@ export const initHooks = () => {
 
 // export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
 //   const actorEntity: Actor = this.actor;
-//   if (actorEntity && actorEntity.data.type === 'character') {
+//   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
 //     VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
 //   }
 //   return wrapped(embeddedName, id, { strict });
@@ -363,7 +363,7 @@ export const initHooks = () => {
 
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
   const actorEntity: Actor = this.actor;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
   }
   return wrapped(embeddedName, data, context);
@@ -371,7 +371,7 @@ export async function createEmbeddedDocuments(wrapped, embeddedName, data, conte
 
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], options = {}) {
   const actorEntity: Actor = this.actor;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
   }
   return wrapped(embeddedName, ids, options);
@@ -379,7 +379,7 @@ export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], o
 
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options) {
   const actorEntity: Actor = this.actor;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.UPDATE);
   }
   return wrapped(embeddedName, data, options);
@@ -388,7 +388,7 @@ export async function updateEmbeddedDocuments(wrapped, embeddedName, data, optio
 export async function createDocuments(wrapped, data, context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
   }
   return wrapped(data, context);
@@ -397,7 +397,7 @@ export async function createDocuments(wrapped, data, context = { parent: {}, pac
 export async function updateDocuments(wrapped, updates = [], context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, EncumbranceMode.UPDATE);
   }
   return wrapped(updates, context);
@@ -406,7 +406,7 @@ export async function updateDocuments(wrapped, updates = [], context = { parent:
 export async function deleteDocuments(wrapped, ids = [], context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (actorEntity && actorEntity.data.type === 'character') {
+  if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
   }
   return wrapped(ids, context);

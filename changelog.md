@@ -1,3 +1,8 @@
+### Update 0.5.21
+
+- Added integration for Vehicle
+- Try to fix again [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43)
+- Revert bug fix for the drag and drop use case
 
 ### Update 0.5.20
 

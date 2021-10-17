@@ -50,3 +50,9 @@ export enum EncumbranceMode {
   DELETE = 'delete',
   UPDATE = 'update',
 }
+
+export enum EncumbranceActorType {
+  CHARACTER = 'character', // Player Character
+  NPC = 'NPC', // Non-Player Character
+  VEHICLE = 'vehicle', // Vehicle
+}
