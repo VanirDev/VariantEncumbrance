@@ -272,14 +272,14 @@ export const VariantEncumbranceImpl = {
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
       // Remove Old settings
       if (effectEntity.data.flags && hasProperty(effectEntity.data, `flags.VariantEncumbrance`)) {
         //&& effectEntity.data.flags['VariantEncumbrance']) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -289,7 +289,7 @@ export const VariantEncumbranceImpl = {
           effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED){
-            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         }
         continue;
       }
@@ -314,7 +314,7 @@ export const VariantEncumbranceImpl = {
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -329,7 +329,7 @@ export const VariantEncumbranceImpl = {
             effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
           ) {
-            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
             //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
           }
         }
@@ -349,7 +349,7 @@ export const VariantEncumbranceImpl = {
             effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
           ) {
-            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
             //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
           }
         }
@@ -366,7 +366,7 @@ export const VariantEncumbranceImpl = {
             if (!effectEntityPresent) {
               effectEntityPresent = effectEntity;
             } else {
-              await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+              VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
               //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
             }
           }
