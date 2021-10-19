@@ -286,14 +286,26 @@ export const VariantEncumbranceImpl = {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
-          await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+          ) {
+            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          }
         }
       } else if (encumbranceData.encumbranceTier) {
         if (!effectEntityPresent && effectEntity?.data?.label && effectEntity.data.flags['variant-encumbrance-dnd5e']) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
-          await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+          ) {
+            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+          }
         }
       } else {
         // We shouldn't go here, never!!!
