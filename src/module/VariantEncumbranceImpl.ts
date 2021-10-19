@@ -283,6 +283,17 @@ export const VariantEncumbranceImpl = {
         continue;
       }
 
+      // Ignore all convenient effect
+      if (hasProperty(effectEntity.data, `flags.isConvenient`)){
+        if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED){
+            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        }
+        continue;
+      }
+
       // Ignore all non encumbrance effect renamed from the player
       if (
         !hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
