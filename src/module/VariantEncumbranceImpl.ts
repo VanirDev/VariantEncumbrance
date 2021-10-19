@@ -109,7 +109,6 @@ export const VariantEncumbranceImpl = {
     updatedEffect?: ActiveEffect | undefined,
     mode?: EncumbranceMode,
   ): Promise<void> {
-
     // Remove old flags
     if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.weight`)) {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'weight');
@@ -149,7 +148,6 @@ export const VariantEncumbranceImpl = {
       }
 
       if (updatedItem) {
-
         // For backwards compatibility
         if (Object.keys(updatedItem).indexOf('data.weight') !== -1) {
           if (mode == EncumbranceMode.ADD || mode == EncumbranceMode.UPDATE) {
@@ -267,7 +265,8 @@ export const VariantEncumbranceImpl = {
       if (
         encumbranceData.encumbranceTier &&
         effectEntity.data.flags &&
-        effectEntity.data.flags[VARIANT_ENCUMBRANCE_MODULE_NAME] &&
+        hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
+        //effectEntity.data.flags[VARIANT_ENCUMBRANCE_MODULE_NAME] &&
         effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
@@ -276,8 +275,10 @@ export const VariantEncumbranceImpl = {
         await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
-      // Old setting
-      if (effectEntity.data.flags && effectEntity.data.flags['VariantEncumbrance']) {
+
+      // Remove Old settings
+      if (effectEntity.data.flags && hasProperty(effectEntity.data, `flags.VariantEncumbrance`)) {
+        //&& effectEntity.data.flags['VariantEncumbrance']) {
         await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
@@ -294,32 +295,51 @@ export const VariantEncumbranceImpl = {
         continue;
       }
 
+      // Remove encumbrance effect with same name used in this module
+      if (
+        !hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
+        (effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
+      ) {
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        continue;
+      }
+
       if (typeof encumbranceData.encumbranceTier === 'number') {
         if (!effectEntityPresent && effectEntity?.data?.label) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
-          if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          if (
+            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
           ) {
-            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+            //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
           }
         }
       } else if (encumbranceData.encumbranceTier) {
-        if (!effectEntityPresent && effectEntity?.data?.label 
-          && hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)){
+        if (
+          !effectEntityPresent &&
+          effectEntity?.data?.label &&
+          hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)
+        ) {
           //&& effectEntity.data.flags['variant-encumbrance-dnd5e']) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
-          if(effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          if (
+            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
             effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
           ) {
-            await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+            await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+            //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
           }
         }
       } else {
@@ -335,7 +355,8 @@ export const VariantEncumbranceImpl = {
             if (!effectEntityPresent) {
               effectEntityPresent = effectEntity;
             } else {
-              await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
+              await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+              //await VariantEncumbranceImpl.removeEffect(effectNameToSet, actorEntity);
             }
           }
         }
@@ -433,7 +454,7 @@ export const VariantEncumbranceImpl = {
 
     // Variable support for strange weight control
     let modifiedItemAlreadyExists = false;
-    
+
     // START TOTAL WEIGHT
     // Get the total weight from items
     const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
@@ -462,10 +483,8 @@ export const VariantEncumbranceImpl = {
       // Start inventory+ module is active
       let ignoreQuantityAndEquipmentCheck = false;
       if (invPlusActive) {
-        const inventoryPlusCategories = <any[]>(
-          // Retrieve flag 'categorys' from inventory plus module
-          actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys')
-        );
+        const inventoryPlusCategories = <any[]>// Retrieve flag 'categorys' from inventory plus module
+        actorEntity.getFlag(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME, 'categorys');
         if (inventoryPlusCategories) {
           // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
           let actorHasCustomCategories = false;
@@ -527,7 +546,7 @@ export const VariantEncumbranceImpl = {
             }
           }
         }
-        if(ignoreQuantityAndEquipmentCheck){
+        if (ignoreQuantityAndEquipmentCheck) {
           return weight + itemWeight;
         }
       }
@@ -561,7 +580,7 @@ export const VariantEncumbranceImpl = {
     //if(!modifiedItemAlreadyExists && veItemData?.weight){
     //  warn("Strange Weight with item : " + veItemData._id);
     //}
-    
+
     // START STRANGE CONTROL (We need this for manage drag and drop use case)
     let strangeWeight = 0;
     if (!modifiedItemAlreadyExists && veItemData?.weight) {
@@ -640,31 +659,28 @@ export const VariantEncumbranceImpl = {
               }
             }
           }
-          if(ignoreQuantityAndEquipmentCheck){
+          if (ignoreQuantityAndEquipmentCheck) {
             strangeWeight = itemWeight;
           }
         }
         // End inventory+ module is active
-        if(!ignoreQuantityAndEquipmentCheck){
+        if (!ignoreQuantityAndEquipmentCheck) {
           let appliedWeight = itemQuantity * itemWeight;
-          const {equipped, proficient} = veItemData ? veItemData : {equipped: false, proficient: false};
-          const multiplierSettingName = 
-            !equipped ? 
-              'unequippedMultiplier' : 
-              proficient ? 
-                'profEquippedMultiplier' : 'equippedMultiplier';
+          const { equipped, proficient } = veItemData ? veItemData : { equipped: false, proficient: false };
+          const multiplierSettingName = !equipped
+            ? 'unequippedMultiplier'
+            : proficient
+            ? 'profEquippedMultiplier'
+            : 'equippedMultiplier';
 
-          appliedWeight *= <number>getGame().settings.get(
-            VARIANT_ENCUMBRANCE_MODULE_NAME,
-            multiplierSettingName
-          );
+          appliedWeight *= <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, multiplierSettingName);
           strangeWeight = appliedWeight;
         }
       }
     }
     totalWeight = totalWeight + strangeWeight;
     // END STRANGE CONTROL
-    
+
     // [Optional] add Currency Weight (for non-transformed actors)
     //@ts-ignore
     if (getGame().settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
@@ -698,7 +714,7 @@ export const VariantEncumbranceImpl = {
     let max = 0;
     let pct = 0;
 
-    if(actorEntity.type == EncumbranceActorType.CHARACTER){
+    if (actorEntity.type == EncumbranceActorType.CHARACTER) {
       // CHARACTER
       //@ts-ignore
       let strengthMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
@@ -720,22 +736,22 @@ export const VariantEncumbranceImpl = {
       //@ts-ignore
       max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
       pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-    }else if(actorEntity.type == EncumbranceActorType.VEHICLE){
+    } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
       // VEHICLE
 
       // Vehicle weights are an order of magnitude greater.
-      totalWeight /= getGame().settings.get("dnd5e", "metricWeightUnits")
-        //@ts-ignore
-        ? CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric
-        //@ts-ignore
-        : CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial;
+      totalWeight /= getGame().settings.get('dnd5e', 'metricWeightUnits')
+        ? //@ts-ignore
+          CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric
+        : //@ts-ignore
+          CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial;
 
       // Compute overall encumbrance
       // const max = actorData.data.attributes.capacity.cargo;
       //@ts-ignore
       max = (actorData.data.attributes.capacity.cargo * mod).toNearest(0.1);
       pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-    }else{
+    } else {
       // NO CHARACTER, NO VEHICLE
       //@ts-ignore
       let strengthMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
@@ -748,7 +764,7 @@ export const VariantEncumbranceImpl = {
         //@ts-ignore
         strengthMultiplier = CONFIG.DND5E.encumbrance.strMultiplier ? CONFIG.DND5E.encumbrance.strMultiplier : 15;
       }
-      
+
       if (<number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier') > 0) {
         strengthMultiplier = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
       }
