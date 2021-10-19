@@ -258,6 +258,11 @@ export const VariantEncumbranceImpl = {
 
     for (const effectEntity of actorEntity.effects) {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+
+      if (!effectNameToSet) {
+        continue;
+      }
+
       // Remove all encumbrance effect renamed from the player
       if (
         encumbranceData.encumbranceTier &&
@@ -277,7 +282,15 @@ export const VariantEncumbranceImpl = {
         continue;
       }
 
-      if (!effectNameToSet) {
+      // Ignore all non encumbrance effect renamed from the player
+      if (
+        !hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
+        //!effectEntity.data.flags['variant-encumbrance-dnd5e'] &&
+        effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
+        effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
+      ) {
         continue;
       }
 
@@ -295,7 +308,9 @@ export const VariantEncumbranceImpl = {
           }
         }
       } else if (encumbranceData.encumbranceTier) {
-        if (!effectEntityPresent && effectEntity?.data?.label && effectEntity.data.flags['variant-encumbrance-dnd5e']) {
+        if (!effectEntityPresent && effectEntity?.data?.label 
+          && hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)){
+          //&& effectEntity.data.flags['variant-encumbrance-dnd5e']) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
