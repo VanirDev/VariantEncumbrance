@@ -396,18 +396,20 @@ export const VariantEncumbranceImpl = {
       effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
     }
 
-    if (
-      effectName != ENCUMBRANCE_STATE.UNENCUMBERED &&
-      !(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))
-    ) {
-      // DO NOTHING
-    } else if (effectName === effectEntityPresent?.data.label) {
-      // Skip if name is the same and the active effect is already present.
-      return;
-    }
+    if(effectName && effectName != '') {
+      if (
+        effectName != ENCUMBRANCE_STATE.UNENCUMBERED &&
+        !(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))
+      ) {
+        // DO NOTHING
+      } else if (effectName === effectEntityPresent?.data.label) {
+        // Skip if name is the same and the active effect is already present.
+        return;
+      }
 
-    const origin = `Actor.${actorEntity.data._id}`;
-    await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
+      const origin = `Actor.${actorEntity.data._id}`;
+      await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
+    }
   },
 
   /**
