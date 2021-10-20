@@ -1,3 +1,14 @@
+### Update 0.5.28
+
+- Remove await from add and remove Effect function for avoid some socket exception
+- Add i18 internazionalization
+
+### Update 0.5.22-27
+
+- Big, Very Big Bug fix and many module collision
+- Bug fix active effects add in loop during the initialization
+- Better checker for remove and addition of Active Effects
+- Remove await from remove Effect function
 ### Update 0.5.21
 
 - Added integration for Vehicle
