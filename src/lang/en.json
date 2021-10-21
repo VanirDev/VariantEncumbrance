@@ -39,12 +39,14 @@
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered.",
 
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
-  "variant-encumbrance-dnd5e.effect.name.encumbered": "Encumbered",
-  "variant-encumbrance-dnd5e.effect.name.heavily_encumbered": "Heavily Encumbered",
-  "variant-encumbrance-dnd5e.effect.name.overburdened": "Overburdened",
-
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
+
+  "variant-encumbrance-dnd5e.effect.name.encumbered": "Encumbered",
   "variant-encumbrance-dnd5e.effect.description.encumbered": "Lowers movement by 10 ft.",
+
+  "variant-encumbrance-dnd5e.effect.name.heavily_encumbered": "Heavily Encumbered",
   "variant-encumbrance-dnd5e.effect.description.heavily_encumbered": "Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves",
+
+  "variant-encumbrance-dnd5e.effect.name.overburdened": "Overburdened",
   "variant-encumbrance-dnd5e.effect.description.overburdened": "Lowers movement to 0 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves"
 }
