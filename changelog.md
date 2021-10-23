@@ -1,3 +1,8 @@
+
+### Update 0.6.0
+
+- Some bug fix and performance
+
 ### Update 0.5.28
 
 - Remove await from add and remove Effect function for avoid some socket exception

@@ -281,18 +281,18 @@ export const VariantEncumbranceImpl = {
         continue;
       }
 
-      // Ignore all convenient effect
-      if (hasProperty(effectEntity.data, `flags.isConvenient`)) {
-        if (
-          effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-          effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-          effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-          effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-        ) {
-          VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-        }
-        continue;
-      }
+      // // Ignore all convenient effect
+      // if (hasProperty(effectEntity.data, `flags.isConvenient`)) {
+      //   if (
+      //     effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+      //     effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+      //     effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+      //     effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+      //   ) {
+      //     VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+      //   }
+      //   continue;
+      // }
 
       // Ignore all non encumbrance effect renamed from the player (again)
       if (
@@ -319,7 +319,7 @@ export const VariantEncumbranceImpl = {
       }
 
       if (typeof encumbranceData.encumbranceTier === 'number') {
-        if (!effectEntityPresent && effectEntity?.data?.label) {
+        if (!effectEntityPresent) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
@@ -333,12 +333,7 @@ export const VariantEncumbranceImpl = {
           }
         }
       } else if (encumbranceData.encumbranceTier) {
-        if (
-          !effectEntityPresent &&
-          effectEntity?.data?.label &&
-          hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)
-        ) {
-          //&& effectEntity.data.flags['variant-encumbrance-dnd5e']) {
+        if (!effectEntityPresent) {
           effectEntityPresent = effectEntity;
         } else {
           // Cannot have more than one effect tier present at any one time
@@ -352,20 +347,17 @@ export const VariantEncumbranceImpl = {
           }
         }
       } else {
-        // We shouldn't go here, never!!!
-        // If this should not be reachable, shouldn't this else be throwing an error?
-        if (effectEntity?.data?.label) {
-          if (
-            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-          ) {
-            if (!effectEntityPresent) {
-              effectEntityPresent = effectEntity;
-            } else {
-              VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-            }
+        // This should not be reachable, shouldn't this else be throwing an error?
+        if (
+          effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+        ) {
+          if (!effectEntityPresent) {
+            effectEntityPresent = effectEntity;
+          } else {
+            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
           }
         }
       }
