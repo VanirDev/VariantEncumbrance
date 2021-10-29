@@ -1,3 +1,8 @@
+### Update 0.6.2
+
+- Bug fix wrong addition of active effect during the load of the world
+- Add isConvinient flag to all the active effects for use the new midi qol integration
+
 ### Update 0.6.1
 
 - Solve module incompatibility with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)

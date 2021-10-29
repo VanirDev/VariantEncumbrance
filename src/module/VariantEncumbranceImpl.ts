@@ -399,8 +399,10 @@ export const VariantEncumbranceImpl = {
         VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
       } else {
         VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-        const origin = `Actor.${actorEntity.data._id}`;
-        VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
+        if(!await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity)){
+          const origin = `Actor.${actorEntity.data._id}`;
+          VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
+        }
       }
     }
   },
