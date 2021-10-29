@@ -22,7 +22,7 @@ import {
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './Effect';
-import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
+import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, itemContainerActive } from './Hooks';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
@@ -47,40 +47,45 @@ export const VariantEncumbranceImpl = {
       proficient: item.data?.proficient ? item.data?.proficient : item.data?.data?.proficient,
       equipped: item.data?.equipped ? item.data?.equipped : item.data?.data?.equipped,
       type: item.type ? item.type : item.data?.type ? item.data?.type : item.data?.data?.type,
-      invPlusCategoryId: item.data?.flags
-        ? item.data?.flags['inventory-plus']
-          ? item.data?.flags['inventory-plus']?.category
-          : undefined
-        : undefined,
+      // invPlusCategoryId: item.data?.flags
+      //   ? item.data?.flags['inventory-plus']
+      //     ? item.data?.flags['inventory-plus']?.category
+      //     : undefined
+      //   : undefined,
       flags: item.data?.flags ? item.data?.flags : item.data?.data?.flags ? item.data?.data?.flags : {},
+      itemCollectionWeightless: item.data?.capacity?.weightless
+        ? item.data?.capacity?.weightless
+        : item.data?.data?.capacity?.weightless,
     };
   },
 
   veItemString: function (item: any): VariantEncumbranceItemData {
     return {
       _id: item?.id ? item?.id : item?.data?._id ? item?.data?._id : item?._id,
-      weight: item['data.weight'],
-      quantity: item['data.quantity'],
-      totalWeight: item['data.weight'] * item['data.quantity'],
-      proficient: item['data.proficient'],
-      equipped: item['data.equipped'],
-      type: item['type'] ? item['type'] : item['data.type'],
-      invPlusCategoryId: item['data.flags.inventory-plus'],
-      flags: item['data.flags'],
+      weight: getProperty(item, 'data.weight'),
+      quantity: getProperty(item, 'data.quantity'),
+      totalWeight: getProperty(item, 'data.weight') * getProperty(item, 'data.quantity'),
+      proficient: getProperty(item, 'data.proficient'),
+      equipped: getProperty(item, 'data.equipped'),
+      type: getProperty(item, 'type') ? getProperty(item, 'type') : getProperty(item, 'data.type'),
+      // invPlusCategoryId: getProperty(item,'data.flags.inventory-plus'),
+      flags: getProperty(item, 'data.flags'),
+      itemCollectionWeightless: getProperty(item, 'data.capacity.weightless'),
     };
   },
 
   veItemString2: function (item: any): VariantEncumbranceItemData {
     return {
       _id: item?.id ? item?.id : item?.data?._id ? item?.data?._id : item?._id,
-      weight: item['data.data.weight'],
-      quantity: item['data.data.quantity'],
-      totalWeight: item['data.data.weight'] * item['data.data.quantity'],
-      proficient: item['data.data.proficient'],
-      equipped: item['data.data.equipped'],
-      type: item['data.type'] ? item['data.type'] : item['data.data.type'],
-      invPlusCategoryId: item['data.data.flags.inventory-plus'],
-      flags: item['data.data.flags'],
+      weight: getProperty(item, 'data.data.weight'),
+      quantity: getProperty(item, 'data.data.quantity'),
+      totalWeight: getProperty(item, 'data.data.weight') * getProperty(item, 'data.data.quantity'),
+      proficient: getProperty(item, 'data.data.proficient'),
+      equipped: getProperty(item, 'data.data.equipped'),
+      type: getProperty(item, 'data.type') ? getProperty(item, 'data.type') : getProperty(item, 'data.data.type'),
+      // invPlusCategoryId: getProperty(item,'data.data.flags.inventory-plus'),
+      flags: getProperty(item, 'data.data.flags'),
+      itemCollectionWeightless: getProperty(item, 'data.data.capacity.weightless'),
     };
   },
 
@@ -116,7 +121,7 @@ export const VariantEncumbranceImpl = {
     if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.VariantEncumbrance`)) {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
-    if (hasProperty(actorEntity.data, 'flags.' + 'VariantEncumbrance')) {
+    if (hasProperty(actorEntity.data, 'flags.VariantEncumbrance')) {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
 
@@ -481,6 +486,30 @@ export const VariantEncumbranceImpl = {
           itemWeight = veItemData?.weight;
         }
       }
+      // Start Item container check
+      if (veItemData && veItemData?.flags?.itemcollection?.bagWeight && item.id === veItemData._id) {
+        modifiedItemAlreadyExists = true;
+        if (mode == EncumbranceMode.DELETE) {
+          itemWeight = 0;
+        } else {
+          // WTF Item container weightless check is inverted ?
+          if (veItemData?.itemCollectionWeightless) {
+            // Is weightless
+            itemWeight = veItemData?.flags?.itemcollection?.bagWeight;
+          } else {
+            const im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+            itemWeight = calcItemWeight(im) + veItemData?.flags?.itemcollection?.bagWeight;
+          }
+        }
+      } else if (getProperty(item, 'data.flags.itemcollection.bagWeight')) {
+        const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
+        if (weightless) {
+          itemWeight = getProperty(item, 'data.flags.itemcollection.bagWeight');
+        } else {
+          itemWeight = calcItemWeight(item) + getProperty(item, 'data.flags.itemcollection.bagWeight');
+        }
+      }
+      // End Item container check
       // Start inventory+ module is active
       let ignoreQuantityAndEquipmentCheck = false;
       if (invPlusActive) {
@@ -602,6 +631,22 @@ export const VariantEncumbranceImpl = {
             itemWeight = veItemData?.weight;
           }
         }
+        // Start Item container check
+        if (veItemData && veItemData?.flags?.itemcollection?.bagWeight) {
+          if (mode == EncumbranceMode.DELETE) {
+            itemWeight = 0;
+          } else {
+            // WTF Item container weightless check is inverted ?
+            if (veItemData?.itemCollectionWeightless) {
+              // Is weightless
+              itemWeight = veItemData?.flags?.itemcollection?.bagWeight;
+            } else {
+              const im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+              itemWeight = calcItemWeight(im) + veItemData?.flags?.itemcollection?.bagWeight;
+            }
+          }
+        }
+        // End Item container check
         // Start inventory+ module is active
         let ignoreQuantityAndEquipmentCheck = false;
         if (invPlusActive) {
@@ -1148,3 +1193,26 @@ export const VariantEncumbranceImpl = {
     }
   },
 };
+
+function calcItemWeight(item: Item) {
+  //@ts-ignore
+  if (item.type !== 'backpack' || item.items === undefined) {
+    return _calcItemWeight(item);
+  }
+  //@ts-ignore
+  const weight = item.items.reduce((acc, item) => {
+    return acc + (item.calcWeight() ?? 0);
+  }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
+  //@ts-ignore
+  const currency = item.data.data.currency ?? {};
+  const numCoins = currency ? Object.keys(currency).reduce((val, denom) => val + currency[denom], 0) : 0;
+  return Math.round(weight + numCoins / 50);
+}
+
+function _calcItemWeight(item: Item) {
+  //@ts-ignore
+  const quantity = item.data.data.quantity || 1;
+  //@ts-ignore
+  const weight = item.data.data.weight || 0;
+  return Math.round(weight * quantity * 100) / 100;
+}

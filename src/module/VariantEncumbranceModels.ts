@@ -6,8 +6,9 @@ export class VariantEncumbranceItemData {
   proficient: boolean;
   equipped: boolean;
   type: string;
-  invPlusCategoryId: string;
+  // invPlusCategoryId: string;
   flags: any;
+  itemCollectionWeightless: boolean;
 }
 
 // export class VariantEncumbranceEffectData {

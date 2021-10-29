@@ -1,3 +1,7 @@
+### Update 0.6.1
+
+- Solve module incompatibility with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
+- Bug fix [[BUG] Item Containers weight calculation with backpacks becomes reverse of intended](https://github.com/VanirDev/VariantEncumbrance/issues/47)
 
 ### Update 0.6.0
 

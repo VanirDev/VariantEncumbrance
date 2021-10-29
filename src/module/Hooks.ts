@@ -3,6 +3,7 @@ import {
   getGame,
   VARIANT_ENCUMBRANCE_FLAG,
   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
+  VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MODULE_NAME,
 } from './settings';
@@ -19,6 +20,7 @@ export let ENCUMBRANCE_STATE = {
 };
 
 export let invPlusActive;
+export let itemContainerActive;
 
 export let invMidiQol;
 
@@ -352,8 +354,9 @@ export const initHooks = () => {
   DND5E.encumbrance.currencyPerWeight = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
   // CONFIG.debug.hooks = true; // For debugging only
 
-  invPlusActive = getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
+  invPlusActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
   invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
+  itemContainerActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
 };
 
 // export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {
