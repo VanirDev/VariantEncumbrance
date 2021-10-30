@@ -489,7 +489,10 @@ export const VariantEncumbranceImpl = {
         }
       }
       // Start Item container check
-      if (veItemData && veItemData?.flags?.itemcollection?.bagWeight && item.id === veItemData._id) {
+      if (veItemData && (
+        veItemData?.flags?.itemcollection?.bagWeight != null &&
+        veItemData?.flags?.itemcollection?.bagWeight != undefined)
+        && item.id === veItemData._id) {
         modifiedItemAlreadyExists = true;
         if (mode == EncumbranceMode.DELETE) {
           itemWeight = 0;
@@ -499,11 +502,15 @@ export const VariantEncumbranceImpl = {
             // Is weightless
             itemWeight = veItemData?.flags?.itemcollection?.bagWeight;
           } else {
-            const im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+            let im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+            if(!im){
+              im = <Item>getGame().items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+            }
             itemWeight = calcItemWeight(im) + veItemData?.flags?.itemcollection?.bagWeight;
           }
         }
-      } else if (getProperty(item, 'data.flags.itemcollection.bagWeight')) {
+      } else if (getProperty(item, 'data.flags.itemcollection.bagWeight') != null &&
+          getProperty(item, 'data.flags.itemcollection.bagWeight') != undefined) {
         const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
         if (weightless) {
           itemWeight = getProperty(item, 'data.flags.itemcollection.bagWeight');
@@ -634,7 +641,10 @@ export const VariantEncumbranceImpl = {
           }
         }
         // Start Item container check
-        if (veItemData && veItemData?.flags?.itemcollection?.bagWeight) {
+        if (veItemData && (
+          veItemData?.flags?.itemcollection?.bagWeight != null &&
+          veItemData?.flags?.itemcollection?.bagWeight != undefined)
+          ) {
           if (mode == EncumbranceMode.DELETE) {
             itemWeight = 0;
           } else {
@@ -643,7 +653,10 @@ export const VariantEncumbranceImpl = {
               // Is weightless
               itemWeight = veItemData?.flags?.itemcollection?.bagWeight;
             } else {
-              const im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+              let im = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+              if(!im){
+                im = <Item>getGame().items?.find((itemTmp: Item) => itemTmp.id === veItemData._id);
+              }
               itemWeight = calcItemWeight(im) + veItemData?.flags?.itemcollection?.bagWeight;
             }
           }
@@ -1173,7 +1186,6 @@ export const VariantEncumbranceImpl = {
   async addEffect(effectName: string, actor: Actor, origin: string, encumbranceData: EncumbranceData) {
     // let effect = VariantEncumbranceImpl.findEffectByName(effectName);
     //const actor = await VariantEncumbranceImpl._foundryHelpers.getActorByUuid(uuid);
-
     // if (effect.isDynamic) {
     const effect: Effect | null = await VariantEncumbranceImpl.addDynamicEffects(effectName, actor, encumbranceData);
     // }
@@ -1202,13 +1214,42 @@ function calcItemWeight(item: Item) {
     return _calcItemWeight(item);
   }
   //@ts-ignore
-  const weight = item.items.reduce((acc, item) => {
+  let weight = item.items.reduce((acc, item) => {
     return acc + (item.calcWeight() ?? 0);
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
+
+  // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore
-  const currency = item.data.data.currency ?? {};
-  const numCoins = currency ? Object.keys(currency).reduce((val, denom) => val + currency[denom], 0) : 0;
-  return Math.round(weight + numCoins / 50);
+  if (getGame().settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+    //@ts-ignore
+    const currency = item.data.data.currency ?? {};
+    const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
+
+    //@ts-ignore
+    let currencyPerWeight = getGame().settings.get('dnd5e', 'metricWeightUnits')
+      ? //@ts-ignore
+        CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+      : //@ts-ignore
+        CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+    // BUG FOUNDRY ????? currencyPerweight is undefined
+    if (!currencyPerWeight) {
+      //@ts-ignore
+      currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight
+        ? //@ts-ignore
+          CONFIG.DND5E.encumbrance.currencyPerWeight
+        : 50;
+    }
+    if (<number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') > 0) {
+      currencyPerWeight = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
+    }
+    weight = Math.round(weight + numCoins / currencyPerWeight);
+  }else{
+    //@ts-ignore
+    const currency = item.data.data.currency ?? {};
+    const numCoins = currency ? Object.keys(currency).reduce((val, denom) => val + currency[denom], 0) : 0;
+    weight = Math.round(weight + numCoins / 50);
+  }
+  return Math.round(weight);
 }
 
 function _calcItemWeight(item: Item) {

@@ -1,3 +1,8 @@
+### Update 0.6.3
+
+- Add custom currency weight calculation to the items of the item container backpack
+- Try to fix again (Bug fix [[BUG] Item Containers weight calculation with backpacks becomes reverse of intended](https://github.com/VanirDev/VariantEncumbrance/issues/47))
+
 ### Update 0.6.2
 
 - Bug fix wrong addition of active effect during the load of the world
