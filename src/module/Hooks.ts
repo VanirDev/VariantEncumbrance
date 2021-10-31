@@ -45,7 +45,7 @@ export const readyHooks = async () => {
           encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
         }
         if (!encumbranceData) {
-          encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
+          encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
         }
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
