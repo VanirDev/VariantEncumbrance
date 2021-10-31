@@ -1,3 +1,9 @@
+### Update 0.6.4 [BREAKING CHANGES]
+
+- Clean up of the code
+- Write a new and better workflow for calculate the weight
+- Try to fix again (Bug fix [[BUG] Item Containers weight calculation with backpacks becomes reverse of intended](https://github.com/VanirDev/VariantEncumbrance/issues/47)) 
+
 ### Update 0.6.3
 
 - Add custom currency weight calculation to the items of the item container backpack

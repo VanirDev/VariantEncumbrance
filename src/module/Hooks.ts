@@ -41,12 +41,16 @@ export const readyHooks = async () => {
         // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
         //const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
         let encumbranceData;
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-          encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
-        }
+        // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+        //   encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+        // }
         if (!encumbranceData) {
           encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
         }
+        // if (encumbranceData) {
+        //   VariantEncumbranceImpl.manageActiveEffect(actorEntity, encumbranceData);
+        // }
+
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
           encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
