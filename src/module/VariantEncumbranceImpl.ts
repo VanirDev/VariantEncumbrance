@@ -622,15 +622,15 @@ export const VariantEncumbranceImpl = {
     }
 
     let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
-    if (totalWeight >= lightMax && totalWeight < mediumMax) {
+    if (totalWeight > lightMax && totalWeight <= mediumMax) {
       speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease');
       encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
     }
-    if (totalWeight >= mediumMax && totalWeight < heavyMax) {
+    if (totalWeight > mediumMax && totalWeight <= heavyMax) {
       speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease');
       encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
     }
-    if (totalWeight >= heavyMax) {
+    if (totalWeight > heavyMax) {
       encumbranceTier = ENCUMBRANCE_TIERS.MAX;
     }
 
