@@ -2,6 +2,8 @@
 
 - try to fix the bug [Variant Encumbrance module issues](https://www.reddit.com/r/FoundryVTT/comments/qpyuv6/variant_encumbrance_module_issues/)
 - Add new checks for remove Active Effects for strange feedback from the users
+- Add new buttons on the header sheet of the actor for choose when to avoid to add the Active Effect
+- Added a feature soltuino for [Provide alternative weight trigger method](https://github.com/VanirDev/VariantEncumbrance/issues/49)
 
 ### Update 0.6.4 [BREAKING CHANGES]
 

@@ -164,14 +164,14 @@ export const registerSettings = function () {
     default: 20,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+  // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
+  //   name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
+  //   hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
+  //   scope: 'world',
+  //   config: true,
+  //   type: Boolean,
+  //   default: false,
+  // });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
     name: getGame().i18n.localize(

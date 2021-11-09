@@ -90,3 +90,12 @@ Hooks.once('ready', () => {
 });
 
 // Add any additional hooks if necessary
+
+// Hooks.once('socketlib.ready', () => {
+//   //@ts-ignore
+//   getGame().variantencumbrance = getGame().variantencumbrance || {};
+//   //@ts-ignore
+//   getGame().variantencumbrance.effectInterface = new EffectInterface();
+//   //@ts-ignore
+//   getGame().variantencumbrance.effectInterface.initialize();
+// });

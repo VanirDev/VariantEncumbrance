@@ -1,5 +1,5 @@
 import { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
-import { getGame } from './settings';
+import { getGame } from '../settings';
 
 /**
  * Data class for defining an effect

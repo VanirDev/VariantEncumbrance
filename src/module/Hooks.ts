@@ -24,7 +24,11 @@ export let itemContainerActive;
 
 export let invMidiQol;
 
+// export const effectInterface = new EffectInterface();
+
 export const readyHooks = async () => {
+  // effectInterface.initialize();
+
   ENCUMBRANCE_STATE = {
     UNENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.unencumbered'), // "Unencumbered",
     ENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.encumbered'), // "Encumbered",
@@ -40,16 +44,14 @@ export const readyHooks = async () => {
         //const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
         // let encumbranceData = await <EncumbranceData>await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "add");
         //const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, null, EncumbranceMode.ADD);
-        let encumbranceData;
+        // let encumbranceData;
         // if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
         //   encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
         // }
-        if (!encumbranceData) {
-          encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
-        }
-        // if (encumbranceData) {
-        //   VariantEncumbranceImpl.manageActiveEffect(actorEntity, encumbranceData);
+        // if (!encumbranceData) {
+        const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
         // }
+        // VariantEncumbranceImpl.manageActiveEffect(actorEntity,encumbranceData.encumbranceTier);
 
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
@@ -295,14 +297,16 @@ export const readyHooks = async () => {
           EncumbranceFlags.ENABLED_AE,
           enableVarianEncumbranceEffectsOnSpecificActorFlag,
         );
+      } else {
+        enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
+          actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
+        );
       }
-      enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
-        actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
-      );
       const removeLabelButtonsSheetHeader = <boolean>(
         getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
       );
-      if (app.object.isOwner) {
+      if (getGame().user?.isGM) {
+        //if (app.object.isOwner) {
         // only prototype actors
         if (!app.object.token) {
           //   varianEncumbranceButtons.push({
@@ -340,9 +344,9 @@ export const readyHooks = async () => {
                 : i18n('variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor');
             }
             if (enableVarianEncumbranceEffectsOnSpecificActorFlag) {
-              await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
+              await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
             } else {
-              // await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
+              await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
             }
             ev.currentTarget.innerHTML = enableVarianEncumbranceEffectsOnSpecificActorFlag
               ? `<i class="fas fa-weight-hanging"></i>${newText}`
@@ -355,6 +359,7 @@ export const readyHooks = async () => {
       if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
         actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE);
       }
+      await VariantEncumbranceImpl.manageActiveEffectLimited(actorEntity);
     }
   });
 };
@@ -441,6 +446,8 @@ export const initHooks = () => {
   invPlusActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
   invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
   itemContainerActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
+
+  // effectInterface.initialize();
 };
 
 // export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {

@@ -42,7 +42,7 @@
   "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.hint": "I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item",
 
   "variant-encumbrance-dnd5e.setting.enableVarianEncumbranceOnSpecificActor.name": "Enable/Disable the feature for applying the variant encumbrance active effects for specific actor",
-  "variant-encumbrance-dnd5e.setting.enableVarianEncumbranceOnSpecificActor.hint": "If true add on the header sheet of the actor a button for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues",
+  "variant-encumbrance-dnd5e.setting.enableVarianEncumbranceOnSpecificActor.hint": "If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues",
 
   "variant-encumbrance-dnd5e.setting.removeLabelButtonsSheetHeader.name": "Remove label from buttons on the header character sheet",
   "variant-encumbrance-dnd5e.setting.removeLabelButtonsSheetHeader.hint": "Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true",
@@ -59,6 +59,6 @@
   "variant-encumbrance-dnd5e.effect.name.overburdened": "Overburdened",
   "variant-encumbrance-dnd5e.effect.description.overburdened": "Lowers movement to 0 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves",
 
-  "variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor": "Disable Variant Encumbrance on this Actor",
-  "variant-encumbrance-dnd5e.label.enableVarianEncumbranceOnSpecificActor": "Enable Variant Encumbrance on this Actor"
+  "variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor": "Disabled VE",
+  "variant-encumbrance-dnd5e.label.enableVarianEncumbranceOnSpecificActor": "Enabled VE"
 }

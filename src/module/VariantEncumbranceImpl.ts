@@ -19,8 +19,8 @@ import {
   EncumbranceMode,
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
-import Effect from './Effect';
-import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, itemContainerActive } from './Hooks';
+import Effect from './lib/effect';
+import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
@@ -136,20 +136,18 @@ export const VariantEncumbranceImpl = {
     }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, inventoryItems);
-    // Add pre check for encumbrance tier
-    if (<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
-      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-        const encumbranceDataCurrent = <EncumbranceData>(
-          actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
-        );
-        if (encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier) {
-          //We ignore all the AE check
-          return;
-        }
-      }
-    }
-
-    // SEEM NOT NECESSARY
+    // SEEM NOT NECESSARY Add pre check for encumbrance tier
+    // if (<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
+    //   if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+    //     const encumbranceDataCurrent = <EncumbranceData>(
+    //       actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
+    //     );
+    //     if (encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier) {
+    //       //We ignore all the AE check
+    //       return;
+    //     }
+    //   }
+    // }
 
     // const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
     //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
@@ -221,6 +219,7 @@ export const VariantEncumbranceImpl = {
     }
 
     await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
+
     const enableVarianEncumbranceEffectsOnActorFlag = <boolean>(
       actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
     );
@@ -369,13 +368,38 @@ export const VariantEncumbranceImpl = {
         return;
       }
       if (effectName == ENCUMBRANCE_STATE.UNENCUMBERED) {
-        VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-      } else {
-        VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-        if (!(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))) {
-          const origin = `Actor.${actorEntity.data._id}`;
-          VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceTier);
+        if (effectEntityPresent?.id) {
+          await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
         }
+      } else {
+        if (effectEntityPresent?.id) {
+          await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
+        }
+        if (!(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))) {
+          const origin = <string>actorEntity.id; // `Actor.${actorEntity.data._id}`;
+          await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceTier);
+        }
+      }
+    }
+  },
+
+  manageActiveEffectLimited: async function (actorEntity: Actor) {
+
+    for (const effectEntity of actorEntity.effects) {
+      const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+
+      if (!effectNameToSet) {
+        continue;
+      }
+
+      if (
+        hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
+        (effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+          effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
+      ) {
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
       }
     }
   },
@@ -879,7 +903,7 @@ export const VariantEncumbranceImpl = {
   },
 
   _addEncumbranceEffectsOverburdened: function ({ effect, actor }) {
-    const movement = actor.data.data.attributes.movement;
+    // const movement = actor.data.data.attributes.movement;
 
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
@@ -961,7 +985,12 @@ export const VariantEncumbranceImpl = {
     );
 
     if (effectToRemove) {
-      actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
+      // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
+      // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
+      // Why i need this ??? for avoid the double AE
+      await effectToRemove.update({disabled: true});
+      await effectToRemove.delete();
+
       log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
     }
   },
@@ -975,7 +1004,11 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
     if (effectToRemove) {
-      actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
+      // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
+      // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
+      // Why i need this ??? for avoid the double AE
+      await effectToRemove.update({disabled: true});
+      await effectToRemove.delete();
       log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
     }
   },
@@ -988,24 +1021,6 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to add the effect to
    */
   async addEffect(effectName: string, actor: Actor, origin: string, encumbranceTier: number) {
-    // let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
-    // switch (effectName) {
-    //   case ENCUMBRANCE_STATE.UNENCUMBERED:
-    //     encumbranceTier = ENCUMBRANCE_TIERS.NONE;
-    //     break;
-    //   case ENCUMBRANCE_STATE.ENCUMBERED:
-    //     encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
-    //     break;
-    //   case ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED:
-    //     encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
-    //     break;
-    //   case ENCUMBRANCE_STATE.OVERBURDENED:
-    //     encumbranceTier = ENCUMBRANCE_TIERS.MAX;
-    //     break;
-    //   default:
-    //     return;
-    // }
-
     let speedDecrease: number | null = 0;
     if (encumbranceTier == ENCUMBRANCE_TIERS.NONE) {
       speedDecrease = 0;
@@ -1016,7 +1031,7 @@ export const VariantEncumbranceImpl = {
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.MAX) {
       speedDecrease = null;
     }
-    // let effect = VariantEncumbranceImpl.findEffectByName(effectName);
+    // let effect = VariantEncumbranceImpl.findEffectByName(effectName, actor.id);
     //const actor = await VariantEncumbranceImpl._foundryHelpers.getActorByUuid(uuid);
     // if (effect.isDynamic) {
     const effect: Effect | null = await VariantEncumbranceImpl.addDynamicEffects(
@@ -1039,7 +1054,8 @@ export const VariantEncumbranceImpl = {
       };
       const activeEffectData = effect.convertToActiveEffectData(origin);
       actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
-      log(`Added effect ${effect.name} to ${actor.name} - ${actor.id}`);
+      // effectInterface.addEffect(effectName, actor.id, origin);
+      log(`Added effect ${effect.name ? effect.name : effectName} to ${actor.name} - ${actor.id}`);
     }
   },
 };

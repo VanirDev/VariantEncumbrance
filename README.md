@@ -126,7 +126,8 @@ variant-encumbrance-dnd5e:
     heavyMax: 150,
     encumbranceTier: 0,
     speedDecrease: 0
-  }
+  },
+  enabledae: true
 }
 ```
 
