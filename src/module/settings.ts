@@ -43,7 +43,7 @@ export const registerSettings = function () {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
     scope: 'world',
-    config: true,
+    config: false,
     type: Boolean,
     default: true,
   });
@@ -173,5 +173,25 @@ export const registerSettings = function () {
     default: false,
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
+    name: getGame().i18n.localize(
+      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.name',
+    ),
+    hint: getGame().i18n.localize(
+      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.hint',
+    ),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
 };

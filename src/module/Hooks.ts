@@ -277,6 +277,86 @@ export const readyHooks = async () => {
   //     }
   //   }
   // });
+  Hooks.on('getActorSheetHeaderButtons', async (app, buttons: any[]) => {
+    const actorSheet = <ActorSheet>app.object.sheet;
+    const actorEntity = <Actor>actorSheet.actor;
+    const enableVarianEncumbranceOnSpecificActor = <boolean>(
+      getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor')
+    );
+    if (enableVarianEncumbranceOnSpecificActor) {
+      const varianEncumbranceButtons: any[] = [];
+      if (!actorEntity) {
+        return;
+      }
+      let enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
+      if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+        await actorEntity.setFlag(
+          VARIANT_ENCUMBRANCE_FLAG,
+          EncumbranceFlags.ENABLED_AE,
+          enableVarianEncumbranceEffectsOnSpecificActorFlag,
+        );
+      }
+      enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
+        actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
+      );
+      const removeLabelButtonsSheetHeader = <boolean>(
+        getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
+      );
+      if (app.object.isOwner) {
+        // only prototype actors
+        if (!app.object.token) {
+          //   varianEncumbranceButtons.push({
+          //       label: removeLabelSheetHeader ? "" : "Theatre.UI.Config.Theatre",
+          //       class: "configure-theatre",
+          //       icon: "fas fa-user-edit",
+          //       onclick: ev => Theatre.onConfigureInsert(ev, app.object.sheet)
+          //   });
+        }
+        varianEncumbranceButtons.push({
+          label: removeLabelButtonsSheetHeader
+            ? ''
+            : <string>(
+                (enableVarianEncumbranceEffectsOnSpecificActorFlag
+                  ? 'variant-encumbrance-dnd5e.label.enableVarianEncumbranceOnSpecificActor'
+                  : 'variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor')
+              ),
+          class: 'enable-disable-variant-encumbrance',
+          icon: enableVarianEncumbranceEffectsOnSpecificActorFlag ? 'fas fa-weight-hanging' : 'fas fa-feather',
+          onclick: async (ev) => {
+            await actorEntity.setFlag(
+              VARIANT_ENCUMBRANCE_FLAG,
+              EncumbranceFlags.ENABLED_AE,
+              !enableVarianEncumbranceEffectsOnSpecificActorFlag,
+            );
+            enableVarianEncumbranceEffectsOnSpecificActorFlag = !enableVarianEncumbranceEffectsOnSpecificActorFlag;
+            let newText;
+            if (enableVarianEncumbranceEffectsOnSpecificActorFlag) {
+              newText = removeLabelButtonsSheetHeader
+                ? ''
+                : i18n('variant-encumbrance-dnd5e.label.enableVarianEncumbranceOnSpecificActor');
+            } else {
+              newText = removeLabelButtonsSheetHeader
+                ? ''
+                : i18n('variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor');
+            }
+            if (enableVarianEncumbranceEffectsOnSpecificActorFlag) {
+              await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
+            } else {
+              // await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
+            }
+            ev.currentTarget.innerHTML = enableVarianEncumbranceEffectsOnSpecificActorFlag
+              ? `<i class="fas fa-weight-hanging"></i>${newText}`
+              : `<i class="fas fa-feather"></i>${newText}`;
+          },
+        });
+      }
+      buttons.unshift(...varianEncumbranceButtons);
+    } else {
+      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+        actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE);
+      }
+    }
+  });
 };
 
 export const setupHooks = async () => {
