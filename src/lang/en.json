@@ -38,6 +38,9 @@
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.name": "Encumbered Speed Decrease",
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered.",
 
+  "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.name" : "Enable pre check encumbrance tier",
+  "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.hint" : "If true the add/remove of the AE is launched only when there is a change on the level of the tier is ignored when add/remove/update item",
+
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
 

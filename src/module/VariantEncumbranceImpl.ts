@@ -11,8 +11,6 @@ import {
   getGame,
   VARIANT_ENCUMBRANCE_FLAG,
 } from './settings';
-//@ts-ignore
-import { DND5E } from '../../../systems/dnd5e/module/config';
 import { i18n, log, warn } from '../VariantEncumbrance';
 import {
   EncumbranceActorType,
@@ -104,7 +102,7 @@ export const VariantEncumbranceImpl = {
     const inventoryItems:Item[] = [];
     const isAlreadyInActor = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
     const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-    actorEntity.data.items.contents.forEach((im:Item) => {  
+    actorEntity.data.items.contents.forEach((im:Item) => {
       if (im && physicalItems.includes(im.type)) {
         if(im.id === currentItemId){
           if(mode == EncumbranceMode.DELETE){
@@ -129,6 +127,17 @@ export const VariantEncumbranceImpl = {
     }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, inventoryItems);
+    // Add pre check for encumbrance tier
+    if(<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')){
+      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+        const encumbranceDataCurrent = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+        if(encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier){
+          //We ignore all the AE check
+          return;
+        }
+      }
+    }
+
     VariantEncumbranceImpl.manageActiveEffect(actorEntity, encumbranceData);
   },
 
@@ -218,7 +227,7 @@ export const VariantEncumbranceImpl = {
 
       // Remove all encumbrance effect renamed from the player
       if (
-        encumbranceData.encumbranceTier &&
+        // encumbranceData.encumbranceTier &&
         effectEntity.data.flags &&
         hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
         effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
@@ -226,13 +235,13 @@ export const VariantEncumbranceImpl = {
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
       ) {
-        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
       // Remove Old settings
       if (effectEntity.data.flags && hasProperty(effectEntity.data, `flags.VariantEncumbrance`)) {
-        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -269,53 +278,56 @@ export const VariantEncumbranceImpl = {
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
       ) {
-        VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
-      if (typeof encumbranceData.encumbranceTier === 'number') {
-        if (!effectEntityPresent) {
-          effectEntityPresent = effectEntity;
-        } else {
-          // Cannot have more than one effect tier present at any one time
-          if (
-            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-          ) {
-            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-          }
-        }
-      } else if (encumbranceData.encumbranceTier) {
-        if (!effectEntityPresent) {
-          effectEntityPresent = effectEntity;
-        } else {
-          // Cannot have more than one effect tier present at any one time
-          if (
-            effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-            effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-          ) {
-            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-          }
-        }
-      } else {
-        // This should not be reachable, shouldn't this else be throwing an error?
-        if (
+      // if (typeof encumbranceData.encumbranceTier === 'number') {
+      //   if (!effectEntityPresent) {
+      //     effectEntityPresent = effectEntity;
+      //   } else {
+      //     // Cannot have more than one effect tier present at any one time
+      //     if (
+      //       effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+      //     ) {
+      //       VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+      //     }
+      //   }
+      // } else if (encumbranceData.encumbranceTier) {
+      //   if (!effectEntityPresent) {
+      //     effectEntityPresent = effectEntity;
+      //   } else {
+      //     // Cannot have more than one effect tier present at any one time
+      //     if (
+      //       effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
+      //       effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
+      //     ) {
+      //       VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+      //     }
+      //   }
+      // } else {
+
+      if (
+        hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
+        (
           effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-        ) {
-          if (!effectEntityPresent) {
-            effectEntityPresent = effectEntity;
-          } else {
-            VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-          }
+        )
+      ) {
+        if (!effectEntityPresent) {
+          effectEntityPresent = effectEntity;
+        } else {
+          await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         }
       }
+      // }
     }
 
     let effectName;
@@ -349,10 +361,10 @@ export const VariantEncumbranceImpl = {
         VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
       } else {
         VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-        //if(!await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity)){
+        if(!await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity)){
           const origin = `Actor.${actorEntity.data._id}`;
           VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceData);
-        //}
+        }
       }
     }
   },

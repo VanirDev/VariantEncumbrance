@@ -1,3 +1,8 @@
+### Update 0.6.5
+
+- try to fix the bug [Variant Encumbrance module issues](https://www.reddit.com/r/FoundryVTT/comments/qpyuv6/variant_encumbrance_module_issues/)
+- Add new checks for remove Active Effects for strange feedback from the users
+
 ### Update 0.6.4 [BREAKING CHANGES]
 
 - Clean up of the code
