@@ -136,18 +136,6 @@ export const VariantEncumbranceImpl = {
     }
 
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, inventoryItems);
-    // SEEM NOT NECESSARY Add pre check for encumbrance tier
-    // if (<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
-    //   if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-    //     const encumbranceDataCurrent = <EncumbranceData>(
-    //       actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
-    //     );
-    //     if (encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier) {
-    //       //We ignore all the AE check
-    //       return;
-    //     }
-    //   }
-    // }
 
     // const tier = hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.TIER}`)
     //   ? actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.TIER)
@@ -216,6 +204,20 @@ export const VariantEncumbranceImpl = {
         //@ts-ignore
         actorEntity.data.data.attributes.movement.walk,
       );
+    }
+
+    // SEEM NOT NECESSARY Add pre check for encumbrance tier
+    if (<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
+      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+        const encumbranceDataCurrent = <EncumbranceData>(
+          actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
+        );
+        if (encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier) {
+          //We ignore all the AE check
+          await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
+          return;
+        }
+      }
     }
 
     await actorEntity.setFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA, encumbranceData);
@@ -384,7 +386,6 @@ export const VariantEncumbranceImpl = {
   },
 
   manageActiveEffectLimited: async function (actorEntity: Actor) {
-
     for (const effectEntity of actorEntity.effects) {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
 
@@ -988,7 +989,7 @@ export const VariantEncumbranceImpl = {
       // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
       // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
       // Why i need this ??? for avoid the double AE
-      await effectToRemove.update({disabled: true});
+      await effectToRemove.update({ disabled: true });
       await effectToRemove.delete();
 
       log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
@@ -1007,7 +1008,7 @@ export const VariantEncumbranceImpl = {
       // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
       // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
       // Why i need this ??? for avoid the double AE
-      await effectToRemove.update({disabled: true});
+      await effectToRemove.update({ disabled: true });
       await effectToRemove.delete();
       log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
     }

@@ -41,9 +41,9 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ## Known Issue
 
-- Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Esxert than me to handle this
+- Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Expert than me to handle this, but i still think to have done a good job with the handling of the use cases.
 - Limitation on some character sheet, open a issue and i'll try to make a fix.
-- Is not full synchronized with DAE in favor od the active effects mechanism
+- Is not full synchronized with DAE in favor of the standard active effects mechanism. but you can still use dae on the active effect.
 
 ## Character Sheets compatibility
 
@@ -75,29 +75,22 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ### Redesigned weight bar
 
-![](https://i.imgur.com/jFflnje.png)
-![](https://i.imgur.com/xruflPz.png)
-![](https://i.imgur.com/Om7hK6o.png)
-![](https://i.imgur.com/G5p8KV6.png)
+![green](./wiki/green.png)
+![orange](./wiki/orange.png)
+![red](./wiki/red.png)
+![yellowblack](./wiki/yellowblack.png)
 
 The default character weight bar has received a lick of paint, giving labels for all four weight thresholds. These thresholds are also reconfigurable in the settings, and will update the bar to display the new proportions.
 
-### Speed Reduction (Optional)
+#### Effect-based Speed Reduction with Active Effects
 
-#### Effect-based Speed Reduction (0.2+)
+![ae](./wiki/ae.png)
 
-![](https://i.imgur.com/ztcUqfU.png)
-<a name="ActiveEffects"/>
-
-#### Old Speed Reduction (Pre 0.1.5)
-
-![](https://i.imgur.com/DCfGuUJ.png)
+![ae2](./wiki/ae2.png)
 
 Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (For 0.1.5, the speed value must be separated by a space from its units).
 
 ### Character Size & Powerful Build (Optional)
-
-<a name="sizeAndBuild"/>
 
 Enabled by default, the module will modify your maximum carry weight according to your character's size, and whether you have the powerful build special trait. This feature can be disabled in the module settings. (Credit to [Eruestani](https://github.com/Eruestani) for implementing this).
 
@@ -105,9 +98,25 @@ Enabled by default, the module will modify your maximum carry weight according t
 
 In the module settings, custom multipliers are available for unequipped, equipped, and proficiently equipped items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them, but this lends some flexibility to the system for anyone to use.
 
-### Variant Encumbrance Flag
+### Buttons header sheet for enable/disable the Active Effect actor by actor
 
-<a name="variantFlags"/>
+Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
+
+If you want to have the Varian Encumbrance Active Effects enabled on your actor make sure to have the "weight" symbol on the header sheet
+
+![img1](./wiki/feature_header_weight_label.png)
+
+![img2](./wiki/feature_header_weight_no_label.png)
+
+
+If you want to have the Varian Encumbrance Active Effects disabled on your actor make sure to have the "feather" symbol on the header sheet
+
+![img3](./wiki/feature_header_light_label.png)
+
+![img4](./wiki/feature_header_light_no_label.png)
+
+
+### Variant Encumbrance Flag
 
 Should you wish to integrate some of Variant Encumbrance's calculations into your own modules, there is now a flag which stores the actor's encumbrance tier, weight, and modified speed. Encumbrance tier is presented as 0, 1, 2, 3, as Unencumbered, Encumbered, Heavily Encumbered, Over Encumbered, respectively.
 
@@ -130,6 +139,39 @@ variant-encumbrance-dnd5e:
   enabledae: true
 }
 ```
+
+# Settings
+
+- **Unencumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.
+
+- **Encumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.
+
+- **Heavily Enc. Strength Multiplier:** Multiplier used to calculate maximum carrying weight from the strength ability score.
+
+- **Variant Encumbrance Speed Penalties:** Enable automatic speed penalties from carry weight.
+
+- **Unequipped Item Weight Multiplier:** Multiplier for items when not equipped.
+
+- **Equipped Item Weight Multiplier:** Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.
+
+- **Proficient Equipped Item Weight Multiplier:** Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.
+
+- **Currency Per Weight Unit:** Define the number of coins required to equal 1 unit of weight.
+
+- **Variant Encumbrance Size Modifiers:** Enable multipliers from creature size.
+
+- **Weight Units:** Units displayed in the encumbrance bar (just graphics).",
+
+- **Lightly Encumbered Speed Decrease:** The number of speed units subtracted when lightly encumbered, default is 10.
+
+- **Encumbered Speed Decrease:** The number of speed units subtracted when heavily encumbered, default is 20.
+
+- **Enable pre check encumbrance tier:** I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item
+
+- **Enable/Disable the feature for applying the variant encumbrance active effects for specific actor:** If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues",
+
+- **Remove label from buttons on the header character sheet:** Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true
+
 
 # Build
 

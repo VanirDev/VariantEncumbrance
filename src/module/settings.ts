@@ -39,14 +39,16 @@ export function getGame(): Game {
 }
 
 export const registerSettings = function () {
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
-    scope: 'world',
-    config: false,
-    type: Boolean,
-    default: true,
-  });
+
+  // Removed on 0.6.5
+  // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
+  //   name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
+  //   hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
+  //   scope: 'world',
+  //   config: false,
+  //   type: Boolean,
+  //   default: true,
+  // });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.name'),
@@ -164,14 +166,14 @@ export const registerSettings = function () {
     default: 20,
   });
 
-  // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
-  //   name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
-  //   hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
-  //   scope: 'world',
-  //   config: true,
-  //   type: Boolean,
-  //   default: false,
-  // });
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
     name: getGame().i18n.localize(

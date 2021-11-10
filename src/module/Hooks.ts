@@ -49,7 +49,10 @@ export const readyHooks = async () => {
         //   encumbranceData = <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
         // }
         // if (!encumbranceData) {
-        const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
+        const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
+          actorEntity,
+          actorEntity.data.items.contents,
+        );
         // }
         // VariantEncumbranceImpl.manageActiveEffect(actorEntity,encumbranceData.encumbranceTier);
 
