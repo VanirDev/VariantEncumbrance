@@ -1,10 +1,12 @@
 ### Update 0.6.5
 
+- Bug fix "wrong" check for the weight value of the encumbrance tier (ty to gambet)
 - try to fix the bug [Variant Encumbrance module issues](https://www.reddit.com/r/FoundryVTT/comments/qpyuv6/variant_encumbrance_module_issues/)
 - Add new checks for remove Active Effects for strange feedback from the users
 - Add new buttons on the header sheet of the actor for choose when to avoid to add the Active Effect
 - Added a feature solution for [Provide alternative weight trigger method](https://github.com/VanirDev/VariantEncumbrance/issues/49)
 - Update readme.md and wiki
+-  try to fix a possible incompatibility/bug with module [Illandril's Inventory Sorter (5e)](https://github.com/illandril/FoundryVTT-inventory-sorter) (ty to gambet)
 
 ### Update 0.6.4 [BREAKING CHANGES]
 

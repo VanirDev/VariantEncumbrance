@@ -39,7 +39,6 @@ export function getGame(): Game {
 }
 
 export const registerSettings = function () {
-
   // Removed on 0.6.5
   // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
   //   name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
