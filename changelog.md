@@ -1,3 +1,10 @@
+### Update 0.6.6 [THE ANGRY PATCH]
+
+- Add stupid feature for some people want ot save 1s on the 2s i need for the weight calculation for manage all the settings and  integration with external module....
+- Add new integration with dfred convenient effects for print on chat external custom effects
+- Add 3 configuration instead of 2 on hedare sheet of the actorcheckout the readme for detail
+- Add setting for rollback tot the standard dnd5e system calculation weight...
+
 ### Update 0.6.5
 
 - Bug fix "wrong" check for the weight value of the encumbrance tier (ty to gambet)

@@ -5,11 +5,20 @@
   "variant-encumbrance-dnd5e.setting.lightMultiplier.name": "Unencumbered Strength Multiplier",
   "variant-encumbrance-dnd5e.setting.lightMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
 
+  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.name": "Unencumbered Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).",
+
   "variant-encumbrance-dnd5e.setting.mediumMultiplier.name": "Encumbered Strength Multiplier",
   "variant-encumbrance-dnd5e.setting.mediumMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
 
+  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.name": "Encumbered Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).",
+
   "variant-encumbrance-dnd5e.setting.heavyMultiplier.name": "Heavily Enc. Strength Multiplier",
   "variant-encumbrance-dnd5e.setting.heavyMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+
+  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.name": "Heavily Enc. Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
   "variant-encumbrance-dnd5e.setting.useVariantEncumbrance.name": "Variant Encumbrance Speed Penalties",
   "variant-encumbrance-dnd5e.setting.useVariantEncumbrance.hint": "Enable automatic speed penalties from carry weight.",
@@ -25,6 +34,15 @@
 
   "variant-encumbrance-dnd5e.setting.currencyWeight.name": "Currency Per Weight Unit",
   "variant-encumbrance-dnd5e.setting.currencyWeight.hint": "Define the number of coins required to equal 1 unit of weight.",
+
+  "variant-encumbrance-dnd5e.setting.currencyWeightMetric.name": "Currency Per Weight Unit (Metric System)",
+  "variant-encumbrance-dnd5e.setting.currencyWeightMetric.hint": "Define the number of coins required to equal 1 unit of weight (Metric System).",
+
+  "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplier.name": "Vehicle weights Weight Multiplier, lbs in an imperial ton",
+  "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplier.hint": "Vehicle weights are an order of magnitude greater, Multiplier for vehicles.",
+
+  "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplierMetric.name": "Vehicle weights Weight Multiplier, kg in a metric ton (Metric System)",
+  "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplierMetric.hint": "Vehicle weights are an order of magnitude greater, Multiplier for vehicles (Metric System).",
 
   "variant-encumbrance-dnd5e.setting.sizeMultipliers.name": "Variant Encumbrance Size Modifiers",
   "variant-encumbrance-dnd5e.setting.sizeMultipliers.hint": "Enable multipliers from creature size.",
@@ -48,7 +66,7 @@
   "variant-encumbrance-dnd5e.setting.removeLabelButtonsSheetHeader.hint": "Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true",
 
   "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.name": "Use standard calculation weight of the dnd5e system",
-  "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.hint": "I DON'T RECCOMENDED it, but some peoplae seem to lose their mind for 4ms instead of 2 ms on the calculation weight ???, you will lose all the benefit form the others feature like Euqipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc.",
+  "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.hint": "I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit form the others feature like Euqipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc.",
 
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",

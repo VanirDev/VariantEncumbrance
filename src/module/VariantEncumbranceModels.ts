@@ -16,6 +16,13 @@ export class VariantEncumbranceItemData {
 //     add: number[];
 // }
 
+export class EncumbranceDnd5e {
+  value: number;
+  max:number;
+  pct:number;
+  encumbered?: boolean; //Vehicle not have this
+}
+
 export class EncumbranceData {
   totalWeight: number;
   lightMax: number;

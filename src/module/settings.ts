@@ -58,6 +58,15 @@ export const registerSettings = function () {
     default: 5,
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 2.3,
+  });
+
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.hint'),
@@ -67,6 +76,15 @@ export const registerSettings = function () {
     default: 10,
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 4.5,
+  });
+
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.hint'),
@@ -74,6 +92,19 @@ export const registerSettings = function () {
     config: true,
     type: Number,
     default: 15,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.strMultiplier = value;
+    },
+  });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 6.8,
     onChange: (value) => {
       // NOT NECESSARY WE USE THE VALUE ON THE SETTING
       // DND5E.encumbrance.strMultiplier = value;
@@ -123,6 +154,45 @@ export const registerSettings = function () {
     config: true,
     type: Number,
     default: 50,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.currencyPerWeight = value;
+    },
+  });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 110,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.currencyPerWeight = value;
+    },
+  });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 2000,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.currencyPerWeight = value;
+    },
+  });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 1000,
     onChange: (value) => {
       // NOT NECESSARY WE USE THE VALUE ON THE SETTING
       // DND5E.encumbrance.currencyPerWeight = value;

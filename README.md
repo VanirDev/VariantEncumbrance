@@ -100,13 +100,13 @@ In the module settings, custom multipliers are available for unequipped, equippe
 
 ### Buttons header sheet for enable/disable the Active Effect actor by actor
 
-Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
+Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
 
 | Symbol Button Header Sheet  | Description  |
 |:----:|:----:|:----:|
 |![weight-hanging-solid](./wiki/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
 |![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects disabled on your actor make sure to have the "balance" symbol on the header sheet |
-|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet. (NOTE: the weight is not calculated anymore and remain froze) |
+|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet. *The weight is not calculated anymore and remain froze (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calcualtion system dnd5e)* |
 
 Some preview:
 
@@ -143,7 +143,8 @@ variant-encumbrance-dnd5e:
     encumbranceTier: 0,
     speedDecrease: 0
   },
-  enabledae: true
+  enabledae: true,
+  enabledwe: true
 }
 ```
 
@@ -178,6 +179,8 @@ variant-encumbrance-dnd5e:
 - **Enable/Disable the feature for applying the variant encumbrance active effects for specific actor:** If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues",
 
 - **Remove label from buttons on the header character sheet:** Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true
+
+- **Use standard calculation weight of the dnd5e system:** I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit form the others feature like Euqipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss..
 
 
 # Build
