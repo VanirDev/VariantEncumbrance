@@ -673,7 +673,7 @@ export const VariantEncumbranceImpl = {
         // Compute overall encumbrance
         // const max = actorData.data.attributes.capacity.cargo;
         //@ts-ignore
-        max = (actorData.data.attributes.capacity.cargo * mod).toNearest(0.1);
+        max = (actorEntity.data.data.attributes.capacity.cargo * mod).toNearest(0.1);
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
       } else {
         // ===========================
@@ -705,7 +705,7 @@ export const VariantEncumbranceImpl = {
       // Inventory encumbrance
       // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
       //@ts-ignore
-      actorEntity.data.data.attributes.encumbrance = {
+      (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
         value: totalWeight.toNearest(0.1),
         max,
         pct,
@@ -1172,9 +1172,18 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
       mod = Math.min(mod * 2, 8);
     }
   }
-
-  //@ts-ignore
-  const strengthScore = actorEntity.data.data.abilities.str.value * mod;
+  
+  let strengthScore = 1;
+  if (actorEntity.type == EncumbranceActorType.CHARACTER) {
+    //@ts-ignore
+    strengthScore = actorEntity.data.data.abilities.str.value * mod;
+  } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
+    //@ts-ignore
+    strengthScore = actorEntity.data.data.attributes.capacity.cargo * mod;
+  } else {
+    //@ts-ignore
+    strengthScore = actorEntity.data.data.abilities.str.value * mod;
+  }
 
   const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
     ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
@@ -1267,3 +1276,89 @@ function _standardVehicleWeightCalculation(actorEntity: Actor): EncumbranceDnd5e
   //@ts-ignore
   return <EncumbranceDnd5e>actorEntity._computeEncumbrance(totalWeight, data);
 }
+
+// VERSION 1.5.3
+
+  // /**
+  //  * Compute the level and percentage of encumbrance for an Actor.
+  //  *
+  //  * Optionally include the weight of carried currency across all denominations by applying the standard rule
+  //  * from the PHB pg. 143
+  //  * @param {object} actorData      The data object for the Actor being rendered
+  //  * @returns {{max: number, value: number, pct: number}}  An object describing the character's encumbrance level
+  //  * @private
+  //  */
+  //  _computeEncumbranceActor(actorData) {
+
+  //   // Get the total weight from items
+  //   const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
+  //   let weight = actorData.items.reduce((weight, i) => {
+  //     if ( !physicalItems.includes(i.type) ) return weight;
+  //     const q = i.data.data.quantity || 0;
+  //     const w = i.data.data.weight || 0;
+  //     return weight + (q * w);
+  //   }, 0);
+
+  //   // [Optional] add Currency Weight (for non-transformed actors)
+  //   if ( game.settings.get("dnd5e", "currencyWeight") && actorData.data.currency ) {
+  //     const currency = actorData.data.currency;
+  //     const numCoins = Object.values(currency).reduce((val, denom) => val += Math.max(denom, 0), 0);
+
+  //     const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
+  //       ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+  //       : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+
+  //     weight += numCoins / currencyPerWeight;
+  //   }
+
+  //   // Determine the encumbrance size class
+  //   let mod = {
+  //     tiny: 0.5,
+  //     sm: 1,
+  //     med: 1,
+  //     lg: 2,
+  //     huge: 4,
+  //     grg: 8
+  //   }[actorData.data.traits.size] || 1;
+  //   if ( this.getFlag("dnd5e", "powerfulBuild") ) mod = Math.min(mod * 2, 8);
+
+  //   // Compute Encumbrance percentage
+  //   weight = weight.toNearest(0.1);
+
+  //   const strengthMultiplier = game.settings.get("dnd5e", "metricWeightUnits")
+  //     ? CONFIG.DND5E.encumbrance.strMultiplier.metric
+  //     : CONFIG.DND5E.encumbrance.strMultiplier.imperial;
+
+  //   const max = (actorData.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
+  //   const pct = Math.clamped((weight * 100) / max, 0, 100);
+  //   return { value: weight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
+  // }
+
+  // /**
+  //  * Compute the total weight of the vehicle's cargo.
+  //  * @param {number} totalWeight    The cumulative item weight from inventory items
+  //  * @param {object} actorData      The data object for the Actor being rendered
+  //  * @returns {{max: number, value: number, pct: number}}
+  //  * @private
+  //  */
+  //  _computeEncumbranceVehicle(totalWeight, actorData) {
+
+  //   // Compute currency weight
+  //   const totalCoins = Object.values(actorData.data.currency).reduce((acc, denom) => acc + denom, 0);
+
+  //   const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
+  //     ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+  //     : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+
+  //   totalWeight += totalCoins / currencyPerWeight;
+
+  //   // Vehicle weights are an order of magnitude greater.
+  //   totalWeight /= game.settings.get("dnd5e", "metricWeightUnits")
+  //     ? CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric
+  //     : CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial;
+
+  //   // Compute overall encumbrance
+  //   const max = actorData.data.attributes.capacity.cargo;
+  //   const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
+  //   return {value: totalWeight.toNearest(0.1), max, pct};
+  // }
