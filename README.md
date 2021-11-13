@@ -104,7 +104,7 @@ In the module settings, custom multipliers are available for unequipped, equippe
 Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
 
 | Symbol Button Header Sheet  | Description  |
-|:----:|:----:|:----:|
+|:----:|:----:|
 |![weight-hanging-solid](./wiki/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
 |![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects disabled on your actor make sure to have the "balance" symbol on the header sheet |
 |![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet. *The weight is not calculated anymore and remain froze (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calcualtion system dnd5e)* |
