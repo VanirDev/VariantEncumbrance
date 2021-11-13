@@ -102,18 +102,25 @@ In the module settings, custom multipliers are available for unequipped, equippe
 
 Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
 
-If you want to have the Varian Encumbrance Active Effects enabled on your actor make sure to have the "weight" symbol on the header sheet
+| Symbol Button Header Sheet  | Description  |
+|:----:|:----:|:----:|
+|![weight-hanging-solid](./wiki/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
+|![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects disabled on your actor make sure to have the "balance" symbol on the header sheet |
+|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation enabled on your actor make sure to have the "weight" symbol on the header sheet. (NOTE: the weight is not calculated anymore and remain froze) |
 
-![img1](./wiki/feature_header_weight_label.png)
+Some preview:
 
-![img2](./wiki/feature_header_weight_no_label.png)
+![img1](./wiki/feature_header_weight_label_2.png)
 
+![img2](./wiki/feature_header_weight_nolabel_2.png)
 
-If you want to have the Varian Encumbrance Active Effects disabled on your actor make sure to have the "feather" symbol on the header sheet
+![img3](./wiki/feature_header_noae_label_2.png)
 
-![img3](./wiki/feature_header_light_label.png)
+![img4](./wiki/feature_header_noae_nolabel_2.png)
 
-![img4](./wiki/feature_header_light_no_label.png)
+![img5](./wiki/feature_header_light_label_2.png)
+
+![img6](./wiki/feature_header_light_nolabel_2.png)
 
 
 ### Variant Encumbrance Flag

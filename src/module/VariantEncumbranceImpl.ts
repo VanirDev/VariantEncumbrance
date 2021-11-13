@@ -76,6 +76,13 @@ export const VariantEncumbranceImpl = {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
 
+    const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
+      actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
+    );
+    if (!enableVarianEncumbranceWeightOnActorFlag) {
+      return;
+    }
+
     if (updatedItem) {
       let itemID: any;
       if (typeof updatedItem === 'string' || updatedItem instanceof String) {
@@ -421,6 +428,27 @@ export const VariantEncumbranceImpl = {
     inventoryItems: Item[],
     // mode?: EncumbranceMode,
   ): EncumbranceData {
+    const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
+      actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
+    );
+    if (!enableVarianEncumbranceWeightOnActorFlag) {
+      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+        return <EncumbranceData>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA);
+      } else {
+        // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
+        //@ts-ignore
+        const dataEncumbrance = actorEntity.data.data.attributes.encumbrance;
+        return {
+          totalWeight: dataEncumbrance.value,
+          lightMax: dataEncumbrance.max,
+          mediumMax: dataEncumbrance.max,
+          heavyMax: dataEncumbrance.max,
+          encumbranceTier: 0,
+          speedDecrease: 0,
+        };
+      }
+    }
+
     let speedDecrease = 0;
 
     let mod = 1; //actorEntity.data.data.abilities.str.value;

@@ -47,6 +47,9 @@
   "variant-encumbrance-dnd5e.setting.removeLabelButtonsSheetHeader.name": "Remove label from buttons on the header character sheet",
   "variant-encumbrance-dnd5e.setting.removeLabelButtonsSheetHeader.hint": "Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true",
 
+  "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.name": "Use standard calculation weight of the dnd5e system",
+  "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.hint": "I DON'T RECCOMENDED it, but some peoplae seem to lose their mind for 4ms instead of 2 ms on the calculation weight ???, you will lose all the benefit form the others feature like Euqipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc.",
+
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
 
@@ -59,6 +62,8 @@
   "variant-encumbrance-dnd5e.effect.name.overburdened": "Overburdened",
   "variant-encumbrance-dnd5e.effect.description.overburdened": "Lowers movement to 0 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves",
 
-  "variant-encumbrance-dnd5e.label.disableVarianEncumbranceOnSpecificActor": "Disabled VE",
-  "variant-encumbrance-dnd5e.label.enableVarianEncumbranceOnSpecificActor": "Enabled VE"
+  "variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor": "Disabled VE+WE",
+  "variant-encumbrance-dnd5e.label.enableWEOnSpecificActor": "Enabled WE",
+  "variant-encumbrance-dnd5e.label.disableVEOnSpecificActor": "Disabled VE",
+  "variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor": "Enabled VE+WE"
 }

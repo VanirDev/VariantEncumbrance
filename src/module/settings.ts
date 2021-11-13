@@ -195,4 +195,14 @@ export const registerSettings = function () {
     type: Boolean,
     default: true,
   });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStandardWeightCalculation', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
 };
