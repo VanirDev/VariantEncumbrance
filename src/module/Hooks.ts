@@ -37,7 +37,7 @@ export const readyHooks = async () => {
   Hooks.on(
     'renderActorSheet',
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
-      if (actorObject.isCharacter) {
+      if (actorObject.isCharacter || actorObject.isVehicle) {
         const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
         const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
           actorEntity,
@@ -280,151 +280,156 @@ export const readyHooks = async () => {
       return;
     }
 
-    if (enableVarianEncumbranceOnSpecificActor) {
-      const varianEncumbranceButtons: any[] = [];
+    if (
+      actorEntity &&
+      (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)){
 
-      let enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
-      if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
-        await actorEntity.setFlag(
-          VARIANT_ENCUMBRANCE_FLAG,
-          EncumbranceFlags.ENABLED_AE,
-          enableVarianEncumbranceEffectsOnSpecificActorFlag,
-        );
-      } else {
-        enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
-          actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
-        );
-      }
+      if (enableVarianEncumbranceOnSpecificActor) {
+        const varianEncumbranceButtons: any[] = [];
 
-      let enableVarianEncumbranceWeightOnSpecificActorFlag = true;
-      if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
-        await actorEntity.setFlag(
-          VARIANT_ENCUMBRANCE_FLAG,
-          EncumbranceFlags.ENABLED_WE,
-          enableVarianEncumbranceWeightOnSpecificActorFlag,
-        );
-      } else {
-        enableVarianEncumbranceWeightOnSpecificActorFlag = <boolean>(
-          actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
-        );
-      }
-
-      if (getGame().user?.isGM) {
-        let mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
-        let myicon = 'fas fa-weight-hanging';
-        let index = 0;
-        if (enableVarianEncumbranceEffectsOnSpecificActorFlag && enableVarianEncumbranceWeightOnSpecificActorFlag) {
-          mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
-          myicon = 'fas fa-weight-hanging';
-          index = 0;
-        } else if (
-          !enableVarianEncumbranceEffectsOnSpecificActorFlag &&
-          enableVarianEncumbranceWeightOnSpecificActorFlag
-        ) {
-          mylabel = i18n('variant-encumbrance-dnd5e.label.enableWEOnSpecificActor');
-          myicon = 'fas fa-balance-scale-right';
-          index = 1;
-        } else if (
-          !enableVarianEncumbranceEffectsOnSpecificActorFlag &&
-          !enableVarianEncumbranceWeightOnSpecificActorFlag
-        ) {
-          mylabel = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor');
-          myicon = 'fas fa-feather';
-          index = 2;
-        } else if (
-          enableVarianEncumbranceEffectsOnSpecificActorFlag &&
-          !enableVarianEncumbranceWeightOnSpecificActorFlag
-        ) {
-          // THIS USE CASE CAN'T BE HAPPENED WE REST TO THE STANDARD
-          mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
-          myicon = 'fas fa-weight-hanging';
-          index = 3;
+        let enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
+        if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+          await actorEntity.setFlag(
+            VARIANT_ENCUMBRANCE_FLAG,
+            EncumbranceFlags.ENABLED_AE,
+            enableVarianEncumbranceEffectsOnSpecificActorFlag,
+          );
         } else {
-          throw new Error('Something is wrong');
+          enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
+            actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
+          );
         }
 
-        const removeLabelButtonsSheetHeader = <boolean>(
-          getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
-        );
-
-        if (removeLabelButtonsSheetHeader) {
-          mylabel = '';
+        let enableVarianEncumbranceWeightOnSpecificActorFlag = true;
+        if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
+          await actorEntity.setFlag(
+            VARIANT_ENCUMBRANCE_FLAG,
+            EncumbranceFlags.ENABLED_WE,
+            enableVarianEncumbranceWeightOnSpecificActorFlag,
+          );
+        } else {
+          enableVarianEncumbranceWeightOnSpecificActorFlag = <boolean>(
+            actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
+          );
         }
 
-        //if (app.object.isOwner) {
-        // only prototype actors
-        if (!app.object.token) {
-          //   varianEncumbranceButtons.push({
-          //       label: removeLabelSheetHeader ? "" : "Theatre.UI.Config.Theatre",
-          //       class: "configure-theatre",
-          //       icon: "fas fa-user-edit",
-          //       onclick: ev => Theatre.onConfigureInsert(ev, app.object.sheet)
-          //   });
+        if (getGame().user?.isGM) {
+          let mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
+          let myicon = 'fas fa-weight-hanging';
+          let index = 0;
+          if (enableVarianEncumbranceEffectsOnSpecificActorFlag && enableVarianEncumbranceWeightOnSpecificActorFlag) {
+            mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
+            myicon = 'fas fa-weight-hanging';
+            index = 0;
+          } else if (
+            !enableVarianEncumbranceEffectsOnSpecificActorFlag &&
+            enableVarianEncumbranceWeightOnSpecificActorFlag
+          ) {
+            mylabel = i18n('variant-encumbrance-dnd5e.label.enableWEOnSpecificActor');
+            myicon = 'fas fa-balance-scale-right';
+            index = 1;
+          } else if (
+            !enableVarianEncumbranceEffectsOnSpecificActorFlag &&
+            !enableVarianEncumbranceWeightOnSpecificActorFlag
+          ) {
+            mylabel = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor');
+            myicon = 'fas fa-feather';
+            index = 2;
+          } else if (
+            enableVarianEncumbranceEffectsOnSpecificActorFlag &&
+            !enableVarianEncumbranceWeightOnSpecificActorFlag
+          ) {
+            // THIS USE CASE CAN'T BE HAPPENED WE REST TO THE STANDARD
+            mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
+            myicon = 'fas fa-weight-hanging';
+            index = 3;
+          } else {
+            throw new Error('Something is wrong');
+          }
+
+          const removeLabelButtonsSheetHeader = <boolean>(
+            getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
+          );
+
+          if (removeLabelButtonsSheetHeader) {
+            mylabel = '';
+          }
+
+          //if (app.object.isOwner) {
+          // only prototype actors
+          if (!app.object.token) {
+            //   varianEncumbranceButtons.push({
+            //       label: removeLabelSheetHeader ? "" : "Theatre.UI.Config.Theatre",
+            //       class: "configure-theatre",
+            //       icon: "fas fa-user-edit",
+            //       onclick: ev => Theatre.onConfigureInsert(ev, app.object.sheet)
+            //   });
+          }
+          varianEncumbranceButtons.push({
+            label: mylabel,
+            class: 'enable-disable-variant-encumbrance',
+            icon: myicon,
+            onclick: async (ev) => {
+              if (index == 0) {
+                enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
+                enableVarianEncumbranceWeightOnSpecificActorFlag = true;
+                mylabel = i18n('variant-encumbrance-dnd5e.label.enableWEOnSpecificActor');
+                myicon = 'fas fa-balance-scale-right';
+                index = 1;
+              } else if (index == 1) {
+                enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
+                enableVarianEncumbranceWeightOnSpecificActorFlag = false;
+                mylabel = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor');
+                myicon = 'fas fa-feather';
+                index = 2;
+              } else if (index == 2) {
+                enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
+                enableVarianEncumbranceWeightOnSpecificActorFlag = true;
+                mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
+                myicon = 'fas fa-weight-hanging';
+                index = 0;
+              } else if (index == 3) {
+                enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
+                enableVarianEncumbranceWeightOnSpecificActorFlag = true;
+                mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
+                myicon = 'fas fa-weight-hanging';
+                index = 0;
+              }
+
+              await actorEntity.setFlag(
+                VARIANT_ENCUMBRANCE_FLAG,
+                EncumbranceFlags.ENABLED_AE,
+                enableVarianEncumbranceEffectsOnSpecificActorFlag,
+              );
+              await actorEntity.setFlag(
+                VARIANT_ENCUMBRANCE_FLAG,
+                EncumbranceFlags.ENABLED_WE,
+                enableVarianEncumbranceWeightOnSpecificActorFlag,
+              );
+
+              if (!enableVarianEncumbranceEffectsOnSpecificActorFlag) {
+                await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
+              }
+              if (enableVarianEncumbranceWeightOnSpecificActorFlag) {
+                await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
+              }
+              if (removeLabelButtonsSheetHeader) {
+                mylabel = '';
+              }
+              ev.currentTarget.innerHTML = `<i class="${myicon}"></i>${mylabel}`;
+            },
+          });
         }
-        varianEncumbranceButtons.push({
-          label: mylabel,
-          class: 'enable-disable-variant-encumbrance',
-          icon: myicon,
-          onclick: async (ev) => {
-            if (index == 0) {
-              enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
-              enableVarianEncumbranceWeightOnSpecificActorFlag = true;
-              mylabel = i18n('variant-encumbrance-dnd5e.label.enableWEOnSpecificActor');
-              myicon = 'fas fa-balance-scale-right';
-              index = 1;
-            } else if (index == 1) {
-              enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
-              enableVarianEncumbranceWeightOnSpecificActorFlag = false;
-              mylabel = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor');
-              myicon = 'fas fa-feather';
-              index = 2;
-            } else if (index == 2) {
-              enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
-              enableVarianEncumbranceWeightOnSpecificActorFlag = true;
-              mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
-              myicon = 'fas fa-weight-hanging';
-              index = 0;
-            } else if (index == 3) {
-              enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
-              enableVarianEncumbranceWeightOnSpecificActorFlag = true;
-              mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
-              myicon = 'fas fa-weight-hanging';
-              index = 0;
-            }
-
-            await actorEntity.setFlag(
-              VARIANT_ENCUMBRANCE_FLAG,
-              EncumbranceFlags.ENABLED_AE,
-              enableVarianEncumbranceEffectsOnSpecificActorFlag,
-            );
-            await actorEntity.setFlag(
-              VARIANT_ENCUMBRANCE_FLAG,
-              EncumbranceFlags.ENABLED_WE,
-              enableVarianEncumbranceWeightOnSpecificActorFlag,
-            );
-
-            if (!enableVarianEncumbranceEffectsOnSpecificActorFlag) {
-              await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
-            }
-            if (enableVarianEncumbranceWeightOnSpecificActorFlag) {
-              await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
-            }
-            if (removeLabelButtonsSheetHeader) {
-              mylabel = '';
-            }
-            ev.currentTarget.innerHTML = `<i class="${myicon}"></i>${mylabel}`;
-          },
-        });
+        buttons.unshift(...varianEncumbranceButtons);
+      } else {
+        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+          actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE);
+        }
+        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
+          actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE);
+        }
+        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
       }
-      buttons.unshift(...varianEncumbranceButtons);
-    } else {
-      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
-        actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE);
-      }
-      if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
-        actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE);
-      }
-      await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
     }
   });
 };

@@ -28,6 +28,7 @@ export class EncumbranceData {
   lightMax: number;
   mediumMax: number;
   heavyMax: number;
+  totalMax:number;
   encumbranceTier: number;
   speedDecrease: number;
 }

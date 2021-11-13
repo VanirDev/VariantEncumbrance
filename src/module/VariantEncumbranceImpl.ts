@@ -459,52 +459,6 @@ export const VariantEncumbranceImpl = {
         _standardActorWeightCalculation(actorEntity) ?? actorEntity.data.data.attributes.encumbrance;
       return dataEncumbrance;
     } else if (enableVarianEncumbranceWeightOnActorFlag && !useStandardWeightCalculation) {
-      let speedDecrease = 0;
-
-      let mod = 1; //actorEntity.data.data.abilities.str.value;
-      if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
-        //@ts-ignore
-        const size = actorEntity.data.data.traits.size;
-        if (size === 'tiny') {
-          mod *= 0.5;
-        } else if (size === 'sm') {
-          mod *= 1;
-        } else if (size === 'med') {
-          mod *= 1;
-        } else if (size === 'lg') {
-          mod *= 2;
-        } else if (size === 'huge') {
-          mod *= 4;
-        } else if (size === 'grg') {
-          mod *= 8;
-        } else {
-          mod *= 1;
-        }
-        // Powerful build support
-        //@ts-ignore
-        if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
-          //jshint ignore:line
-          // mod *= 2;
-          mod = Math.min(mod * 2, 8);
-        }
-      }
-      //@ts-ignore
-      const strengthScore = actorEntity.data.data.abilities.str.value * mod;
-
-      const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
-      const lightMax = lightMultiplier * strengthScore;
-
-      const mediumMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
-      const mediumMax = mediumMultiplier * strengthScore;
-
-      const heavyMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
-      const heavyMax = heavyMultiplier * strengthScore;
 
       const invPlusCategoriesWithInherentWeight: string[] = [];
 
@@ -645,6 +599,53 @@ export const VariantEncumbranceImpl = {
       // Compute Encumbrance percentage
       totalWeight = totalWeight.toNearest(0.1);
 
+      let speedDecrease = 0;
+
+      let mod = 1; //actorEntity.data.data.abilities.str.value;
+      if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
+        //@ts-ignore
+        const size = actorEntity.data.data.traits.size;
+        if (size === 'tiny') {
+          mod *= 0.5;
+        } else if (size === 'sm') {
+          mod *= 1;
+        } else if (size === 'med') {
+          mod *= 1;
+        } else if (size === 'lg') {
+          mod *= 2;
+        } else if (size === 'huge') {
+          mod *= 4;
+        } else if (size === 'grg') {
+          mod *= 8;
+        } else {
+          mod *= 1;
+        }
+        // Powerful build support
+        //@ts-ignore
+        if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
+          //jshint ignore:line
+          // mod *= 2;
+          mod = Math.min(mod * 2, 8);
+        }
+      }
+      //@ts-ignore
+      const strengthScore = actorEntity.data.data.abilities.str.value * mod;
+
+      const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
+        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
+      const lightMax = lightMultiplier * strengthScore;
+
+      const mediumMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
+        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
+      const mediumMax = mediumMultiplier * strengthScore;
+
+      const heavyMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
+        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
+      let heavyMax = heavyMultiplier * strengthScore;
+
       let max = 0;
       let pct = 0;
 
@@ -675,6 +676,10 @@ export const VariantEncumbranceImpl = {
         //@ts-ignore
         max = (actorEntity.data.data.attributes.capacity.cargo * mod).toNearest(0.1);
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
+        // TODO UNDERSTAND WHY heavyMax < max
+        if(heavyMax < max){
+          heavyMax = max;
+        }
       } else {
         // ===========================
         // NO CHARACTER, NO VEHICLE
@@ -717,6 +722,7 @@ export const VariantEncumbranceImpl = {
         lightMax: lightMax,
         mediumMax: mediumMax,
         heavyMax: heavyMax,
+        totalMax: max,
         encumbranceTier: encumbranceTier,
         speedDecrease: speedDecrease,
       };
@@ -1133,17 +1139,6 @@ function _calcItemWeight(item: Item) {
 }
 
 function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
-  let dataEncumbrance: EncumbranceDnd5e;
-  if (actorEntity.type == EncumbranceActorType.CHARACTER) {
-    dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
-  } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
-    dataEncumbrance = _standardVehicleWeightCalculation(actorEntity);
-  } else {
-    dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
-  }
-
-  let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
-  const totalWeight = dataEncumbrance.value;
 
   let mod = 1; //actorEntity.data.data.abilities.str.value;
   if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
@@ -1198,7 +1193,24 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   const heavyMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
     ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
     : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
-  const heavyMax = heavyMultiplier * strengthScore;  
+  let heavyMax = heavyMultiplier * strengthScore;  
+
+  let dataEncumbrance: EncumbranceDnd5e;
+  if (actorEntity.type == EncumbranceActorType.CHARACTER) {
+    dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
+  } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
+    dataEncumbrance = _standardVehicleWeightCalculation(actorEntity);
+    // TODO UNDERSTAND WHY heavyMax < max
+    if(heavyMax < dataEncumbrance.max){
+      heavyMax = dataEncumbrance.max;
+    }
+  } else {
+    dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
+  }
+
+  let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
+  const totalWeight = dataEncumbrance.value;
+  const max = dataEncumbrance.max;
 
   if(dataEncumbrance.encumbered){
     if (totalWeight > lightMax && totalWeight <= mediumMax) {
@@ -1217,6 +1229,7 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     lightMax: lightMax,
     mediumMax: mediumMax,
     heavyMax: heavyMax,
+    totalMax: max,
     encumbranceTier: encumbranceTier,
     speedDecrease: 0,
   };

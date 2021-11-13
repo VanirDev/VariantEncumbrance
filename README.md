@@ -140,6 +140,7 @@ variant-encumbrance-dnd5e:
     lightMax: 50,
     mediumMax: 100,
     heavyMax: 150,
+    totalMax: 200,
     encumbranceTier: 0,
     speedDecrease: 0
   },
