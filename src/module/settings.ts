@@ -111,6 +111,32 @@ export const registerSettings = function () {
     },
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 15,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.strMultiplier = value;
+    },
+  });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 6.8,
+    onChange: (value) => {
+      // NOT NECESSARY WE USE THE VALUE ON THE SETTING
+      // DND5E.encumbrance.strMultiplier = value;
+    },
+  });
+
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.hint'),
@@ -274,5 +300,4 @@ export const registerSettings = function () {
     type: Boolean,
     default: false,
   });
-
 };

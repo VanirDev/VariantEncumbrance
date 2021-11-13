@@ -281,7 +281,6 @@ export const readyHooks = async () => {
     }
 
     if (enableVarianEncumbranceOnSpecificActor) {
-      
       const varianEncumbranceButtons: any[] = [];
 
       let enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
@@ -521,19 +520,25 @@ export const initHooks = () => {
   // };
 
   //@ts-ignore
-  CONFIG.DND5E.encumbrance.strMultiplier.imperial = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier') || 15;
+  CONFIG.DND5E.encumbrance.strMultiplier.imperial =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier') ?? 15;
   //@ts-ignore
-  CONFIG.DND5E.encumbrance.strMultiplier.metric = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric') || 6.8;
-  
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.currencyPerWeight.imperial = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') || 50;
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.currencyPerWeight.metric = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric') || 110;
+  CONFIG.DND5E.encumbrance.strMultiplier.metric =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
 
   //@ts-ignore
-  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') || 2000;
+  CONFIG.DND5E.encumbrance.currencyPerWeight.imperial =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') ?? 50;
   //@ts-ignore
-  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric = getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') || 1000
+  CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric') ?? 110;
+
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000;
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000;
 
   // CONFIG.debug.hooks = true; // For debugging only
 

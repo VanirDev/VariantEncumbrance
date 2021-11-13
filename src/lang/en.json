@@ -14,11 +14,17 @@
   "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.name": "Encumbered Strength Multiplier (Metric System)",
   "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).",
 
-  "variant-encumbrance-dnd5e.setting.heavyMultiplier.name": "Heavily Enc. Strength Multiplier",
+  "variant-encumbrance-dnd5e.setting.heavyMultiplier.name": "Heavily Encumbered (old Strength Multiplier)",
   "variant-encumbrance-dnd5e.setting.heavyMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
 
-  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.name": "Heavily Enc. Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.name": "Heavily Encumbered (old Strength Multiplier) (Metric System)",
   "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
+
+  "variant-encumbrance-dnd5e.setting.strengthMultiplier.name": "Strength Multiplier",
+  "variant-encumbrance-dnd5e.setting.strengthMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+
+  "variant-encumbrance-dnd5e.setting.strengthMultiplierMetric.name": "Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.strengthMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
   "variant-encumbrance-dnd5e.setting.useVariantEncumbrance.name": "Variant Encumbrance Speed Penalties",
   "variant-encumbrance-dnd5e.setting.useVariantEncumbrance.hint": "Enable automatic speed penalties from carry weight.",

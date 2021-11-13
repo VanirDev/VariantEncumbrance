@@ -18,8 +18,8 @@ export class VariantEncumbranceItemData {
 
 export class EncumbranceDnd5e {
   value: number;
-  max:number;
-  pct:number;
+  max: number;
+  pct: number;
   encumbered?: boolean; //Vehicle not have this
 }
 

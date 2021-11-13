@@ -4,6 +4,8 @@
 - Add new integration with dfred convenient effects for print on chat external custom effects
 - Add 3 configuration instead of 2 on hedare sheet of the actorcheckout the readme for detail
 - Add setting for rollback tot the standard dnd5e system calculation weight...
+- Full integrationmetrci system
+- Add feature new button state for this request ???? [Button to calculate the weight of items](https://github.com/VanirDev/VariantEncumbrance/issues/51)
 
 ### Update 0.6.5
 
