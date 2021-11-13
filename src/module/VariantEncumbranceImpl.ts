@@ -386,7 +386,7 @@ export const VariantEncumbranceImpl = {
           await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
         }
         if (!(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))) {
-          const origin = <string>actorEntity.id; // `Actor.${actorEntity.data._id}`;
+          const origin = `Actor.${actorEntity.data._id}`;
           await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceTier);
         }
       }
