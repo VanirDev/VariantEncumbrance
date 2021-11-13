@@ -50,6 +50,10 @@ export const readyHooks = async () => {
           encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
         }
 
+        const displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
+          : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+
         if (
           !encumbranceElements &&
           ((getGame().modules.get('compact-beyond-5e-sheet')?.active &&
@@ -60,13 +64,9 @@ export const readyHooks = async () => {
           const encumbranceElementsTmp: any = htmlElement.find('.encumberance')[0]?.children;
 
           encumbranceElementsTmp[0].textContent =
-            'Weight Carried: ' +
-            Math.round(encumbranceData.totalWeight * 100) / 100 +
-            ' ' +
-            getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+            'Weight Carried: ' + Math.round(encumbranceData.totalWeight * 100) / 100 + ' ' + displayedUnits;
 
-          encumbranceElementsTmp[1].textContent =
-            'Max: ' + encumbranceData.heavyMax + ' ' + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+          encumbranceElementsTmp[1].textContent = 'Max: ' + encumbranceData.heavyMax + ' ' + displayedUnits;
           // TODO visual integration with compact-beyond-5e-sheet
           //const div = document.createElement('div');
           //div.classList.add('encumbrance');
@@ -131,11 +131,7 @@ export const readyHooks = async () => {
             '%;';
           // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
           encumbranceElements[1].textContent =
-            Math.round(encumbranceData.totalWeight * 100) / 100 +
-            '/' +
-            encumbranceData.heavyMax +
-            ' ' +
-            getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+            Math.round(encumbranceData.totalWeight * 100) / 100 + '/' + encumbranceData.heavyMax + ' ' + displayedUnits;
 
           encumbranceElements[0].classList.remove('medium');
           encumbranceElements[0].classList.remove('heavy');
@@ -282,8 +278,9 @@ export const readyHooks = async () => {
 
     if (
       actorEntity &&
-      (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)){
-
+      (actorEntity.data.type === EncumbranceActorType.CHARACTER ||
+        actorEntity.data.type === EncumbranceActorType.VEHICLE)
+    ) {
       if (enableVarianEncumbranceOnSpecificActor) {
         const varianEncumbranceButtons: any[] = [];
 
@@ -411,7 +408,12 @@ export const readyHooks = async () => {
                 await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
               }
               if (enableVarianEncumbranceWeightOnSpecificActorFlag) {
-                await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
+                await VariantEncumbranceImpl.updateEncumbrance(
+                  actorEntity,
+                  undefined,
+                  undefined,
+                  EncumbranceMode.UPDATE,
+                );
               }
               if (removeLabelButtonsSheetHeader) {
                 mylabel = '';

@@ -59,7 +59,7 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 * [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
-* [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
+* [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) version 1.8.13
 
 ### I highly recommend avoiding module Inventory Plus in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
 
@@ -140,7 +140,6 @@ variant-encumbrance-dnd5e:
     lightMax: 50,
     mediumMax: 100,
     heavyMax: 150,
-    totalMax: 200,
     encumbranceTier: 0,
     speedDecrease: 0
   },

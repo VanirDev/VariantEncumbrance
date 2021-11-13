@@ -2,12 +2,12 @@
 
 - Add stupid feature for some people want ot save 1s on the 2s i need for the weight calculation for manage all the settings and  integration with external module....
 - Add new integration with dfred convenient effects for print on chat external custom effects
-- Add 3 configuration instead of 2 on headr sheet of the actor... checkout the readme for details...
+- Add 3 configuration instead of 2 on header sheet of the actor... checkout the readme for details...
 - Add setting for rollback to the standard dnd5e system calculation weight for save 1s on thewieght calculation...
 - Full integration metric system, "Viva l'italia"
 - Add feature new button state for this request ???? [Button to calculate the weight of items](https://github.com/VanirDev/VariantEncumbrance/issues/51)
 - Bug fix error for the vehicle character sheet
-- Bug fix some strange behavior with Item Container module ?
+- Bug fix some strange behavior with Item Container module when equip/uneqipped the bakcpack item
 
 ### Update 0.6.5
 

@@ -243,6 +243,15 @@ export const registerSettings = function () {
     default: 'lbs.',
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: String,
+    default: 'kg.',
+  });
+
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.hint'),
