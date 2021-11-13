@@ -44,6 +44,7 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 - Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Expert than me to handle this, but i still think to have done a good job with the handling of the use cases.
 - Limitation on some character sheet, open a issue and i'll try to make a fix.
 - Is not full synchronized with DAE in favor of the standard active effects mechanism. but you can still use dae on the active effect.
+- I have not foundr the time to fully test for the vehicle sheet so any feedback is more than welcome
 
 ## Character Sheets compatibility
 
@@ -150,37 +151,56 @@ variant-encumbrance-dnd5e:
 
 # Settings
 
-- **Unencumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.
+- **Unencumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
 
-- **Encumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.
+- **Unencumbered Strength Multiplier (Metric System):** Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).",
 
-- **Heavily Enc. Strength Multiplier:** Multiplier used to calculate maximum carrying weight from the strength ability score.
+- **Encumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
 
-- **Variant Encumbrance Speed Penalties:** Enable automatic speed penalties from carry weight.
+- **Encumbered Strength Multiplier (Metric System):** Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).",
 
-- **Unequipped Item Weight Multiplier:** Multiplier for items when not equipped.
+- **Heavily Encumbered (old Strength Multiplier):** Multiplier used to calculate maximum carrying weight from the strength ability score.",
 
-- **Equipped Item Weight Multiplier:** Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.
+- **Heavily Encumbered (old Strength Multiplier) (Metric System):** Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
-- **Proficient Equipped Item Weight Multiplier:** Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.
+- **Strength Multiplier:** Multiplier used to calculate maximum carrying weight from the strength ability score.",
 
-- **Currency Per Weight Unit:** Define the number of coins required to equal 1 unit of weight.
+- **Strength Multiplier (Metric System):** Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
-- **Variant Encumbrance Size Modifiers:** Enable multipliers from creature size.
+- **Variant Encumbrance Speed Penalties:** Enable automatic speed penalties from carry weight.",
+
+- **Unequipped Item Weight Multiplier:** Multiplier for items when not equipped.",
+
+- **Equipped Item Weight Multiplier:** Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.",
+
+- **Proficient Equipped Item Weight Multiplier:** Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.",
+
+- **Currency Per Weight Unit:** Define the number of coins required to equal 1 unit of weight.",
+
+- **Currency Per Weight Unit (Metric System):** Define the number of coins required to equal 1 unit of weight (Metric System).",
+
+- **Vehicle weights Weight Multiplier, lbs in an imperial ton:** Vehicle weights are an order of magnitude greater, Multiplier for vehicles.",
+
+- **Vehicle weights Weight Multiplier, kg in a metric ton (Metric System):** Vehicle weights are an order of magnitude greater, Multiplier for vehicles (Metric System).",
+
+- **Variant Encumbrance Size Modifiers:** Enable multipliers from creature size.",
 
 - **Weight Units:** Units displayed in the encumbrance bar (just graphics).",
 
-- **Lightly Encumbered Speed Decrease:** The number of speed units subtracted when lightly encumbered, default is 10.
+- **Weight Units (Metric System):** Units displayed in the encumbrance bar (just graphics) (Metric System).",
 
-- **Encumbered Speed Decrease:** The number of speed units subtracted when heavily encumbered, default is 20.
+- **Lightly Encumbered Speed Decrease:** The number of speed units subtracted when lightly encumbered, default is 10.",
 
-- **Enable pre check encumbrance tier:** I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item
+- **Encumbered Speed Decrease:** The number of speed units subtracted when heavily encumbered, default is 20.",
+
+- **Enable pre check encumbrance tier:** I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item",
 
 - **Enable/Disable the feature for applying the variant encumbrance active effects for specific actor:** If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues",
 
-- **Remove label from buttons on the header character sheet:** Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true
+- **Remove label from buttons on the header character sheet:** Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true",
 
-- **Use standard calculation weight of the dnd5e system:** I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit form the others feature like Euqipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss..
+- **Use standard calculation weight of the dnd5e system:** I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss..",
+
 
 
 # Build
