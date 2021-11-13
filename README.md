@@ -99,15 +99,15 @@ Enabled by default, the module will modify your maximum carry weight according t
 
 In the module settings, custom multipliers are available for unequipped, equipped, and proficiently equipped items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them, but this lends some flexibility to the system for anyone to use.
 
-### Buttons header sheet for enable/disable the Active Effect actor by actor
+### Buttons header sheet for enable/disable the features (Weight Claculation and Active Effects) actor by actor
 
 Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
 
 | Symbol Button Header Sheet  | Description  |
 |:----:|:----:|
 |![weight-hanging-solid](./wiki/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
-|![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects feature on your actor make sure to have the "balance" symbol on the header sheet |
-|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "feather" symbol on the header sheet. *The weight is not calculated anymore and remain frozen (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calcualtion of the system dnd5e)* |
+|![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects feature on your actor make sure to have the "balance" symbol on the header sheet. ATTENTION the weight calculation feature is still active|
+|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "feather" symbol on the header sheet. *The weight is not calculated anymore and remain frozen (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calculation of the system dnd5e)* |
 
 Some preview:
 
