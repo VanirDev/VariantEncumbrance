@@ -1,3 +1,8 @@
+### Update 0.6.8
+
+- Bug fix [[BUG]](https://github.com/VanirDev/VariantEncumbrance/issues/52), forgot to add check for module 'DFreds Convenient Effects'
+- Add removAE for empty label but with the flag correct
+
 ### Update 0.6.7
 
 - Change origin string on add effect from 'actorEntity.id' to `Actor.${actorEntity.data._id}` for strange buf of retrocomaptibility

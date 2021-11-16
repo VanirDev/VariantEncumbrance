@@ -21,7 +21,7 @@ import {
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './lib/effect';
-import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
+import { dfredsConvenientEffectsActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
 import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
@@ -243,6 +243,12 @@ export const VariantEncumbranceImpl = {
 
     for (const effectEntity of actorEntity.effects) {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+
+      // Remove AE with empty a label but with flag of variant encumbrance ???
+      if (!effectNameToSet && hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
+        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        continue;
+      }
 
       if (!effectNameToSet) {
         continue;
@@ -1081,14 +1087,16 @@ export const VariantEncumbranceImpl = {
         },
       };
 
-      //@ts-ignore
-      const arrayCustomEffects: Effect[] = getGame().dfreds.effects.customEffects;
-      const isPresentonCustomEffect = arrayCustomEffects.find(
-        (customEffect: Effect) => <boolean>customEffect.flags.isConvenient && <string>customEffect.name == effectName,
-      );
-      if (!isPresentonCustomEffect) {
+      if (dfredsConvenientEffectsActive) {
         //@ts-ignore
-        getGame().dfreds.effects.customEffects.push(effect);
+        const arrayCustomEffects: Effect[] = getGame().dfreds?.effects?.customEffects || [];
+        const isPresentonCustomEffect = arrayCustomEffects.find(
+          (customEffect: Effect) => <boolean>customEffect.flags.isConvenient && <string>customEffect.name == effectName,
+        );
+        if (!isPresentonCustomEffect) {
+          //@ts-ignore
+          getGame().dfreds?.effects?.customEffects?.push(effect);
+        }
       }
 
       const activeEffectData = effect.convertToActiveEffectData(origin);

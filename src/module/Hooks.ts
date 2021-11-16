@@ -1,6 +1,7 @@
 import { warn, error, debug, i18n } from '../VariantEncumbrance';
 import {
   getGame,
+  VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME,
   VARIANT_ENCUMBRANCE_FLAG,
   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
   VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME,
@@ -19,7 +20,7 @@ export let ENCUMBRANCE_STATE = {
 
 export let invPlusActive;
 export let itemContainerActive;
-
+export let dfredsConvenientEffectsActive;
 export let invMidiQol;
 
 // export const effectInterface = new EffectInterface();
@@ -552,6 +553,9 @@ export const initHooks = () => {
   invPlusActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
   invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
   itemContainerActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
+  dfredsConvenientEffectsActive = <boolean>(
+    getGame().modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
+  );
 
   // effectInterface.initialize();
 };
