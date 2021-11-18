@@ -465,7 +465,7 @@ export const VariantEncumbranceImpl = {
         _standardActorWeightCalculation(actorEntity) ?? actorEntity.data.data.attributes.encumbrance;
       return dataEncumbrance;
     } else if (enableVarianEncumbranceWeightOnActorFlag && !useStandardWeightCalculation) {
-      const invPlusCategoriesWithInherentWeight: string[] = [];
+      const invPlusCategoriesWeightToAdd = new Map<string,number>();
 
       // START TOTAL WEIGHT
       // Get the total weight from items
@@ -481,6 +481,11 @@ export const VariantEncumbranceImpl = {
 
         //@ts-ignore
         let itemWeight = item.data.data.weight || 0;
+
+        let ignoreEquipmentCheck = false;
+
+        // External modules calculation
+
         // Start Item container check
         if (
           getProperty(item, 'data.flags.itemcollection.bagWeight') != null &&
@@ -496,7 +501,6 @@ export const VariantEncumbranceImpl = {
         }
         // End Item container check
         // Start inventory+ module is active
-        let ignoreQuantityAndEquipmentCheck = false;
         if (invPlusActive) {
           // Retrieve flag 'categorys' from inventory plus module
           const inventoryPlusCategories = <any[]>(
@@ -515,22 +519,17 @@ export const VariantEncumbranceImpl = {
                   //@ts-ignore
                   item.data?.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
               ) {
-                // Ignore weight
                 const section = inventoryPlusCategories[categoryId];
-                if (section?.ignoreWeight) {
+                // Ignore weight
+                if (section?.ignoreWeight == true) {
                   itemWeight = 0;
-                  ignoreQuantityAndEquipmentCheck = true;
+                  ignoreEquipmentCheck = true;
                 }
-
                 // Inherent weight
                 if (Number(section?.ownWeight) > 0) {
-                  itemWeight = Number(section?.ownWeight);
-                  if (invPlusCategoriesWithInherentWeight.includes(categoryId)) {
-                    itemWeight = 0;
-                  } else {
-                    invPlusCategoriesWithInherentWeight.push(categoryId);
+                  if(!invPlusCategoriesWeightToAdd.has(categoryId)){
+                    invPlusCategoriesWeightToAdd.set(categoryId,Number(section.ownWeight));
                   }
-                  ignoreQuantityAndEquipmentCheck = true;
                 }
                 // EXIT FOR
                 actorHasCustomCategories = true;
@@ -540,22 +539,17 @@ export const VariantEncumbranceImpl = {
             if (!actorHasCustomCategories) {
               for (const categoryId in inventoryPlusCategories) {
                 if (item.type === categoryId) {
-                  // ignore weight
                   const section = inventoryPlusCategories[categoryId];
-                  if (section?.ignoreWeight) {
+                  // Ignore weight
+                  if (section?.ignoreWeight == true) {
                     itemWeight = 0;
-                    ignoreQuantityAndEquipmentCheck = true;
+                    ignoreEquipmentCheck = true;
                   }
-
                   // Inherent weight
                   if (Number(section?.ownWeight) > 0) {
-                    itemWeight = Number(section?.ownWeight);
-                    if (invPlusCategoriesWithInherentWeight.includes(categoryId)) {
-                      itemWeight = 0;
-                    } else {
-                      invPlusCategoriesWithInherentWeight.push(categoryId);
+                    if(!invPlusCategoriesWeightToAdd.has(categoryId)){
+                      invPlusCategoriesWeightToAdd.set(categoryId,Number(section.ownWeight));
                     }
-                    ignoreQuantityAndEquipmentCheck = true;
                   }
                   // EXIT FOR
                   break;
@@ -563,12 +557,15 @@ export const VariantEncumbranceImpl = {
               }
             }
           }
-          if (ignoreQuantityAndEquipmentCheck) {
-            return weight + itemWeight;
-          }
         }
         // End Inventory+ module is active
+
+        // End External modules calculation
+
         let appliedWeight = itemQuantity * itemWeight;
+        if (ignoreEquipmentCheck) {
+          return weight + appliedWeight;
+        }
         //@ts-ignore
         const isEquipped: boolean = item.data.data.equipped;
         if (isEquipped) {
@@ -584,6 +581,14 @@ export const VariantEncumbranceImpl = {
         }
         return weight + appliedWeight;
       }, 0);
+
+      // Start inventory+ module is active 2
+      if (invPlusActive) {
+        for (const [key, value] of invPlusCategoriesWeightToAdd) {
+          totalWeight = totalWeight + value;
+        }
+      }
+      // End inventory+ module is active 2
       // END TOTAL WEIGHT
 
       // [Optional] add Currency Weight (for non-transformed actors)
