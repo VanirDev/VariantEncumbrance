@@ -1,4 +1,3 @@
-![](https://img.shields.io/badge/Foundry-v0.8.9-blue)
 ![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
 ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
 ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
@@ -7,6 +6,8 @@
 ![](https://img.shields.io/badge/Foundry-v0.8.9-informational)
 
 # Variant Encumbrance
+
+![Latest Release Download Count](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&colorB=03ff1c&style=for-the-badge)](https://forge-vtt.com/bazaar#package=variant-encumbrance-dnd5e) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
@@ -44,7 +45,7 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 - Due to the million variations of the various use cases that I have to take into account the most attentive players may notice a slowdown which is logical if you think I have to redo the checks and refresh the flags every time it is inserted, updated, deleted, revised , edited an object with weight. You need someone more Expert than me to handle this, but i still think to have done a good job with the handling of the use cases.
 - Limitation on some character sheet, open a issue and i'll try to make a fix.
 - Is not full synchronized with DAE in favor of the standard active effects mechanism. but you can still use dae on the active effect.
-- I have not foundr the time to fully test for the vehicle sheet so any feedback is more than welcome
+- I have not found the time to fully test for the vehicle sheet so any feedback is more than welcome, seem to work anyway
 
 ## Character Sheets compatibility
 
