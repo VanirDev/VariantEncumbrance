@@ -10,6 +10,7 @@ import {
   VARIANT_ENCUMBRANCE_MODULE_NAME,
   getGame,
   VARIANT_ENCUMBRANCE_FLAG,
+  VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
 } from './settings';
 import { i18n, log, warn } from '../VariantEncumbrance';
 import {
@@ -21,7 +22,7 @@ import {
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './lib/effect';
-import { dfredsConvenientEffectsActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
+import { dfQualityLifeActive, dfredsConvenientEffectsActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
 import {
   ActorData,
   ItemData,
@@ -670,6 +671,7 @@ export const VariantEncumbranceImpl = {
 
       let max = 0;
       let pct = 0;
+      const totalWeightOriginal = totalWeight;
 
       if (actorEntity.type == EncumbranceActorType.CHARACTER) {
         // ==================
@@ -705,6 +707,17 @@ export const VariantEncumbranceImpl = {
         */
         // TODO
         //totalWeight /= <number>this.document.getFlag(SETTINGS.MOD_NAME, 'unit') || vehicleWeightMultiplier;
+
+        // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
+        if (dfQualityLifeActive && actorEntity.getFlag(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,`unit`)) {
+          const dfVehicleUnit = actorEntity.getFlag(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,`unit`);
+          switch (dfVehicleUnit) {
+            case 2240: totalWeight /= dfVehicleUnit; break;
+            case 2000: totalWeight /= dfVehicleUnit; break;
+            case 1: totalWeight /= dfVehicleUnit; break;
+          }
+        }
+
         //@ts-ignore
         const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
         // Compute overall encumbrance
@@ -752,7 +765,7 @@ export const VariantEncumbranceImpl = {
       // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
       //@ts-ignore
       (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
-        value: totalWeight.toNearest(0.1),
+        value: totalWeightOriginal.toNearest(0.1),
         max,
         pct,
         encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
@@ -1373,6 +1386,17 @@ function _standardVehicleWeightCalculation(actorEntity: Actor): EncumbranceDnd5e
   // data.features = Object.values(features);
   // data.cargo = Object.values(cargo);
   // data.data.attributes.encumbrance = actorEntity._computeEncumbrance(totalWeight, data);
+
+  // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
+  if (dfQualityLifeActive && actorEntity.getFlag(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,`unit`)) {
+    const dfVehicleUnit = actorEntity.getFlag(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,`unit`);
+    switch (dfVehicleUnit) {
+      case 2240: totalWeight /= dfVehicleUnit; break;
+      case 2000: totalWeight /= dfVehicleUnit; break;
+      case 1: totalWeight /= dfVehicleUnit; break;
+    }
+  }
+
   //@ts-ignore
   return <EncumbranceDnd5e>actorEntity._computeEncumbrance(totalWeight, data);
 }

@@ -102,9 +102,9 @@
 
   "variant-encumbrance-dnd5e.config.name": "Weight Unit",
   "variant-encumbrance-dnd5e.config.hint": "Unit of measurement to be used for weight calculation.",
-  "variant-encumbrance-dnd5e.label.Units_LongTon": "Long Ton (2240 lb.)",
-  "variant-encumbrance-dnd5e.label.Units_ShortTon": "Short Ton (2000 lb.)",
-  "variant-encumbrance-dnd5e.label.Units_Pounds": "Pounds (1 lb.)",
-  "variant-encumbrance-dnd5e.label.ConvertTitle": "Convert Cargo Capacity",
-  "variant-encumbrance-dnd5e.label.ConvertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?"
+  "variant-encumbrance-dnd5e.label.units_LongTon": "Long Ton (2240 lb.)",
+  "variant-encumbrance-dnd5e.label.units_ShortTon": "Short Ton (2000 lb.)",
+  "variant-encumbrance-dnd5e.label.units_Pounds": "Pounds (1 lb.)",
+  "variant-encumbrance-dnd5e.label.convertTitle": "Convert Cargo Capacity",
+  "variant-encumbrance-dnd5e.label.convertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?"
 }
