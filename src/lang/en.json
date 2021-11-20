@@ -2,6 +2,9 @@
   "variant-encumbrance-dnd5e.setting.enabled.name": "Enabled",
   "variant-encumbrance-dnd5e.setting.enabled.hint": "Enable or disable the module's functions.",
 
+  "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificActorType.name": "Use Variant Encumbrance with specific type of actor",
+  "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificActorType.hint": "Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive",
+
   "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.name": "Enable or disable the strength multiplier feature",
   "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.hint": "Enable or disable the strength multiplier feature",
 

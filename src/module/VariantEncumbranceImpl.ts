@@ -15,6 +15,7 @@ import {
 import { i18n, log, warn } from '../VariantEncumbrance';
 import {
   EncumbranceActorType,
+  // EncumbranceActorType,
   EncumbranceData,
   EncumbranceDnd5e,
   EncumbranceFlags,
@@ -1214,6 +1215,23 @@ export const VariantEncumbranceImpl = {
       log(`Added effect ${effect.name ? effect.name : effectName} to ${actor.name} - ${actor.id}`);
     }
   },
+};
+
+export const isEnabledActorType = function (actorEntity: Actor): boolean {
+  const useVarianEncumbranceWithSpecificType: string[] = getGame().settings.get(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'useVarianEncumbranceWithSpecificType',
+  )
+    ? String(getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType')).split(',')
+    : [];
+  if (
+    actorEntity &&
+    useVarianEncumbranceWithSpecificType.length > 0 &&
+    useVarianEncumbranceWithSpecificType.includes(<string>actorEntity?.type)
+  ) {
+    return true;
+  }
+  return false;
 };
 
 // ===========================

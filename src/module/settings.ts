@@ -1,6 +1,8 @@
 //@ts-ignore
 // import { DND5E } from '../../../systems/dnd5e/module/config.js';
 
+import { i18n } from '../VariantEncumbrance';
+
 export const VARIANT_ENCUMBRANCE_MODULE_NAME = 'variant-encumbrance-dnd5e';
 export const VARIANT_ENCUMBRANCE_FLAG = 'variant-encumbrance-dnd5e';
 export const VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME = 'inventory-plus';
@@ -43,17 +45,25 @@ export function getGame(): Game {
 export const registerSettings = function () {
   // Removed on 0.6.5
   // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
-  //   name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
-  //   hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
+  //   name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
+  //   hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
   //   scope: 'world',
   //   config: false,
   //   type: Boolean,
   //   default: true,
   // });
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType', {
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.hint'),
+    scope: 'world',
+    config: false,
+    type: String,
+    default: 'character,vehicle',
+  });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -61,8 +71,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -70,8 +80,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -79,8 +89,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -88,8 +98,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -101,8 +111,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -114,8 +124,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -123,8 +133,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -136,8 +146,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -149,8 +159,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -158,8 +168,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unequippedMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -167,8 +177,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'equippedMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -176,8 +186,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'profEquippedMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -185,8 +195,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -198,8 +208,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -211,8 +221,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -224,8 +234,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -237,8 +247,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -246,8 +256,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.hint'),
     scope: 'world',
     config: true,
     type: String,
@@ -255,8 +265,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.hint'),
     scope: 'world',
     config: true,
     type: String,
@@ -264,8 +274,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -273,8 +283,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.hint'),
     scope: 'world',
     config: true,
     type: Number,
@@ -282,8 +292,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -291,12 +301,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
-    name: getGame().i18n.localize(
-      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.name',
-    ),
-    hint: getGame().i18n.localize(
-      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.hint',
-    ),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -304,8 +310,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -313,8 +319,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStandardWeightCalculation', {
-    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.name'),
-    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.hint'),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.hint'),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -322,12 +328,8 @@ export const registerSettings = function () {
   });
 
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature', {
-    name: getGame().i18n.localize(
-      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.name',
-    ),
-    hint: getGame().i18n.localize(
-      VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.hint',
-    ),
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.hint'),
     scope: 'world',
     config: true,
     type: Boolean,

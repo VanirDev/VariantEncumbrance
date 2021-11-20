@@ -1,13 +1,16 @@
 # Variant Encumbrance
 
-![Latest Release Download Count](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=variant-encumbrance-dnd5e) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
+![Latest Release Download Count](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
 
-![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
-![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
-![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
-![](https://img.shields.io/badge/Inventory+-v0.3.1-red) 
-![](https://img.shields.io/badge/DAE-v0.2.34-red)
-![](https://img.shields.io/badge/Foundry-v0.8.9-informational)
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=variant-encumbrance-dnd5e) 
+
+![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
+
+![Forge Installs](https://img.shields.io/badge/dynamic/json?color=red&label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&style=for-the-badge) 
+
+![Latest Version](https://img.shields.io/badge/dynamic/json?label=Latest%20Release&prefix=v&query=package.versions%5B0%5D&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&style=for-the-badge) 
+
+[![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fvariant-encumbrance-dnd5e%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/variant-encumbrance-dnd5e/)
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
@@ -47,7 +50,15 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 - Is not full synchronized with DAE in favor of the standard active effects mechanism. but you can still use dae on the active effect.
 - I have not found the time to fully test for the vehicle sheet so any feedback is more than welcome, seem to work anyway
 
-## Character Sheets compatibility
+## Compatibility
+
+![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
+![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
+![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
+![](https://img.shields.io/badge/Inventory+-v0.3.1-red) 
+![](https://img.shields.io/badge/DAE-v0.2.34-red)
+
+### Character Sheets compatibility
 
 * D&D5e Default Character Sheet
 
@@ -56,16 +67,17 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 * [Compact DnDBeyond-like 5e Character Sheet](https://github.com/ElfFriend-DnD/foundryvtt-compactBeyond5eSheet) Active effect work, but there is no visual bar , the values of the weight are synchronized with the system core
 * [DNDBeyond Character Sheet for 5E](https://github.com/jopeek/fvtt-dndbeyond-character-sheet) Active effect work, but there is no visual bar , the values of the weight are synchronized with the system core
 
-## Other Modules Compatability
+### Other Modules Compatability
 
 * [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 * [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) version 1.8.13
+* [DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature](https://github.com/flamewave000/dragonflagon-fvtt/blob/master/df-qol/README.md#vehicle-cargo-capacity-unit) version 1.6.0
 
-### I highly recommend avoiding module Inventory Plus in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)
+**I highly recommend avoiding module Inventory Plus in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
 
-### Verified issues with some sheet for [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5, until is not updated i highly recommend to avoiding the use of this module.
+**Verified issues with some sheet for [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5, until is not updated i highly recommend to avoiding the use of this module.**
 
 <!--
 <details>
@@ -153,6 +165,8 @@ variant-encumbrance-dnd5e:
 ```
 
 # Settings
+
+- **Use Variant Encumbrance with specific type of actor:** Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive.
 
 - **Unencumbered Strength Multiplier:** Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
 
