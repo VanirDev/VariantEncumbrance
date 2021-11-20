@@ -46,7 +46,7 @@ export enum EncumbranceFlags {
   DATA = 'data',
   ENABLED_AE = 'enabledae',
   ENABLED_WE = 'enabledwe',
-  UNIT = 'unit'
+  UNIT = 'unit',
 }
 
 // export class EncumbranceFlagData {

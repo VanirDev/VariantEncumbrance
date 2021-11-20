@@ -139,6 +139,7 @@ variant-encumbrance-dnd5e:
   walk: 30,
   data: {
     totalWeight: 0,
+    totalWeightToDisplay: 0,
     lightMax: 50,
     mediumMax: 100,
     heavyMax: 150,

@@ -42,26 +42,30 @@ export const readyHooks = async () => {
     'renderActorSheet',
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
       if (actorObject.isCharacter || actorObject.isVehicle) {
-        const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
-
+        // const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+        // Do no touch the true actor again
+        const actorEntityTmp:any = <Actor>getGame().actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
         let encumbranceData;
         // if (hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
         //   encumbranceData = <EncumbranceData>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`);
         // }
-        if(!encumbranceData){
+        if (!encumbranceData) {
           // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
           // const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>getGame().actors?.get(actorObject.actor._id);
-          if(actorObject.actor?.flags){
-            mergeObject(<any>actorEntity.data.flags, <any>actorObject.actor.flags);
+          // STRANGE BEHAVIOUR
+          if (actorObject.actor?.flags) {
+            // mergeObject(<any>actorEntity.data.flags, <any>actorObject.actor.flags);
+            setProperty(actorEntityTmp.data, 'flags', actorObject.actor.flags);
           }
-          if(actorObject.data){
-            mergeObject(<any>actorEntity.data.data, <any>actorObject.data);
+          if (actorObject.data) {
+            // mergeObject(<any>actorEntity.data.data, <any>actorObject.data);
+            setProperty(actorEntityTmp.data, 'data', actorObject.data);
           }
           // mergeObject(actorEntity.data.items, actorObject.items);
           encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
-            actorEntity,
+            actorEntityTmp,
             //@ts-ignore
-            actorObject.items instanceof Array ? actorObject.items : actorEntity.data.items.contents,
+            actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
           );
         }
         let encumbranceElements;
@@ -72,25 +76,6 @@ export const readyHooks = async () => {
         }
 
         const displayedUnits = encumbranceData.unit;
-        // let displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        //   ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
-        //   : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
-
-        // // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
-        // if (dfQualityLifeActive && actorObject.isVehicle && hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`)) {
-        //   const dfVehicleUnit = <number>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`);
-        //   if(dfVehicleUnit){
-        //     let oldLabel = '';
-        //     switch (dfVehicleUnit) {
-        //       case 2240: oldLabel = 'L.Ton'; break;
-        //       case 2000: oldLabel = 'S.Ton'; break;
-        //       case 1: oldLabel = 'lbs'; break;
-        //     }
-        //     if(oldLabel){
-        //       displayedUnits = oldLabel;
-        //     }
-        //   }
-        // }
 
         if (
           !encumbranceElements &&
@@ -169,7 +154,11 @@ export const readyHooks = async () => {
             '%;';
           // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
           encumbranceElements[1].textContent =
-            Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + '/' + encumbranceData.heavyMax + ' ' + displayedUnits;
+            Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 +
+            '/' +
+            encumbranceData.heavyMax +
+            ' ' +
+            displayedUnits;
 
           encumbranceElements[0].classList.remove('medium');
           encumbranceElements[0].classList.remove('heavy');
@@ -208,6 +197,7 @@ export const readyHooks = async () => {
         actorEntity.data.type === EncumbranceActorType.VEHICLE)
     ) {
       let doTheUpdate = false;
+      let noActiveEffect = false;
 
       // For our purpose we filter only the STR modifier action
       //@ts-ignore
@@ -232,13 +222,18 @@ export const readyHooks = async () => {
         doTheUpdate = true;
       }
       // Check change on the cargo property of vehicle
-      if (data?.data?.attributes.capacity?.cargo){
+      if (data?.data?.attributes.capacity?.cargo) {
         doTheUpdate = true;
+        noActiveEffect = true;
       }
 
       // Do the update
       if (doTheUpdate) {
-        await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+        if(noActiveEffect){
+          VariantEncumbranceImpl.calculateEncumbrance(actorEntity,actorEntity.data.items.contents);
+        }else{
+          await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
+        }
       }
     }
   });
@@ -609,7 +604,7 @@ export const initHooks = () => {
   dfredsConvenientEffectsActive = <boolean>(
     getGame().modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
   );
-  dfQualityLifeActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active; 
+  dfQualityLifeActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
 
   // effectInterface.initialize();
 };
