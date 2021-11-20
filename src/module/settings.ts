@@ -113,6 +113,15 @@ export const registerSettings = function () {
     },
   });
 
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
   getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier', {
     name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.name'),
     hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.hint'),

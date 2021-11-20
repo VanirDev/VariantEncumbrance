@@ -2,26 +2,11 @@
   "variant-encumbrance-dnd5e.setting.enabled.name": "Enabled",
   "variant-encumbrance-dnd5e.setting.enabled.hint": "Enable or disable the module's functions.",
 
-  "variant-encumbrance-dnd5e.setting.lightMultiplier.name": "Unencumbered Strength Multiplier",
-  "variant-encumbrance-dnd5e.setting.lightMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
-
-  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.name": "Unencumbered Strength Multiplier (Metric System)",
-  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).",
-
-  "variant-encumbrance-dnd5e.setting.mediumMultiplier.name": "Encumbered Strength Multiplier",
-  "variant-encumbrance-dnd5e.setting.mediumMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
-
-  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.name": "Encumbered Strength Multiplier (Metric System)",
-  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).",
-
-  "variant-encumbrance-dnd5e.setting.heavyMultiplier.name": "Heavily Encumbered (old Strength Multiplier)",
-  "variant-encumbrance-dnd5e.setting.heavyMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
-
-  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.name": "Heavily Encumbered (old Strength Multiplier) (Metric System)",
-  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
+  "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.name": "Enable or disable the strength multiplier feature",
+  "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.hint": "Enable or disable the strength multiplier feature",
 
   "variant-encumbrance-dnd5e.setting.strengthMultiplier.name": "Strength Multiplier",
-  "variant-encumbrance-dnd5e.setting.strengthMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+  "variant-encumbrance-dnd5e.setting.strengthMultiplier.hint": "Work only with strength multiplier feature enabled. Multiplier used to calculate maximum carrying weight from the strength ability score.",
 
   "variant-encumbrance-dnd5e.setting.strengthMultiplierMetric.name": "Strength Multiplier (Metric System)",
   "variant-encumbrance-dnd5e.setting.strengthMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
@@ -49,6 +34,24 @@
 
   "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplierMetric.name": "Vehicle weights Weight Multiplier, kg in a metric ton (Metric System)",
   "variant-encumbrance-dnd5e.setting.vehicleWeightMultiplierMetric.hint": "Vehicle weights are an order of magnitude greater, Multiplier for vehicles (Metric System).",
+
+  "variant-encumbrance-dnd5e.setting.lightMultiplier.name": "Unencumbered Strength Multiplier",
+  "variant-encumbrance-dnd5e.setting.lightMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.",
+
+  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.name": "Unencumbered Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.lightMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).",
+
+  "variant-encumbrance-dnd5e.setting.mediumMultiplier.name": "Encumbered Strength Multiplier",
+  "variant-encumbrance-dnd5e.setting.mediumMultiplier.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.",
+
+  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.name": "Encumbered Strength Multiplier (Metric System)",
+  "variant-encumbrance-dnd5e.setting.mediumMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).",
+
+  "variant-encumbrance-dnd5e.setting.heavyMultiplier.name": "Heavily Encumbered (old Strength Multiplier)",
+  "variant-encumbrance-dnd5e.setting.heavyMultiplier.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score.",
+
+  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.name": "Heavily Encumbered (old Strength Multiplier) (Metric System)",
+  "variant-encumbrance-dnd5e.setting.heavyMultiplierMetric.hint": "Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
   "variant-encumbrance-dnd5e.setting.sizeMultipliers.name": "Variant Encumbrance Size Modifiers",
   "variant-encumbrance-dnd5e.setting.sizeMultipliers.hint": "Enable multipliers from creature size.",

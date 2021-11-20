@@ -25,12 +25,14 @@ export class EncumbranceDnd5e {
 
 export class EncumbranceData {
   totalWeight: number;
+  totalWeightToDisplay: number;
   lightMax: number;
   mediumMax: number;
   heavyMax: number;
   // totalMax:number;
   encumbranceTier: number;
   speedDecrease: number;
+  unit: string;
 }
 
 export enum EncumbranceFlags {
@@ -44,6 +46,7 @@ export enum EncumbranceFlags {
   DATA = 'data',
   ENABLED_AE = 'enabledae',
   ENABLED_WE = 'enabledwe',
+  UNIT = 'unit'
 }
 
 // export class EncumbranceFlagData {

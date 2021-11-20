@@ -143,7 +143,8 @@ variant-encumbrance-dnd5e:
     mediumMax: 100,
     heavyMax: 150,
     encumbranceTier: 0,
-    speedDecrease: 0
+    speedDecrease: 0,
+    unit 'lbs'
   },
   enabledae: true,
   enabledwe: true
@@ -164,7 +165,9 @@ variant-encumbrance-dnd5e:
 
 - **Heavily Encumbered (old Strength Multiplier) (Metric System):** Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 
-- **Strength Multiplier:** Multiplier used to calculate maximum carrying weight from the strength ability score.",
+- **Enable or disable the strength multiplier feature**: Enable or disable the strength multiplier feature.
+
+- **Strength Multiplier:** Work only with strength multiplier feature enabled. Multiplier used to calculate maximum carrying weight from the strength ability score.",
 
 - **Strength Multiplier (Metric System):** Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).",
 

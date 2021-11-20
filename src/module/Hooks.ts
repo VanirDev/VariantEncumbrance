@@ -50,8 +50,13 @@ export const readyHooks = async () => {
         // }
         if(!encumbranceData){
           // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
-          const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>getGame().actors?.get(actorObject.actor._id);
-          mergeObject(<any>actorEntity.data.flags[VARIANT_ENCUMBRANCE_MODULE_NAME], <any>actorEntityCurrent.flags[VARIANT_ENCUMBRANCE_MODULE_NAME]);
+          // const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>getGame().actors?.get(actorObject.actor._id);
+          if(actorObject.actor?.flags){
+            mergeObject(<any>actorEntity.data.flags, <any>actorObject.actor.flags);
+          }
+          if(actorObject.data){
+            mergeObject(<any>actorEntity.data.data, <any>actorObject.data);
+          }
           // mergeObject(actorEntity.data.items, actorObject.items);
           encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
             actorEntity,
@@ -66,25 +71,26 @@ export const readyHooks = async () => {
           encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
         }
 
-        let displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
-          ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
-          : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+        const displayedUnits = encumbranceData.unit;
+        // let displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
+        //   ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
+        //   : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
 
-        // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
-        if (dfQualityLifeActive && actorObject.isVehicle && hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`)) {
-          const dfVehicleUnit = <number>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`);
-          if(dfVehicleUnit){
-            let oldLabel = '';
-            switch (dfVehicleUnit) {
-              case 2240: oldLabel = 'L.Ton'; break;
-              case 2000: oldLabel = 'S.Ton'; break;
-              case 1: oldLabel = 'lbs'; break;
-            }
-            if(oldLabel){
-              displayedUnits = oldLabel;
-            }
-          }
-        }
+        // // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
+        // if (dfQualityLifeActive && actorObject.isVehicle && hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`)) {
+        //   const dfVehicleUnit = <number>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME}.unit`);
+        //   if(dfVehicleUnit){
+        //     let oldLabel = '';
+        //     switch (dfVehicleUnit) {
+        //       case 2240: oldLabel = 'L.Ton'; break;
+        //       case 2000: oldLabel = 'S.Ton'; break;
+        //       case 1: oldLabel = 'lbs'; break;
+        //     }
+        //     if(oldLabel){
+        //       displayedUnits = oldLabel;
+        //     }
+        //   }
+        // }
 
         if (
           !encumbranceElements &&
@@ -96,7 +102,7 @@ export const readyHooks = async () => {
           const encumbranceElementsTmp: any = htmlElement.find('.encumberance')[0]?.children;
 
           encumbranceElementsTmp[0].textContent =
-            'Weight Carried: ' + Math.round(encumbranceData.totalWeight * 100) / 100 + ' ' + displayedUnits;
+            'Weight Carried: ' + Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + ' ' + displayedUnits;
 
           encumbranceElementsTmp[1].textContent = 'Max: ' + encumbranceData.heavyMax + ' ' + displayedUnits;
           // TODO visual integration with compact-beyond-5e-sheet
@@ -159,11 +165,11 @@ export const readyHooks = async () => {
           encumbranceElements[5].style.left = (encumbranceData.mediumMax / encumbranceData.heavyMax) * 100 + '%';
           encumbranceElements[0].style.cssText =
             'width: ' +
-            Math.min(Math.max((encumbranceData.totalWeight / encumbranceData.heavyMax) * 100, 0), 99.8) +
+            Math.min(Math.max((encumbranceData.totalWeightToDisplay / encumbranceData.heavyMax) * 100, 0), 99.8) +
             '%;';
-          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeight * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
+          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
           encumbranceElements[1].textContent =
-            Math.round(encumbranceData.totalWeight * 100) / 100 + '/' + encumbranceData.heavyMax + ' ' + displayedUnits;
+            Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + '/' + encumbranceData.heavyMax + ' ' + displayedUnits;
 
           encumbranceElements[0].classList.remove('medium');
           encumbranceElements[0].classList.remove('heavy');

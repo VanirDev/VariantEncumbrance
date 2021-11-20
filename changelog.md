@@ -4,6 +4,8 @@
 - Add a module settings for the integration with the equipped/unequipped feature of the [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) module
 - Bug fix straneg behavior on the hook render actor need a mrge object for set up the correct values of the flags
 - Integration with [DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature](https://github.com/flamewave000/dragonflagon-fvtt/blob/master/df-qol/README.md#vehicle-cargo-capacity-unit)
+- Add new settings 'useStrengthMultiplier'
+- Many big fix
 
 ### Update 0.6.8
 
