@@ -430,28 +430,28 @@ export const readyHooks = async () => {
                 index = 0;
               }
 
-              // THIS LOOP ON RENDER ACTOR
-              // await actorEntity.setFlag(
-              //   VARIANT_ENCUMBRANCE_FLAG,
-              //   EncumbranceFlags.ENABLED_AE,
-              //   enableVarianEncumbranceEffectsOnSpecificActorFlag,
-              // );
-              // await actorEntity.setFlag(
-              //   VARIANT_ENCUMBRANCE_FLAG,
-              //   EncumbranceFlags.ENABLED_WE,
-              //   enableVarianEncumbranceWeightOnSpecificActorFlag,
-              // );
-
-              setProperty(
-                actorEntity.data.flags,
+              // THIS LOOP ON RENDER ACTOR ?
+              await actorEntity.setFlag(
+                VARIANT_ENCUMBRANCE_FLAG,
                 EncumbranceFlags.ENABLED_AE,
                 enableVarianEncumbranceEffectsOnSpecificActorFlag,
               );
-              setProperty(
-                actorEntity.data.flags,
+              await actorEntity.setFlag(
+                VARIANT_ENCUMBRANCE_FLAG,
                 EncumbranceFlags.ENABLED_WE,
                 enableVarianEncumbranceWeightOnSpecificActorFlag,
               );
+
+              // setProperty(
+              //   actorEntity.data.flags,
+              //   EncumbranceFlags.ENABLED_AE,
+              //   enableVarianEncumbranceEffectsOnSpecificActorFlag,
+              // );
+              // setProperty(
+              //   actorEntity.data.flags,
+              //   EncumbranceFlags.ENABLED_WE,
+              //   enableVarianEncumbranceWeightOnSpecificActorFlag,
+              // );
 
               if (!enableVarianEncumbranceEffectsOnSpecificActorFlag) {
                 await VariantEncumbranceImpl.manageActiveEffect(actorEntity, ENCUMBRANCE_TIERS.NONE);
