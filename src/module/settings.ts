@@ -310,4 +310,14 @@ export const registerSettings = function () {
     type: Boolean,
     default: false,
   });
+
+  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature', {
+    name: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.name'),
+    hint: getGame().i18n.localize(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+  
 };

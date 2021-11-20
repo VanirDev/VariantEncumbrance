@@ -1,3 +1,9 @@
+### Update 0.6.9
+
+- Better integration with [Inventory +](https://github.com/syl3r86/inventory-plus)
+- Add a module settings for the integration with the equipped/unequipped feature of the [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) module
+
+
 ### Update 0.6.8
 
 - Bug fix [[BUG]](https://github.com/VanirDev/VariantEncumbrance/issues/52), forgot to add check for module 'DFreds Convenient Effects'

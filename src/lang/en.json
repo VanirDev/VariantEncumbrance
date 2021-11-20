@@ -77,6 +77,9 @@
   "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.name": "Use standard calculation weight of the dnd5e system",
   "variant-encumbrance-dnd5e.setting.useStandardWeightCalculation.hint": "I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss..",
 
+  "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.name": "Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack",
+  "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.hint": "I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)",
+
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
 

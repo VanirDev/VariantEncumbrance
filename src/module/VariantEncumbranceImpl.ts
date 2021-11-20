@@ -22,7 +22,7 @@ import {
 } from './VariantEncumbranceModels';
 import Effect from './lib/effect';
 import { dfredsConvenientEffectsActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './Hooks';
-import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import { ActorData, ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -677,10 +677,14 @@ export const VariantEncumbranceImpl = {
         // VEHICLE
         // ===============================
 
-        // Vehicle weights are an order of magnitude greater.
-        totalWeight /= getGame().settings.get('dnd5e', 'metricWeightUnits')
+        const vehicleWeightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
           ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric')
           : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier');
+
+        // Vehicle weights are an order of magnitude greater.
+        // totalWeight /= vehicleWeightMultiplier;
+        // @ts-ignore
+        totalWeight /= <number>this.document.getFlag(SETTINGS.MOD_NAME, 'unit') || vehicleWeightMultiplier;
 
         // Compute overall encumbrance
         // const max = actorData.data.attributes.capacity.cargo;
@@ -1112,11 +1116,20 @@ export const VariantEncumbranceImpl = {
   },
 };
 
+  // ===========================
+  // Item Collection/Container SUPPORT
+  // ===========================
+
 function calcWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
   if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item);
-  //@ts-ignore
+  // if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
   // MOD 4535992 Removed variant encumbrance take care of this
-  //if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
+  const useEquippedUnequippedItemCollectionFeature = getGame().settings.get(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'useEquippedUnequippedItemCollectionFeature',
+  );
+  //@ts-ignore
+  if (useEquippedUnequippedItemCollectionFeature && item.parent instanceof Actor && !item.data.data.equipped) return 0;
   const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
   if (weightless) return getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0;
   return (
@@ -1163,6 +1176,10 @@ function _calcItemWeight(item: Item) {
   const weight = item.data.data.weight || 0;
   return Math.round(weight * quantity * 100) / 100;
 }
+
+  // ============================
+  // STANDARD SYSTEM CALCULATION SUPPORT
+  // ============================
 
 function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   let mod = 1; //actorEntity.data.data.abilities.str.value;

@@ -1,13 +1,13 @@
+# Variant Encumbrance
+
+![Latest Release Download Count](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=variant-encumbrance-dnd5e) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
+
 ![](https://img.shields.io/badge/D&D5e-v1.3.4-blue) 
 ![](https://img.shields.io/badge/Sky's%20Alternate%20Character%20Sheet-v1.5.2-red) 
 ![](https://img.shields.io/badge/Tidy5e%20Sheet-v0.4.10-red) 
 ![](https://img.shields.io/badge/Inventory+-v0.3.1-red) 
 ![](https://img.shields.io/badge/DAE-v0.2.34-red)
 ![](https://img.shields.io/badge/Foundry-v0.8.9-informational)
-
-# Variant Encumbrance
-
-![Latest Release Download Count](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&colorB=03ff1c&style=for-the-badge)](https://forge-vtt.com/bazaar#package=variant-encumbrance-dnd5e) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
@@ -202,7 +202,7 @@ variant-encumbrance-dnd5e:
 
 - **Use standard calculation weight of the dnd5e system:** I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss..",
 
-
+- **Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack**: I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)
 
 # Build
 
