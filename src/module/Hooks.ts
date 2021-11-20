@@ -1,3 +1,4 @@
+import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import { warn, error, debug, i18n } from '../VariantEncumbrance';
 import {
   getGame,
@@ -40,10 +41,22 @@ export const readyHooks = async () => {
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
       if (actorObject.isCharacter || actorObject.isVehicle) {
         const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
-        const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
-          actorEntity,
-          actorEntity.data.items.contents,
-        );
+
+        let encumbranceData;
+        if (hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
+          encumbranceData = <EncumbranceData>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`);
+        }
+        if(!encumbranceData){
+          // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
+          const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>getGame().actors?.get(actorObject.actor._id);
+          mergeObject(actorEntity.data.flags, actorEntityCurrent.flags);
+          // mergeObject(actorEntity.data.items, actorObject.items);
+          encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
+            actorEntity,
+            //@ts-ignore
+            actorObject.items instanceof Array ? actorObject.items : actorEntity.data.items.contents,
+          );
+        }
         let encumbranceElements;
         if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
           encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
@@ -394,13 +407,25 @@ export const readyHooks = async () => {
                 index = 0;
               }
 
-              await actorEntity.setFlag(
-                VARIANT_ENCUMBRANCE_FLAG,
+              // THIS LOOP ON RENDER ACTOR
+              // await actorEntity.setFlag(
+              //   VARIANT_ENCUMBRANCE_FLAG,
+              //   EncumbranceFlags.ENABLED_AE,
+              //   enableVarianEncumbranceEffectsOnSpecificActorFlag,
+              // );
+              // await actorEntity.setFlag(
+              //   VARIANT_ENCUMBRANCE_FLAG,
+              //   EncumbranceFlags.ENABLED_WE,
+              //   enableVarianEncumbranceWeightOnSpecificActorFlag,
+              // );
+
+              setProperty(
+                actorEntity.data.flags,
                 EncumbranceFlags.ENABLED_AE,
                 enableVarianEncumbranceEffectsOnSpecificActorFlag,
               );
-              await actorEntity.setFlag(
-                VARIANT_ENCUMBRANCE_FLAG,
+              setProperty(
+                actorEntity.data.flags,
                 EncumbranceFlags.ENABLED_WE,
                 enableVarianEncumbranceWeightOnSpecificActorFlag,
               );
@@ -543,10 +568,10 @@ export const initHooks = () => {
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000;
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
   //@ts-ignore
   CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000;
+    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
 
   // CONFIG.debug.hooks = true; // For debugging only
 

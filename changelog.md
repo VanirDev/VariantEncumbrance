@@ -2,7 +2,8 @@
 
 - Better integration with [Inventory +](https://github.com/syl3r86/inventory-plus)
 - Add a module settings for the integration with the equipped/unequipped feature of the [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) module
-
+- Bug fix straneg behavior on the hook render actor need a mrge object for set up the correct values of the flags
+- 
 
 ### Update 0.6.8
 
