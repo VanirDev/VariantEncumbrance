@@ -6,9 +6,7 @@
 
 ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
 
-![Forge Installs](https://img.shields.io/badge/dynamic/json?color=red&label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fvariant-encumbrance-dnd5e&style=for-the-badge) 
-
-![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=orange&style=for-the-badge)
+![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FVanirDev%2FVariantEncumbrance%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=red&style=for-the-badge)
 
 [![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fvariant-encumbrance-dnd5e%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/variant-encumbrance-dnd5e/)
 
@@ -166,9 +164,9 @@ variant-encumbrance-dnd5e:
 
 # Settings
 
-| Name | Hint | Default Value| More Details |
-|:-----|:-----|:-------------|:-------------|
-|Use Variant Encumbrance with specific type of actor| Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive.|character,vehicle|A list of actor type where the module is enabled, if empty is like disable the module|
+| Name | Hint | Default Value | More Details |
+|:-----|:-----|:--------------|:-------------|
+|Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. |character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
 |Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|||
 |Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|||
 |Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|||
