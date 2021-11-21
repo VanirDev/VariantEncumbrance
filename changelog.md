@@ -1,3 +1,7 @@
+### Update 0.6.10
+
+- change the default value of setting 'useStrengthMultiplier' to 'false' for bad feedback on the feature
+
 ### Update 0.6.9
 
 - Better integration with [Inventory +](https://github.com/syl3r86/inventory-plus)

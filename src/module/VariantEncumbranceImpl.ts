@@ -1365,6 +1365,8 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
     : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
 
+  // const strengthScore = actorEntity.data.data.abilities.str.value * modForSize;
+
   const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
     ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
     : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
