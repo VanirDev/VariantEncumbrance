@@ -1,6 +1,7 @@
 ### Update 0.6.10
 
 - change the default value of setting 'useStrengthMultiplier' to 'false' for bad feedback on the feature
+- Bug fix [Max weight values now many times larger than they should be](https://github.com/VanirDev/VariantEncumbrance/issues/54)
 
 ### Update 0.6.9
 
