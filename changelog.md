@@ -1,3 +1,7 @@
+
+### Update 0.6.11
+
+- Just add color to the header sheet button inspired from [Actor Link Indicator for Foundry VTT](https://github.com/saif-ellafi/foundryvtt-actor-link-indicator)
 ### Update 0.6.10
 
 - change the default value of setting 'useStrengthMultiplier' to 'false' for bad feedback on the feature
