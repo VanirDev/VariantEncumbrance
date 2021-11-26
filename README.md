@@ -134,6 +134,7 @@ Some preview:
 
 ![img6](./wiki/feature_header_light_nolabel_2.png)
 
+**NOTE: from 0.6.11 the button are colored !!!**
 
 ### Variant Encumbrance Flag
 

@@ -57,17 +57,17 @@
   background: repeating-linear-gradient(135deg, #2d2d2d, #2d2d2d 10px, #efd00e 10px, #efd00e 20px) !important;
 }
 
-.enable-disable-variant-encumbrance .fa-balance-scale-right {
-  color: darkred;
-  text-shadow: 0 0 8px darkred;
+.enable-disable-variant-encumbrance .fa-weight-hanging {
+  color:crimson;
+  text-shadow: 0 0 8px crimson;
 }
 
-.enable-disable-variant-encumbrance .fa-weight-hanging {
-  color: darkorange;
-  text-shadow: 0 0 8px darkorange;
+.enable-disable-variant-encumbrance .fa-balance-scale-right{
+  color: orange;
+  text-shadow: 0 0 8px orange;
 }
 
 .enable-disable-variant-encumbrance .fa-feather {
-  color: darkgreen;
-  text-shadow: 0 0 8px darkgreen;
+  color:lightgreen;
+  text-shadow: 0 0 8px lightgreen;
 }
