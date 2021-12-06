@@ -12,7 +12,7 @@ import {
   VARIANT_ENCUMBRANCE_FLAG,
   VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
 } from './settings';
-import { i18n, log, warn } from '../VariantEncumbrance';
+import { error, i18n, log, warn } from '../VariantEncumbrance';
 import {
   EncumbranceActorType,
   // EncumbranceActorType,
@@ -116,7 +116,11 @@ export const VariantEncumbranceImpl = {
         } else {
           // On update operations, the actorEntity's items have not been updated.
           // Override the entry for this item using the updatedItem data.
-          mergeObject(<ItemData>itemCurrent.data, updatedItem);
+          try{
+            mergeObject(<ItemData>itemCurrent.data, updatedItem);
+          }catch(e){
+            error(e?.message);
+          }
         }
         updatedItem = itemCurrent;
       }

@@ -1,4 +1,8 @@
 
+### Update 0.6.12
+
+- Add try catch for module compatibility on the mergeObject method during the update of a item
+
 ### Update 0.6.11
 
 - Just add color to the header sheet button inspired from [Actor Link Indicator for Foundry VTT](https://github.com/saif-ellafi/foundryvtt-actor-link-indicator)
