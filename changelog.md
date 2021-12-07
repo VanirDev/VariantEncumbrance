@@ -1,4 +1,8 @@
 
+### Update 0.6.13
+
+- Little performance add check if sheet is rendered avoid to recalculate for compatibility with others modules
+
 ### Update 0.6.12
 
 - Add try catch for module compatibility on the mergeObject method during the update of a item

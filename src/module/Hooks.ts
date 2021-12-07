@@ -196,7 +196,7 @@ export const readyHooks = async () => {
     if (!actorEntity) {
       return;
     }
-    if (isEnabledActorType(actorEntity)) {
+    if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
       let doTheUpdate = false;
       let noActiveEffect = false;
 
@@ -616,7 +616,7 @@ export const initHooks = () => {
 
 export async function createEmbeddedDocuments(wrapped, embeddedName, data, context) {
   const actorEntity: Actor = this.actor;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
   }
   return wrapped(embeddedName, data, context);
@@ -624,7 +624,7 @@ export async function createEmbeddedDocuments(wrapped, embeddedName, data, conte
 
 export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], options = {}) {
   const actorEntity: Actor = this.actor;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
   }
   return wrapped(embeddedName, ids, options);
@@ -632,7 +632,7 @@ export async function deleteEmbeddedDocuments(wrapped, embeddedName, ids = [], o
 
 export async function updateEmbeddedDocuments(wrapped, embeddedName, data, options) {
   const actorEntity: Actor = this.actor;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.UPDATE);
   }
   return wrapped(embeddedName, data, options);
@@ -641,7 +641,7 @@ export async function updateEmbeddedDocuments(wrapped, embeddedName, data, optio
 export async function createDocuments(wrapped, data, context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
   }
   return wrapped(data, context);
@@ -650,7 +650,7 @@ export async function createDocuments(wrapped, data, context = { parent: {}, pac
 export async function updateDocuments(wrapped, updates = [], context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, EncumbranceMode.UPDATE);
   }
   return wrapped(updates, context);
@@ -659,7 +659,7 @@ export async function updateDocuments(wrapped, updates = [], context = { parent:
 export async function deleteDocuments(wrapped, ids = [], context = { parent: {}, pack: {}, options: {} }) {
   const { parent, pack, options } = context;
   const actorEntity: Actor = <Actor>parent;
-  if (isEnabledActorType(actorEntity)) {
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
   }
   return wrapped(ids, context);
