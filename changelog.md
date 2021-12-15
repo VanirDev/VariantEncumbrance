@@ -1,4 +1,8 @@
 
+### Update 0.6.14
+
+- Add [CHANGELOGS & CONFLICTS](https://github.com/theripper93/libChangelogs) hooks for better management of the conflicts
+
 ### Update 0.6.13
 
 - Little performance add check if sheet is rendered avoid to recalculate for compatibility with others modules

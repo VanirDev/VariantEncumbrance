@@ -12,7 +12,12 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { getGame, registerSettings } from './module/settings';
+import {
+  getGame,
+  registerSettings,
+  VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
+  VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
+} from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { VARIANT_ENCUMBRANCE_MODULE_NAME } from './module/settings';
 import { initHooks, readyHooks, setupHooks } from './module/Hooks';
@@ -99,3 +104,26 @@ Hooks.once('ready', () => {
 //   //@ts-ignore
 //   getGame().variantencumbrance.effectInterface.initialize();
 // });
+
+Hooks.once('libChangelogsReady', function () {
+  //@ts-ignore
+  libChangelogs.register(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'Add [CHANGELOGS & CONFLICTS](https://github.com/theripper93/libChangelogs) hooks for better management of the conflicts',
+    'minor',
+  );
+  //@ts-ignore
+  libChangelogs.registerConflict(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
+    'possible minor issue with "Vehicle Cargo Capacity Unit"',
+    'minor',
+  );
+  //@ts-ignore
+  libChangelogs.registerConflict(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
+    'no particular errors, but it is still not recommended to use this module with the "0.3.5" version of inventory +',
+    'minor',
+  );
+});

@@ -116,9 +116,9 @@ export const VariantEncumbranceImpl = {
         } else {
           // On update operations, the actorEntity's items have not been updated.
           // Override the entry for this item using the updatedItem data.
-          try{
+          try {
             mergeObject(<ItemData>itemCurrent.data, updatedItem);
-          }catch(e){
+          } catch (e) {
             error(e?.message);
           }
         }
