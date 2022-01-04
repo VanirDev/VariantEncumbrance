@@ -20,6 +20,7 @@ export default class Effect {
   atlChanges: any[] = [];
   tokenMagicChanges: any[] = [];
   nestedEffects: Effect[] = [];
+  transfer = false;
 
   constructor({
     customId = '',
@@ -37,6 +38,7 @@ export default class Effect {
     atlChanges = <any[]>[],
     tokenMagicChanges = <any[]>[],
     nestedEffects = <Effect[]>[],
+    transfer = false,
   }) {
     this.customId = customId;
     this.name = name;
@@ -53,6 +55,7 @@ export default class Effect {
     this.atlChanges = atlChanges;
     this.tokenMagicChanges = tokenMagicChanges;
     this.nestedEffects = nestedEffects;
+    this.transfer = transfer;
   }
 
   /**
@@ -61,7 +64,7 @@ export default class Effect {
    * @param {string} origin - the origin to add to the effect
    * @returns The active effect data object for this effect
    */
-  convertToActiveEffectData(origin): Record<string, unknown> {
+  convertToActiveEffectData(origin: string): Record<string, unknown> {
     return {
       id: this._id,
       name: this.name,
@@ -76,6 +79,7 @@ export default class Effect {
         isConvenient: true,
       }),
       origin: origin,
+      transfer: this.transfer ?? false,
       changes: this.changes,
     };
   }

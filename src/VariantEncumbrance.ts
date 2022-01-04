@@ -21,6 +21,7 @@ import {
 import { preloadTemplates } from './module/preloadTemplates';
 import { VARIANT_ENCUMBRANCE_MODULE_NAME } from './module/settings';
 import { initHooks, readyHooks, setupHooks } from './module/Hooks';
+import EffectInterface from './module/effects/effect-interface';
 // import { installedModules, setupModules } from './module/setupModules';
 
 export let debugEnabled = 0;
@@ -86,30 +87,38 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
-  // if (!getGame().modules.get("lib-wrapper")?.active && getGame().user.isGM){
-  // 	ui.notifications.error(`The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`);
-  // 	return;
-  // }
+  if (!getGame().modules.get('lib-wrapper')?.active && getGame().user?.isGM) {
+    ui.notifications?.error(
+      `The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`,
+    );
+    return;
+  }
+  if (!getGame().modules.get('socketlib')?.active && getGame().user?.isGM) {
+    ui.notifications?.error(
+      `The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'socketlib' module.`,
+    );
+    return;
+  }
 
   readyHooks();
 });
 
 // Add any additional hooks if necessary
 
-// Hooks.once('socketlib.ready', () => {
-//   //@ts-ignore
-//   getGame().variantencumbrance = getGame().variantencumbrance || {};
-//   //@ts-ignore
-//   getGame().variantencumbrance.effectInterface = new EffectInterface();
-//   //@ts-ignore
-//   getGame().variantencumbrance.effectInterface.initialize();
-// });
+Hooks.once('socketlib.ready', () => {
+  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME] = getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME] || {};
+
+  // getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effects = new EffectDefinitions();
+  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface = new EffectInterface(VARIANT_ENCUMBRANCE_MODULE_NAME);
+  // getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].statusEffects = new StatusEffects();
+  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface.initialize();
+});
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
   libChangelogs.register(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'Add [CHANGELOGS & CONFLICTS](https://github.com/theripper93/libChangelogs) hooks for better management of the conflicts',
+    'Add new effect-handler, preparation to foundryvtt 9',
     'minor',
   );
   //@ts-ignore

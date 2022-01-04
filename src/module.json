@@ -2,7 +2,7 @@
   "name": "variant-encumbrance-dnd5e",
   "title": "Variant Encumbrance+Midi",
   "description": "A module for D&D 5th Edition, to automatically modify character carry weights to match the Variant Encumbrance optional rule set.",
-  "version": "0.6.14",
+  "version": "0.7.0",
   "author": "Vanir#0001 (discord), 47Y, p4535992",
   "type": "module",
   "socket": true,
@@ -41,19 +41,22 @@
   "system": ["dnd5e"],
   "esmodules": ["VariantEncumbrance.js"],
   "styles": ["styles/VariantEncumbrance.css"],
-  "minimumCoreVersion": "0.7.10",
-  "compatibleCoreVersion": "0.8.9",
+  "minimumCoreVersion": "0.8.9",
+  "compatibleCoreVersion": "9",
   "url": "https://github.com/VanirDev/VariantEncumbrance",
   "manifest": "https://github.com/VanirDev/VariantEncumbrance/releases/latest/download/module.json",
-  "download": "https://github.com/VanirDev/VariantEncumbrance/releases/download/v0.6.14/module.zip",
-  "readme": "https://github.com/VanirDev/VariantEncumbrance/blob/v0.6.14/README.md",
-  "changelog": "https://github.com/VanirDev/VariantEncumbrance/blob/v0.6.14/changelog.md",
+  "download": "https://github.com/VanirDev/VariantEncumbrance/releases/download/v0.7.0/module.zip",
+  "readme": "https://github.com/VanirDev/VariantEncumbrance/blob/v0.7.0/README.md",
+  "changelog": "https://github.com/VanirDev/VariantEncumbrance/blob/v0.7.0/changelog.md",
   "bugs": "https://github.com/VanirDev/VariantEncumbrance/issues",
   "allowBugReporter": true,
   "manifestPlusVersion": "1.2.0",
   "dependencies": [
     {
       "name": "lib-wrapper"
+    },
+    {
+      "name": "socketlib"
     }
   ]
 }

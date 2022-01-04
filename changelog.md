@@ -1,4 +1,8 @@
 
+### Update 0.7.0
+
+- Add new effect-handler, preparation to foundryvtt 9
+
 ### Update 0.6.14
 
 - Add [CHANGELOGS & CONFLICTS](https://github.com/theripper93/libChangelogs) hooks for better management of the conflicts

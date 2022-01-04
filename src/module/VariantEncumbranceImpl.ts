@@ -22,7 +22,7 @@ import {
   EncumbranceMode,
   VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
-import Effect from './lib/effect';
+import Effect from './effects/effect';
 import {
   dfQualityLifeActive,
   dfredsConvenientEffectsActive,
@@ -34,6 +34,7 @@ import {
   ActorData,
   ItemData,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import EffectInterface from './effects/effect-interface';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -929,6 +930,7 @@ export const VariantEncumbranceImpl = {
       description: i18n('variant-encumbrance-dnd5e.effect.description.encumbered'),
       icon: 'icons/svg/down.svg',
       isDynamic: true,
+      transfer: true,
     });
   },
 
@@ -938,6 +940,7 @@ export const VariantEncumbranceImpl = {
       description: i18n('variant-encumbrance-dnd5e.effect.description.heavily_encumbered'),
       icon: 'icons/svg/downgrade.svg',
       isDynamic: true,
+      transfer: true,
       changes: [
         {
           key: 'flags.midi-qol.disadvantage.attack.all',
@@ -969,6 +972,7 @@ export const VariantEncumbranceImpl = {
       description: i18n('variant-encumbrance-dnd5e.effect.description.heavily_encumbered'),
       icon: 'icons/svg/downgrade.svg',
       isDynamic: true,
+      transfer: true,
       changes: [],
     });
   },
@@ -980,6 +984,7 @@ export const VariantEncumbranceImpl = {
       // icon: 'icons/svg/hazard.svg',
       icon: 'icons/tools/smithing/anvil.webp',
       isDynamic: true,
+      transfer: true,
       changes: [
         {
           key: 'flags.midi-qol.disadvantage.attack.all',
@@ -1012,6 +1017,7 @@ export const VariantEncumbranceImpl = {
       // icon: 'icons/svg/hazard.svg',
       icon: 'icons/tools/smithing/anvil.webp',
       isDynamic: true,
+      transfer: true,
       changes: [],
     });
   },
@@ -1094,10 +1100,16 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
+    /*
     // const actor = await this._foundryHelpers.getActorByUuid(uuid);
     return actor?.data?.effects?.some(
       (activeEffect) =>
         <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+    );
+    */
+    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
+      effectName,
+      <string>actor.id,
     );
   },
 
@@ -1111,10 +1123,16 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
+    /*
     // const actor = await this._foundryHelpers.getActorByUuid(uuid);
     return actor?.data?.effects?.some(
       (activeEffect) =>
         <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effect.id,
+    );
+    */
+    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
+      <string>effect.id,
+      <string>actor.id,
     );
   },
 
@@ -1126,6 +1144,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffect(effectName: string, actor: Actor) {
+    /*
     // const actor = await this._foundryHelpers.getActorByUuid(uuid);
     const effectToRemove = actor.data.effects.find(
       (activeEffect) =>
@@ -1141,6 +1160,11 @@ export const VariantEncumbranceImpl = {
 
       log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
     }
+    */
+    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
+      effectName,
+      <string>actor.id,
+    );
   },
 
   /**
@@ -1151,6 +1175,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
+    /*
     if (effectToRemove) {
       // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
       // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
@@ -1159,6 +1184,11 @@ export const VariantEncumbranceImpl = {
       await effectToRemove.delete();
       log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
     }
+    */
+    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
+      <string>effectToRemove.id,
+      <string>actor.id,
+    );
   },
 
   /**
@@ -1200,7 +1230,7 @@ export const VariantEncumbranceImpl = {
           tier: encumbranceTier,
         },
       };
-
+      /*
       if (dfredsConvenientEffectsActive) {
         //@ts-ignore
         const arrayCustomEffects: Effect[] = getGame().dfreds?.effects?.customEffects || [];
@@ -1212,11 +1242,18 @@ export const VariantEncumbranceImpl = {
           getGame().dfreds?.effects?.customEffects?.push(effect);
         }
       }
-
+      */
+      /*
       const activeEffectData = effect.convertToActiveEffectData(origin);
       actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
       // effectInterface.addEffect(effectName, actor.id, origin);
       log(`Added effect ${effect.name ? effect.name : effectName} to ${actor.name} - ${actor.id}`);
+      */
+      return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
+        effectName,
+        <string>actor.id,
+        effect,
+      );
     }
   },
 };
