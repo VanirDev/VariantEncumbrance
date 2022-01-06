@@ -56,7 +56,7 @@ export const registerSettings = function () {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.hint'),
     scope: 'world',
-    config: false,
+    config: true,
     type: String,
     default: 'character,vehicle',
   });

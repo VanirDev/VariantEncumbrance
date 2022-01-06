@@ -172,35 +172,35 @@ variant-encumbrance-dnd5e:
 # Settings
 
 | Name | Hint | Default Value | More Details |
-|:-----|:-----|:--------------|:-------------|
-|Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. |character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
-|Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|||
-|Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|||
-|Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|||
-|Encumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).|||
-|Heavily Encumbered (old Strength Multiplier)| Multiplier used to calculate maximum carrying weight from the strength ability score.|||
-|Heavily Encumbered (old Strength Multiplier) (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|||
+|:-----|:-----|:-------------:|:-------------|
+|Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. | character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
+|Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|5||
+|Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|2.3||
+|Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|10||
+|Encumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).|4.5||
+|Heavily Encumbered (old Strength Multiplier)| Multiplier used to calculate maximum carrying weight from the strength ability score.|15||
+|Heavily Encumbered (old Strength Multiplier) (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|6.8||
 |Enable or disable the strength multiplier feature| Enable or disable the strength multiplier feature.|false|Attention this will mutiply the carriage value with CONFIG.DND5E.encumbrance.strMultiplier.imperial/CONFIG.DND5E.encumbrance.strMultiplier.metric value, USUALLY YOU DON'T NEED THIS because the module alredy do this with the setting "Heavily Encumbered" multiplier|
-|Strength Multiplier| Work only with strength multiplier feature enabled. Multiplier used to calculate maximum carrying weight from the strength ability score.|||
-|Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|||
-|Variant Encumbrance Speed Penalties| Enable automatic speed penalties from carry weight.|||
-|Unequipped Item Weight Multiplier| Multiplier for items when not equipped.|||
-|Equipped Item Weight Multiplier| Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.|||
-|Proficient Equipped Item Weight Multiplier| Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.|||
-|Currency Per Weight Unit| Define the number of coins required to equal 1 unit of weight.|||
-|Currency Per Weight Unit (Metric System)| Define the number of coins required to equal 1 unit of weight (Metric System).|||
-|Vehicle weights Weight Multiplier, lbs in an imperial ton| Vehicle weights are an order of magnitude greater, Multiplier for vehicles.|||
-|Vehicle weights Weight Multiplier, kg in a metric ton (Metric System)| Vehicle weights are an order of magnitude greater, Multiplier for vehicles (Metric System).|||
-|Variant Encumbrance Size Modifiers| Enable multipliers from creature size.|||
-|Weight Units| Units displayed in the encumbrance bar (just graphics).|||
-|Weight Units (Metric System)| Units displayed in the encumbrance bar (just graphics) (Metric System).|||
-|Lightly Encumbered Speed Decrease| The number of speed units subtracted when lightly encumbered, default is 10.|||
-|Encumbered Speed Decrease| The number of speed units subtracted when heavily encumbered, default is 20.|||
-|Enable pre check encumbrance tier| I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item|||
-|Enable/Disable the feature for applying the variant encumbrance active effects for specific actor| If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues|||
-|Remove label from buttons on the header character sheet| Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true|||
-|Use standard calculation weight of the dnd5e system| I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss.|||
-|Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|||
+|Strength Multiplier| Work only with strength multiplier feature enabled. Multiplier used to calculate maximum carrying weight from the strength ability score.|15|Usually you never need this except for some homebrew rule|
+|Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|6.8|Usually you never need this except for some homebrew rule|
+|Variant Encumbrance Speed Penalties| Enable automatic speed penalties from carry weight.|true||
+|Unequipped Item Weight Multiplier| Multiplier for items when not equipped.|1||
+|Equipped Item Weight Multiplier| Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.|1||
+|Proficient Equipped Item Weight Multiplier| Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.|1||
+|Currency Per Weight Unit| Define the number of coins required to equal 1 unit of weight.|50||
+|Currency Per Weight Unit (Metric System)| Define the number of coins required to equal 1 unit of weight (Metric System).|110||
+|Vehicle weights Weight Multiplier, lbs in an imperial ton| Vehicle weights are an order of magnitude greater, Multiplier for vehicles.|2000||
+|Vehicle weights Weight Multiplier, kg in a metric ton (Metric System)| Vehicle weights are an order of magnitude greater, Multiplier for vehicles (Metric System).|1000||
+|Variant Encumbrance Size Modifiers| Enable multipliers from creature size.|true||
+|Weight Units| Units displayed in the encumbrance bar (just graphics).|lbs.||
+|Weight Units (Metric System)| Units displayed in the encumbrance bar (just graphics) (Metric System).|kg.||
+|Lightly Encumbered Speed Decrease| The number of speed units subtracted when lightly encumbered, default is 10.|10||
+|Encumbered Speed Decrease| The number of speed units subtracted when heavily encumbered, default is 20.|20||
+|Enable pre check encumbrance tier| I DON'T RECCOMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item|false||
+|Enable/Disable the feature for applying the variant encumbrance active effects for specific actor| If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues|true||
+|Remove label from buttons on the header character sheet| Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true|true||
+|Use standard calculation weight of the dnd5e system| I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss.|false||
+|Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|false|This make sense only with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) installed and active|
 
 # Build
 

@@ -1,4 +1,10 @@
 
+### 0.7.1
+
+- Update README table of settings
+- Rename label 'useVarianEncumbranceWithSpecificActorType' to 'useVarianEncumbranceWithSpecificType'
+- change configuration 'useVarianEncumbranceWithSpecificType' from false to true
+
 ### Update 0.7.0
 
 - Add new effect-handler, preparation to foundryvtt 9
