@@ -1,5 +1,5 @@
 import { log } from '../../VariantEncumbrance';
-import { getCanvas, getGame } from '../settings';
+import { canvas, game } from '../settings';
 import Effect from './effect';
 
 export default class EffectHandler {
@@ -323,14 +323,14 @@ export default class EffectHandler {
    * @returns {string[]} actor uuids for selected or targeted tokens
    */
   getActorUuidsFromCanvas() {
-    if (getCanvas().tokens?.controlled.length == 0 && getGame().user?.targets.size == 0) {
+    if (canvas.tokens?.controlled.length == 0 && game.user?.targets.size == 0) {
       return [];
     }
 
-    // if (this._settings.prioritizeTargets && getGame().user?.targets.size !== 0) {
-    //   return Array.from(<UserTargets>getGame().user?.targets).map((token) => token.actor?.uuid);
+    // if (this._settings.prioritizeTargets && game.user?.targets.size !== 0) {
+    //   return Array.from(<UserTargets>game.user?.targets).map((token) => token.actor?.uuid);
     // } else {
-    return getCanvas().tokens?.controlled.map((token) => token.actor?.uuid);
+    return canvas.tokens?.controlled.map((token) => token.actor?.uuid);
     // }
   }
 
@@ -343,7 +343,7 @@ export default class EffectHandler {
   async getActorByUuid(uuid: string) {
     //const actorToken = <TokenDocument>await fromUuid(uuid);
     //const actor = actorToken?.actor ? actorToken?.actor : actorToken;
-    const actor = <Actor>getGame().actors?.get(uuid);
+    const actor = <Actor>game.actors?.get(uuid);
     return actor;
   }
 }

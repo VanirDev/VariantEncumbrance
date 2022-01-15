@@ -8,7 +8,6 @@ import {
   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  getGame,
   VARIANT_ENCUMBRANCE_FLAG,
   VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
 } from './settings';
@@ -35,6 +34,7 @@ import {
   ItemData,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import EffectInterface from './effects/effect-interface';
+import { canvas, game } from './settings';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -149,7 +149,7 @@ export const VariantEncumbranceImpl = {
       }
     });
     if (!isAlreadyInActor) {
-      const im = <Item>getGame().items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
+      const im = <Item>game.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
       if (im && physicalItems.includes(im.type)) {
         if (mode == EncumbranceMode.DELETE) {
           // setProperty(im, 'data.data.weight', 0);
@@ -231,7 +231,7 @@ export const VariantEncumbranceImpl = {
     }
 
     // SEEM NOT NECESSARY Add pre check for encumbrance tier
-    if (<boolean>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
+    if (<boolean>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
       if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
         const encumbranceDataCurrent = <EncumbranceData>(
           actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.DATA)
@@ -390,7 +390,7 @@ export const VariantEncumbranceImpl = {
         return;
     }
 
-    if (!getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance')) {
+    if (!game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance')) {
       effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
     }
 
@@ -454,7 +454,7 @@ export const VariantEncumbranceImpl = {
     const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
       actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
     );
-    const useStandardWeightCalculation = getGame().settings.get(
+    const useStandardWeightCalculation = game.settings.get(
       VARIANT_ENCUMBRANCE_MODULE_NAME,
       'useStandardWeightCalculation',
     );
@@ -524,7 +524,7 @@ export const VariantEncumbranceImpl = {
             // itemWeight = calcItemWeight(item) + getProperty(item, 'data.flags.itemcollection.bagWeight');
             // MOD 4535992 Removed variant encumbrance take care of this
             const useEquippedUnequippedItemCollectionFeature = <boolean>(
-              getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature')
+              game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature')
             );
             itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature);
             //@ts-ignore
@@ -616,12 +616,12 @@ export const VariantEncumbranceImpl = {
               : //@ts-ignore
                 item.data.data?.proficient) || false;
           if (isProficient) {
-            appliedWeight *= <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'profEquippedMultiplier');
+            appliedWeight *= <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'profEquippedMultiplier');
           } else {
-            appliedWeight *= <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'equippedMultiplier');
+            appliedWeight *= <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'equippedMultiplier');
           }
         } else {
-          appliedWeight *= <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unequippedMultiplier');
+          appliedWeight *= <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unequippedMultiplier');
         }
         return weight + appliedWeight;
       }, 0);
@@ -637,16 +637,16 @@ export const VariantEncumbranceImpl = {
 
       // [Optional] add Currency Weight (for non-transformed actors)
       //@ts-ignore
-      if (getGame().settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
+      if (game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
         //@ts-ignore
         const currency = actorEntity.data.data.currency;
         const numCoins = <number>(
           Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
         );
 
-        const currencyPerWeight = getGame().settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric')
-          : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
+        const currencyPerWeight = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric')
+          : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
 
         totalWeight += numCoins / currencyPerWeight;
       }
@@ -657,7 +657,7 @@ export const VariantEncumbranceImpl = {
       let speedDecrease = 0;
 
       let modForSize = 1; //actorEntity.data.data.abilities.str.value;
-      if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
+      if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
         //@ts-ignore
         const size = actorEntity.data.data.traits.size;
         if (size === 'tiny') {
@@ -685,29 +685,29 @@ export const VariantEncumbranceImpl = {
       }
 
       let strengthMultiplier = 1;
-      if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier')) {
-        strengthMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric')
-          : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier');
+      if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier')) {
+        strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric')
+          : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier');
       }
 
-      let displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
-        : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+      let displayedUnits = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <string>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
+        : <string>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
 
-      const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
+      const lightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
+        : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
       let lightMax = lightMultiplier; // lightMultiplier * strengthScore;
 
-      const mediumMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
+      const mediumMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
+        : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
       let mediumMax = mediumMultiplier; // mediumMultiplier * strengthScore;
 
-      const heavyMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
-        : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
+      const heavyMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
+        : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
       let heavyMax = heavyMultiplier; // heavyMultiplier * strengthScore;
 
       let max = 0;
@@ -733,9 +733,9 @@ export const VariantEncumbranceImpl = {
         // ===============================
         // MOD 4535992 FROM 2000 to 1 SO I REMOVED ???
         /*
-        const vehicleWeightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric')
-          : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier');
+        const vehicleWeightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric')
+          : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier');
 
         // Vehicle weights are an order of magnitude greater.
         
@@ -815,11 +815,11 @@ export const VariantEncumbranceImpl = {
 
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
       if (totalWeight > lightMax && totalWeight <= mediumMax) {
-        speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease');
+        speedDecrease = <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease');
         encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
       }
       if (totalWeight > mediumMax && totalWeight <= heavyMax) {
-        speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease');
+        speedDecrease = <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease');
         encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
       }
       if (totalWeight > heavyMax) {
@@ -859,7 +859,7 @@ export const VariantEncumbranceImpl = {
    * @param {Actor5e} actor - the effected actor
    */
   addDynamicEffects: async function (effectName: string, actor: Actor, speedDecrease: number): Promise<Effect | null> {
-    // const invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
+    // const invMidiQol = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
     switch (effectName.toLowerCase()) {
       case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
         // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
@@ -1107,7 +1107,7 @@ export const VariantEncumbranceImpl = {
         <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
     );
     */
-    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
+    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
       effectName,
       <string>actor.id,
     );
@@ -1130,7 +1130,7 @@ export const VariantEncumbranceImpl = {
         <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effect.id,
     );
     */
-    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
+    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
       <string>effect.id,
       <string>actor.id,
     );
@@ -1161,7 +1161,7 @@ export const VariantEncumbranceImpl = {
       log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
     }
     */
-    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
+    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
       effectName,
       <string>actor.id,
     );
@@ -1185,7 +1185,7 @@ export const VariantEncumbranceImpl = {
       log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
     }
     */
-    return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
+    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
       <string>effectToRemove.id,
       <string>actor.id,
     );
@@ -1203,9 +1203,9 @@ export const VariantEncumbranceImpl = {
     if (encumbranceTier == ENCUMBRANCE_TIERS.NONE) {
       speedDecrease = 0;
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.LIGHT) {
-      speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease');
+      speedDecrease = <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.HEAVY) {
-      speedDecrease = <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease');
+      speedDecrease = <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.MAX) {
       speedDecrease = null;
     }
@@ -1233,13 +1233,13 @@ export const VariantEncumbranceImpl = {
       /*
       if (dfredsConvenientEffectsActive) {
         //@ts-ignore
-        const arrayCustomEffects: Effect[] = getGame().dfreds?.effects?.customEffects || [];
+        const arrayCustomEffects: Effect[] = game.dfreds?.effects?.customEffects || [];
         const isPresentonCustomEffect = arrayCustomEffects.find(
           (customEffect: Effect) => <boolean>customEffect.flags.isConvenient && <string>customEffect.name == effectName,
         );
         if (!isPresentonCustomEffect) {
           //@ts-ignore
-          getGame().dfreds?.effects?.customEffects?.push(effect);
+          game.dfreds?.effects?.customEffects?.push(effect);
         }
       }
       */
@@ -1249,7 +1249,7 @@ export const VariantEncumbranceImpl = {
       // effectInterface.addEffect(effectName, actor.id, origin);
       log(`Added effect ${effect.name ? effect.name : effectName} to ${actor.name} - ${actor.id}`);
       */
-      return (<EffectInterface>getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
+      return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
         effectName,
         <string>actor.id,
         effect,
@@ -1259,11 +1259,11 @@ export const VariantEncumbranceImpl = {
 };
 
 export const isEnabledActorType = function (actorEntity: Actor): boolean {
-  const useVarianEncumbranceWithSpecificType: string[] = getGame().settings.get(
+  const useVarianEncumbranceWithSpecificType: string[] = game.settings.get(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
     'useVarianEncumbranceWithSpecificType',
   )
-    ? String(getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType')).split(',')
+    ? String(game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType')).split(',')
     : [];
   if (
     actorEntity &&
@@ -1287,7 +1287,7 @@ function calcWeight(
   if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item);
   // if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
   // MOD 4535992 Removed variant encumbrance take care of this
-  // const useEquippedUnequippedItemCollectionFeature = getGame().settings.get(
+  // const useEquippedUnequippedItemCollectionFeature = game.settings.get(
   //   VARIANT_ENCUMBRANCE_MODULE_NAME,
   //   'useEquippedUnequippedItemCollectionFeature',
   // );
@@ -1323,14 +1323,14 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore
-  if (getGame().settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+  if (game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
     //@ts-ignore
     const currency = item.data.data.currency ?? {};
     const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
 
-    const currencyPerWeight = getGame().settings.get('dnd5e', 'metricWeightUnits')
-      ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric')
-      : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
+    const currencyPerWeight = game.settings.get('dnd5e', 'metricWeightUnits')
+      ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric')
+      : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight');
 
     weight = Math.round(weight + numCoins / currencyPerWeight);
   } else {
@@ -1368,7 +1368,7 @@ function _calcItemWeight(item: Item) {
 
 function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   let modForSize = 1; //actorEntity.data.data.abilities.str.value;
-  if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
+  if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers')) {
     //@ts-ignore
     const size = actorEntity.data.data.traits.size;
     if (size === 'tiny') {
@@ -1396,31 +1396,31 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   }
 
   let strengthMultiplier = 1;
-  if (getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier')) {
-    strengthMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-      ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric')
-      : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier');
+  if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier')) {
+    strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+      ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric')
+      : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier');
   }
 
-  let displayedUnits = getGame().settings.get('dnd5e', 'metricWeightUnits')
-    ? <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
-    : <string>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
+  let displayedUnits = game.settings.get('dnd5e', 'metricWeightUnits')
+    ? <string>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric')
+    : <string>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units');
 
   // const strengthScore = actorEntity.data.data.abilities.str.value * modForSize;
 
-  const lightMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
-    : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
+  const lightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+    ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric')
+    : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier');
   let lightMax = lightMultiplier; // lightMultiplier * strengthScore;
 
-  const mediumMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
-    : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
+  const mediumMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+    ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric')
+    : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier');
   let mediumMax = mediumMultiplier; // mediumMultiplier * strengthScore;
 
-  const heavyMultiplier = getGame().settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
-    : <number>getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
+  const heavyMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+    ? <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric')
+    : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier');
   let heavyMax = heavyMultiplier; // heavyMultiplier * strengthScore;
 
   let dataEncumbrance: EncumbranceDnd5e;

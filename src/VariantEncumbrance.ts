@@ -13,7 +13,6 @@
 
 // Import TypeScript modules
 import {
-  getGame,
   registerSettings,
   VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
@@ -22,7 +21,7 @@ import { preloadTemplates } from './module/preloadTemplates';
 import { VARIANT_ENCUMBRANCE_MODULE_NAME } from './module/settings';
 import { initHooks, readyHooks, setupHooks } from './module/Hooks';
 import EffectInterface from './module/effects/effect-interface';
-// import { installedModules, setupModules } from './module/setupModules';
+import { canvas, game } from './module/settings';
 
 export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
@@ -37,10 +36,10 @@ export const error = (...args) => console.error(`${VARIANT_ENCUMBRANCE_MODULE_NA
 export const timelog = (...args) => warn(`${VARIANT_ENCUMBRANCE_MODULE_NAME} | `, Date.now(), ...args);
 
 export const i18n = (key) => {
-  return getGame().i18n.localize(key);
+  return game.i18n.localize(key);
 };
 export const i18nFormat = (key, data = {}) => {
-  return getGame().i18n.format(key, data);
+  return game.i18n.format(key, data);
 };
 
 export const setDebugLevel = (debugText: string) => {
@@ -87,13 +86,13 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
-  if (!getGame().modules.get('lib-wrapper')?.active && getGame().user?.isGM) {
+  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
     ui.notifications?.error(
       `The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`,
     );
     return;
   }
-  if (!getGame().modules.get('socketlib')?.active && getGame().user?.isGM) {
+  if (!game.modules.get('socketlib')?.active && game.user?.isGM) {
     ui.notifications?.error(
       `The '${VARIANT_ENCUMBRANCE_MODULE_NAME}' module requires to install and activate the 'socketlib' module.`,
     );
@@ -106,12 +105,12 @@ Hooks.once('ready', () => {
 // Add any additional hooks if necessary
 
 Hooks.once('socketlib.ready', () => {
-  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME] = getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME] || {};
+  game[VARIANT_ENCUMBRANCE_MODULE_NAME] = game[VARIANT_ENCUMBRANCE_MODULE_NAME] || {};
 
-  // getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effects = new EffectDefinitions();
-  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface = new EffectInterface(VARIANT_ENCUMBRANCE_MODULE_NAME);
-  // getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].statusEffects = new StatusEffects();
-  getGame()[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface.initialize();
+  // game[VARIANT_ENCUMBRANCE_MODULE_NAME].effects = new EffectDefinitions();
+  game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface = new EffectInterface(VARIANT_ENCUMBRANCE_MODULE_NAME);
+  // game[VARIANT_ENCUMBRANCE_MODULE_NAME].statusEffects = new StatusEffects();
+  game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface.initialize();
 });
 
 Hooks.once('libChangelogsReady', function () {
@@ -125,7 +124,7 @@ Hooks.once('libChangelogsReady', function () {
   libChangelogs.registerConflict(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
     VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
-    'possible minor issue with "Vehicle Cargo Capacity Unit"',
+    '- Clean up and update typescript',
     'minor',
   );
   //@ts-ignore

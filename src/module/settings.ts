@@ -1,7 +1,7 @@
-//@ts-ignore
-// import { DND5E } from '../../../systems/dnd5e/module/config.js';
-
 import { i18n } from '../VariantEncumbrance';
+
+export const game = getGame();
+export const canvas = getCanvas();
 
 export const VARIANT_ENCUMBRANCE_MODULE_NAME = 'variant-encumbrance-dnd5e';
 export const VARIANT_ENCUMBRANCE_FLAG = 'variant-encumbrance-dnd5e';
@@ -20,12 +20,13 @@ export const VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME = 'df-qol';
  * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
  * @returns
  */
-export function getCanvas(): Canvas {
+function getCanvas(): Canvas {
   if (!(canvas instanceof Canvas) || !canvas.ready) {
     throw new Error('Canvas Is Not Initialized');
   }
   return canvas;
 }
+
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
  * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
@@ -35,7 +36,7 @@ export function getCanvas(): Canvas {
  * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
  * @returns
  */
-export function getGame(): Game {
+function getGame(): Game {
   if (!(game instanceof Game)) {
     throw new Error('Game Is Not Initialized');
   }
@@ -44,7 +45,7 @@ export function getGame(): Game {
 
 export const registerSettings = function () {
   // Removed on 0.6.5
-  // getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
+  // game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enabled', {
   //   name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.name'),
   //   hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enabled.hint'),
   //   scope: 'world',
@@ -52,7 +53,7 @@ export const registerSettings = function () {
   //   type: Boolean,
   //   default: true,
   // });
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVarianEncumbranceWithSpecificType', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.hint'),
     scope: 'world',
@@ -61,7 +62,7 @@ export const registerSettings = function () {
     default: 'character,vehicle',
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplier.hint'),
     scope: 'world',
@@ -70,7 +71,7 @@ export const registerSettings = function () {
     default: 5,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightMultiplierMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightMultiplierMetric.hint'),
     scope: 'world',
@@ -79,7 +80,7 @@ export const registerSettings = function () {
     default: 2.3,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplier.hint'),
     scope: 'world',
@@ -88,7 +89,7 @@ export const registerSettings = function () {
     default: 10,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'mediumMultiplierMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.mediumMultiplierMetric.hint'),
     scope: 'world',
@@ -97,7 +98,7 @@ export const registerSettings = function () {
     default: 4.5,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplier.hint'),
     scope: 'world',
@@ -110,7 +111,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyMultiplierMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyMultiplierMetric.hint'),
     scope: 'world',
@@ -123,7 +124,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStrengthMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStrengthMultiplier.hint'),
     scope: 'world',
@@ -132,7 +133,7 @@ export const registerSettings = function () {
     default: false,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplier.hint'),
     scope: 'world',
@@ -145,7 +146,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.strengthMultiplierMetric.hint'),
     scope: 'world',
@@ -158,7 +159,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useVariantEncumbrance.hint'),
     scope: 'world',
@@ -167,7 +168,7 @@ export const registerSettings = function () {
     default: true,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unequippedMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unequippedMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unequippedMultiplier.hint'),
     scope: 'world',
@@ -176,7 +177,7 @@ export const registerSettings = function () {
     default: 1,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'equippedMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'equippedMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.equippedMultiplier.hint'),
     scope: 'world',
@@ -185,7 +186,7 @@ export const registerSettings = function () {
     default: 1,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'profEquippedMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'profEquippedMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.profEquippedMultiplier.hint'),
     scope: 'world',
@@ -194,7 +195,7 @@ export const registerSettings = function () {
     default: 1,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeight.hint'),
     scope: 'world',
@@ -207,7 +208,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.currencyWeightMetric.hint'),
     scope: 'world',
@@ -220,7 +221,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplier.hint'),
     scope: 'world',
@@ -233,7 +234,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.vehicleWeightMultiplierMetric.hint'),
     scope: 'world',
@@ -246,7 +247,7 @@ export const registerSettings = function () {
     },
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'sizeMultipliers', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.sizeMultipliers.hint'),
     scope: 'world',
@@ -255,7 +256,7 @@ export const registerSettings = function () {
     default: true,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'units', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.units.hint'),
     scope: 'world',
@@ -264,7 +265,7 @@ export const registerSettings = function () {
     default: 'lbs.',
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'unitsMetric', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.unitsMetric.hint'),
     scope: 'world',
@@ -273,7 +274,7 @@ export const registerSettings = function () {
     default: 'kg.',
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'lightWeightDecrease', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.lightWeightDecrease.hint'),
     scope: 'world',
@@ -282,7 +283,7 @@ export const registerSettings = function () {
     default: 10,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'heavyWeightDecrease', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.heavyWeightDecrease.hint'),
     scope: 'world',
@@ -291,7 +292,7 @@ export const registerSettings = function () {
     default: 20,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enablePreCheckEncumbranceTier', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enablePreCheckEncumbranceTier.hint'),
     scope: 'world',
@@ -300,7 +301,7 @@ export const registerSettings = function () {
     default: false,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.enableVarianEncumbranceOnSpecificActor.hint'),
     scope: 'world',
@@ -309,7 +310,7 @@ export const registerSettings = function () {
     default: true,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.removeLabelButtonsSheetHeader.hint'),
     scope: 'world',
@@ -318,7 +319,7 @@ export const registerSettings = function () {
     default: true,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStandardWeightCalculation', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useStandardWeightCalculation', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useStandardWeightCalculation.hint'),
     scope: 'world',
@@ -327,7 +328,7 @@ export const registerSettings = function () {
     default: false,
   });
 
-  getGame().settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature', {
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature', {
     name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.name'),
     hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.hint'),
     scope: 'world',

@@ -1,7 +1,6 @@
 import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import { warn, error, debug, i18n } from '../VariantEncumbrance';
 import {
-  getGame,
   VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME,
   VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
   VARIANT_ENCUMBRANCE_FLAG,
@@ -12,6 +11,7 @@ import {
 } from './settings';
 import { ENCUMBRANCE_TIERS, isEnabledActorType, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
+import { canvas, game } from './settings';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -41,10 +41,10 @@ export const readyHooks = async () => {
   Hooks.on(
     'renderActorSheet',
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
-      const actorEntityTmp: any = <Actor>getGame().actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
+      const actorEntityTmp: any = <Actor>game.actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
       if (isEnabledActorType(actorEntityTmp)) {
         //if (actorObject.isCharacter || actorObject.isVehicle) {
-        // const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+        // const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
         // Do no touch the true actor again
 
         let encumbranceData;
@@ -53,7 +53,7 @@ export const readyHooks = async () => {
         // }
         if (!encumbranceData) {
           // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
-          // const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>getGame().actors?.get(actorObject.actor._id);
+          // const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>game.actors?.get(actorObject.actor._id);
           // STRANGE BEHAVIOUR
           if (actorObject.actor?.flags) {
             // mergeObject(<any>actorEntity.data.flags, <any>actorObject.actor.flags);
@@ -81,9 +81,9 @@ export const readyHooks = async () => {
 
         if (
           !encumbranceElements &&
-          ((getGame().modules.get('compact-beyond-5e-sheet')?.active &&
+          ((game.modules.get('compact-beyond-5e-sheet')?.active &&
             actorSheet.template.includes('compact-beyond-5e-sheet')) ||
-            (getGame().modules.get('dndbeyond-character-sheet')?.active &&
+            (game.modules.get('dndbeyond-character-sheet')?.active &&
               actorSheet.template.includes('dndbeyond-character-sheet')))
         ) {
           const encumbranceElementsTmp: any = htmlElement.find('.encumberance')[0]?.children;
@@ -154,7 +154,7 @@ export const readyHooks = async () => {
             'width: ' +
             Math.min(Math.max((encumbranceData.totalWeightToDisplay / encumbranceData.heavyMax) * 100, 0), 99.8) +
             '%;';
-          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
+          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
           encumbranceElements[1].textContent =
             Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 +
             '/' +
@@ -249,7 +249,7 @@ export const readyHooks = async () => {
   //   }
   //   const actorEntity: any = activeEffect.parent;
   //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
-  //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+  //     if (game.userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
   //     }
@@ -271,7 +271,7 @@ export const readyHooks = async () => {
 
   //   const actorEntity: any = activeEffect.parent;
   //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
-  //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+  //     if (game.userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
   //     }
@@ -293,7 +293,7 @@ export const readyHooks = async () => {
 
   //   const actorEntity: any = activeEffect.parent;
   //   if (actorEntity && (actorEntity.data.type === EncumbranceActorType.CHARACTER || actorEntity.data.type === EncumbranceActorType.VEHICLE)) {
-  //     if (getGame().userId !== userId || actorEntity.constructor.name != 'Actor5e') {
+  //     if (game.userId !== userId || actorEntity.constructor.name != 'Actor5e') {
   //       // Only act if we initiated the update ourselves, and the effect is a child of a character
   //       return;
   //     }
@@ -307,7 +307,7 @@ export const readyHooks = async () => {
     const actorSheet = <ActorSheet>app.object.sheet;
     const actorEntity = <Actor>actorSheet.actor;
     const enableVarianEncumbranceOnSpecificActor = <boolean>(
-      getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor')
+      game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor')
     );
 
     if (!actorEntity) {
@@ -344,7 +344,7 @@ export const readyHooks = async () => {
           );
         }
 
-        if (getGame().user?.isGM) {
+        if (game.user?.isGM) {
           let mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
           let myicon = 'fas fa-weight-hanging';
           let index = 0;
@@ -379,7 +379,7 @@ export const readyHooks = async () => {
           }
 
           const removeLabelButtonsSheetHeader = <boolean>(
-            getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
+            game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
           );
 
           if (removeLabelButtonsSheetHeader) {
@@ -574,34 +574,34 @@ export const initHooks = () => {
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.strMultiplier.imperial =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier') ?? 15;
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier') ?? 15;
   //@ts-ignore
   CONFIG.DND5E.encumbrance.strMultiplier.metric =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.currencyPerWeight.imperial =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') ?? 50;
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') ?? 50;
   //@ts-ignore
   CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric') ?? 110;
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric') ?? 110;
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
   //@ts-ignore
   CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
-    getGame().settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
+    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
 
   // CONFIG.debug.hooks = true; // For debugging only
 
-  invPlusActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
-  invMidiQol = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
-  itemContainerActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
+  invPlusActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
+  invMidiQol = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
+  itemContainerActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
   dfredsConvenientEffectsActive = <boolean>(
-    getGame().modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
+    game.modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
   );
-  dfQualityLifeActive = <boolean>getGame().modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
+  dfQualityLifeActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
 
   // effectInterface.initialize();
 };

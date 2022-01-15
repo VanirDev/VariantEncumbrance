@@ -1,5 +1,5 @@
 import { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
-import { getGame } from '../settings';
+import { game } from '../settings';
 
 /**
  * Data class for defining an effect
@@ -89,15 +89,15 @@ export default class Effect {
   }
 
   _getDurationData() {
-    if (getGame().combat) {
+    if (game.combat) {
       return {
-        startRound: getGame().combat?.round,
+        startRound: game.combat?.round,
         rounds: this._getCombatRounds(),
         turns: this.turns,
       };
     } else {
       return {
-        startTime: getGame().time.worldTime,
+        startTime: game.time.worldTime,
         seconds: this._getSeconds(),
       };
     }

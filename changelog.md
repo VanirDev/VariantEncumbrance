@@ -1,4 +1,8 @@
 
+### 0.7.2
+
+- Clean up and update typescript
+
 ### 0.7.1
 
 - Update README table of settings
