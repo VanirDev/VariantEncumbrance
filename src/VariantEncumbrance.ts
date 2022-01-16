@@ -117,21 +117,21 @@ Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
   libChangelogs.register(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'Add new effect-handler, preparation to foundryvtt 9',
+    '- Add `item.flags` to the checking for the inventory + module during the weight calculation, from the issue [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43), very special ty to @aprusik for pointed that out.',
     'minor',
   );
   //@ts-ignore
   libChangelogs.registerConflict(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
     VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
-    '- Clean up and update typescript',
+    '- possible minor issue with "Vehicle Cargo Capacity Unit"',
     'minor',
   );
   //@ts-ignore
-  libChangelogs.registerConflict(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
-    'no particular errors, but it is still not recommended to use this module with the "0.3.5" version of inventory +',
-    'minor',
-  );
+  // libChangelogs.registerConflict(
+  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
+  //   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
+  //   'no particular errors, but it is still not recommended to use this module with version of inventory +',
+  //   'minor',
+  // );
 });

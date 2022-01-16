@@ -1,4 +1,8 @@
 
+### 0.7.3
+
+- Add `item.flags` to the checking for the inventory + module during the weight calculation, from the issue [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43), very special ty to @aprusik for pointed that out.
+
 ### 0.7.2
 
 - Clean up and update typescript

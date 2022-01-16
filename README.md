@@ -24,6 +24,7 @@ For D&D5e 1.4.2 and newer the system supports a core implementation of this encu
 It's always easiest to install modules from the in game add-on browser.
 
 To install this module manually:
+
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
@@ -73,15 +74,13 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ### Other Modules Compatability
 
-* [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5
+* [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.4.0
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 * [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) version 1.8.13
 * [DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature](https://github.com/flamewave000/dragonflagon-fvtt/blob/master/df-qol/README.md#vehicle-cargo-capacity-unit) version 1.6.0
 
-**I highly recommend avoiding module Inventory Plus in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
-
-**Verified issues with some sheet for [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.3.5, until is not updated i highly recommend to avoiding the use of this module.**
+**I highly recommend avoiding module [Inventory +](https://github.com/syl3r86/inventory-plus) in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
 
 <!--
 <details>

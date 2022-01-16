@@ -545,6 +545,11 @@ export const VariantEncumbranceImpl = {
             let actorHasCustomCategories = false;
             for (const categoryId in inventoryPlusCategories) {
               if (
+                // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
+                //@ts-ignore
+                (item.flags &&
+                  //@ts-ignore
+                  item.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
                 (item.data?.flags &&
                   //@ts-ignore
                   item.data?.flags[VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
