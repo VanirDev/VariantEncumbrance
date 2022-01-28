@@ -1,3 +1,6 @@
+### 0.7.4
+
+- Add some check for fix [[BUG] Throwing Errors When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/56) and [[BUG] Additional Error When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/57)
 
 ### 0.7.3
 

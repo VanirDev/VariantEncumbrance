@@ -106,11 +106,9 @@ export default class EffectHandler {
    */
   async removeEffect(effectName, uuid) {
     const actor = <Actor>await this.getActorByUuid(uuid);
-    const effectToRemove = <any>(
-      actor.data.effects.find(
-        // (activeEffect: ActiveEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
-        (activeEffect: ActiveEffect) => <string>activeEffect?.data?.label == effectName,
-      )
+    const effectToRemove = <any>actor.data.effects.find(
+      // (activeEffect: ActiveEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      (activeEffect: ActiveEffect) => <string>activeEffect?.data?.label == effectName,
     );
 
     if (effectToRemove) {
@@ -258,11 +256,9 @@ export default class EffectHandler {
    */
   async removeEffectOnActor(effectName: string, uuid: string) {
     const actor = <Actor>await this.getActorByUuid(uuid);
-    const effectToRemove = <ActiveEffect>(
-      actor.data.effects.find(
-        // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
-        (activeEffect) => <string>activeEffect?.data?.label == effectName,
-      )
+    const effectToRemove = <ActiveEffect>actor.data.effects.find(
+      // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      (activeEffect) => <string>activeEffect?.data?.label == effectName,
     );
 
     if (effectToRemove) {
@@ -286,11 +282,9 @@ export default class EffectHandler {
       const actor = <Actor>await this.getActorByUuid(uuid);
       //actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemoveId]);
       // Why i need this ??? for avoid the double AE
-      const effectToRemove = <ActiveEffect>(
-        actor.data.effects.find(
-          // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect.id == effectToRemoveId,
-          (activeEffect) => <string>activeEffect.id == effectToRemoveId,
-        )
+      const effectToRemove = <ActiveEffect>actor.data.effects.find(
+        // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect.id == effectToRemoveId,
+        (activeEffect) => <string>activeEffect.id == effectToRemoveId,
       );
       await effectToRemove.update({ disabled: true });
       await effectToRemove.delete();

@@ -117,7 +117,7 @@ Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
   libChangelogs.register(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
-    '- Add `item.flags` to the checking for the inventory + module during the weight calculation, from the issue [Inherent weight miscalculation in Inventory + module](https://github.com/VanirDev/VariantEncumbrance/issues/43), very special ty to @aprusik for pointed that out.',
+    `- Add some check for fix [[BUG] Throwing Errors When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/56) and [[BUG] Additional Error When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/57)`,
     'minor',
   );
   //@ts-ignore
