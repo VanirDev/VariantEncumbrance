@@ -53,14 +53,6 @@ export const VariantEncumbranceImpl = {
     updatedEffect?: ActiveEffect | undefined,
     mode?: EncumbranceMode,
   ): Promise<void> {
-    // if (updatedItems && (<any[]>updatedItems)?.length > 1) {
-    //   throw new Error('Variant encumbrance not work with multiple item');
-    // }
-
-    // const enableVarianEncumbranceOnActorFlag = <boolean>actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_VE);
-    // if(!enableVarianEncumbranceOnActorFlag){
-    //   return;
-    // }
 
     if (updatedItems && updatedItems.length > 0) {
       for (let i = 0; i < updatedItems.length; i++) {
@@ -88,13 +80,6 @@ export const VariantEncumbranceImpl = {
     if (hasProperty(actorEntity.data, 'flags.VariantEncumbrance')) {
       await actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, 'VariantEncumbrance');
     }
-
-    // const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
-    //   actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
-    // );
-    // if (!enableVarianEncumbranceWeightOnActorFlag) {
-    //   return;
-    // }
 
     if (updatedItem) {
       let itemID: any;
@@ -290,19 +275,6 @@ export const VariantEncumbranceImpl = {
         continue;
       }
 
-      // // Ignore all convenient effect
-      // if (hasProperty(effectEntity.data, `flags.isConvenient`)) {
-      //   if (
-      //     effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-      //     effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-      //     effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-      //     effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-      //   ) {
-      //     VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-      //   }
-      //   continue;
-      // }
-
       // Ignore all non encumbrance effect renamed from the player (again)
       if (
         !hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
@@ -325,36 +297,6 @@ export const VariantEncumbranceImpl = {
         await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
-
-      // if (typeof encumbranceData.encumbranceTier === 'number') {
-      //   if (!effectEntityPresent) {
-      //     effectEntityPresent = effectEntity;
-      //   } else {
-      //     // Cannot have more than one effect tier present at any one time
-      //     if (
-      //       effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-      //     ) {
-      //       VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-      //     }
-      //   }
-      // } else if (encumbranceData.encumbranceTier) {
-      //   if (!effectEntityPresent) {
-      //     effectEntityPresent = effectEntity;
-      //   } else {
-      //     // Cannot have more than one effect tier present at any one time
-      //     if (
-      //       effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-      //       effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED
-      //     ) {
-      //       VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-      //     }
-      //   }
-      // } else {
 
       if (
         hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
@@ -414,26 +356,6 @@ export const VariantEncumbranceImpl = {
       }
     }
   },
-
-  // manageActiveEffectLimited: async function (actorEntity: Actor) {
-  //   for (const effectEntity of actorEntity.effects) {
-  //     const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
-
-  //     if (!effectNameToSet) {
-  //       continue;
-  //     }
-
-  //     if (
-  //       hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`) &&
-  //       (effectNameToSet === ENCUMBRANCE_STATE.UNENCUMBERED ||
-  //         effectNameToSet === ENCUMBRANCE_STATE.ENCUMBERED ||
-  //         effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
-  //         effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
-  //     ) {
-  //       await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
-  //     }
-  //   }
-  // },
 
   /**
    * Compute the level and percentage of encumbrance for an Actor.
@@ -743,7 +665,7 @@ export const VariantEncumbranceImpl = {
           : <number>game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier');
 
         // Vehicle weights are an order of magnitude greater.
-        
+
         totalWeight /= vehicleWeightMultiplier;
         */
         // TODO
@@ -867,24 +789,12 @@ export const VariantEncumbranceImpl = {
     // const invMidiQol = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
     switch (effectName.toLowerCase()) {
       case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
-        // }
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
-        // }
         const effect = VariantEncumbranceImpl._encumbered();
         const speedDecreased = speedDecrease > 0 ? speedDecrease : 10;
         VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: speedDecreased });
         return effect;
       }
       case ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED.toLowerCase(): {
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
-        // }
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
-        // }
         let effect: Effect;
         if (invMidiQol) {
           effect = VariantEncumbranceImpl._heavilyEncumbered();
@@ -896,24 +806,9 @@ export const VariantEncumbranceImpl = {
         return effect;
       }
       case ENCUMBRANCE_STATE.UNENCUMBERED.toLowerCase(): {
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
-        // }
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
-        // }
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.OVERBURDENED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.OVERBURDENED, actor);
-        // }
         return null;
       }
       case ENCUMBRANCE_STATE.OVERBURDENED.toLowerCase(): {
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.ENCUMBERED, actor);
-        // }
-        // if (await VariantEncumbranceImpl.hasEffectApplied(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor)) {
-        //   VariantEncumbranceImpl.removeEffect(ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED, actor);
-        // }
         let effect: Effect;
         if (invMidiQol) {
           effect = VariantEncumbranceImpl._overburdenedEncumbered();
@@ -1105,13 +1000,6 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
-    /*
-    // const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    return actor?.data?.effects?.some(
-      (activeEffect) =>
-        <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
-    );
-    */
     return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
       effectName,
       <string>actor.id,
@@ -1128,13 +1016,6 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
-    /*
-    // const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    return actor?.data?.effects?.some(
-      (activeEffect) =>
-        <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effect.id,
-    );
-    */
     return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
       <string>effect.id,
       <string>actor.id,
@@ -1149,23 +1030,6 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffect(effectName: string, actor: Actor) {
-    /*
-    // const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    const effectToRemove = actor.data.effects.find(
-      (activeEffect) =>
-        <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
-    );
-
-    if (effectToRemove) {
-      // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
-      // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
-      // Why i need this ??? for avoid the double AE
-      await effectToRemove.update({ disabled: true });
-      await effectToRemove.delete();
-
-      log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
-    }
-    */
     return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
       effectName,
       <string>actor.id,
@@ -1180,16 +1044,6 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
-    /*
-    if (effectToRemove) {
-      // actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
-      // effectInterface.removeEffect(effectToRemove.data.label, actor.id);
-      // Why i need this ??? for avoid the double AE
-      await effectToRemove.update({ disabled: true });
-      await effectToRemove.delete();
-      log(`Removed effect ${effectToRemove?.data?.label} from ${actor.name} - ${actor.id}`);
-    }
-    */
     return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
       <string>effectToRemove.id,
       <string>actor.id,
@@ -1224,36 +1078,11 @@ export const VariantEncumbranceImpl = {
     );
     // }
     if (effect) {
-      // VariantEncumbranceImpl._handleIntegrations(effect);
-      // effect.flags = {
-      //   VariantEncumbrance: {
-      //     tier: encumbranceTier,
-      //   },
-      // };
       effect.flags = {
         'variant-encumbrance-dnd5e': {
           tier: encumbranceTier,
         },
       };
-      /*
-      if (dfredsConvenientEffectsActive) {
-        //@ts-ignore
-        const arrayCustomEffects: Effect[] = game.dfreds?.effects?.customEffects || [];
-        const isPresentonCustomEffect = arrayCustomEffects.find(
-          (customEffect: Effect) => <boolean>customEffect.flags.isConvenient && <string>customEffect.name == effectName,
-        );
-        if (!isPresentonCustomEffect) {
-          //@ts-ignore
-          game.dfreds?.effects?.customEffects?.push(effect);
-        }
-      }
-      */
-      /*
-      const activeEffectData = effect.convertToActiveEffectData(origin);
-      actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
-      // effectInterface.addEffect(effectName, actor.id, origin);
-      log(`Added effect ${effect.name ? effect.name : effectName} to ${actor.name} - ${actor.id}`);
-      */
       return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
         effectName,
         <string>actor.id,
@@ -1581,89 +1410,3 @@ function _standardVehicleWeightCalculation(actorEntity: Actor): EncumbranceDnd5e
   //@ts-ignore
   return <EncumbranceDnd5e>actorEntity._computeEncumbrance(totalWeight, data);
 }
-
-// VERSION 1.5.3
-
-// /**
-//  * Compute the level and percentage of encumbrance for an Actor.
-//  *
-//  * Optionally include the weight of carried currency across all denominations by applying the standard rule
-//  * from the PHB pg. 143
-//  * @param {object} actorData      The data object for the Actor being rendered
-//  * @returns {{max: number, value: number, pct: number}}  An object describing the character's encumbrance level
-//  * @private
-//  */
-//  _computeEncumbranceActor(actorData) {
-
-//   // Get the total weight from items
-//   const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
-//   let weight = actorData.items.reduce((weight, i) => {
-//     if ( !physicalItems.includes(i.type) ) return weight;
-//     const q = i.data.data.quantity || 0;
-//     const w = i.data.data.weight || 0;
-//     return weight + (q * w);
-//   }, 0);
-
-//   // [Optional] add Currency Weight (for non-transformed actors)
-//   if ( game.settings.get("dnd5e", "currencyWeight") && actorData.data.currency ) {
-//     const currency = actorData.data.currency;
-//     const numCoins = Object.values(currency).reduce((val, denom) => val += Math.max(denom, 0), 0);
-
-//     const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
-//       ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
-//       : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
-
-//     weight += numCoins / currencyPerWeight;
-//   }
-
-//   // Determine the encumbrance size class
-//   let mod = {
-//     tiny: 0.5,
-//     sm: 1,
-//     med: 1,
-//     lg: 2,
-//     huge: 4,
-//     grg: 8
-//   }[actorData.data.traits.size] || 1;
-//   if ( this.getFlag("dnd5e", "powerfulBuild") ) mod = Math.min(mod * 2, 8);
-
-//   // Compute Encumbrance percentage
-//   weight = weight.toNearest(0.1);
-
-//   const strengthMultiplier = game.settings.get("dnd5e", "metricWeightUnits")
-//     ? CONFIG.DND5E.encumbrance.strMultiplier.metric
-//     : CONFIG.DND5E.encumbrance.strMultiplier.imperial;
-
-//   const max = (actorData.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
-//   const pct = Math.clamped((weight * 100) / max, 0, 100);
-//   return { value: weight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
-// }
-
-// /**
-//  * Compute the total weight of the vehicle's cargo.
-//  * @param {number} totalWeight    The cumulative item weight from inventory items
-//  * @param {object} actorData      The data object for the Actor being rendered
-//  * @returns {{max: number, value: number, pct: number}}
-//  * @private
-//  */
-//  _computeEncumbranceVehicle(totalWeight, actorData) {
-
-//   // Compute currency weight
-//   const totalCoins = Object.values(actorData.data.currency).reduce((acc, denom) => acc + denom, 0);
-
-//   const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
-//     ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
-//     : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
-
-//   totalWeight += totalCoins / currencyPerWeight;
-
-//   // Vehicle weights are an order of magnitude greater.
-//   totalWeight /= game.settings.get("dnd5e", "metricWeightUnits")
-//     ? CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric
-//     : CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial;
-
-//   // Compute overall encumbrance
-//   const max = actorData.data.attributes.capacity.cargo;
-//   const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-//   return {value: totalWeight.toNearest(0.1), max, pct};
-// }
