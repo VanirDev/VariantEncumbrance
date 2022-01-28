@@ -1,8 +1,3 @@
-/**
- * Author: Vanir#0001 (Discord) | github.com/VanirDev
- * Software License: Creative Commons Attributions International License
- */
-
 // Import JavaScript modules
 import {
   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
@@ -245,9 +240,11 @@ export const VariantEncumbranceImpl = {
     for (const effectEntity of actorEntity.effects) {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
 
+      const effectIsApplied = await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity);
+
       // Remove AE with empty a label but with flag of variant encumbrance ???
       if (!effectNameToSet && hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if(effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -265,13 +262,13 @@ export const VariantEncumbranceImpl = {
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if(effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
       // Remove Old settings
       if (effectEntity.data.flags && hasProperty(effectEntity.data, `flags.VariantEncumbrance`)) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if(effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -294,7 +291,7 @@ export const VariantEncumbranceImpl = {
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if(effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -308,10 +305,10 @@ export const VariantEncumbranceImpl = {
         if (!effectEntityPresent) {
           effectEntityPresent = effectEntity;
         } else {
-          await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+          if(effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         }
       }
-      // }
+
     }
 
     let effectName;
@@ -1000,7 +997,7 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
-    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
+    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
       effectName,
       <string>actor.id,
     );
@@ -1016,7 +1013,7 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
-    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
+    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
       <string>effect.id,
       <string>actor.id,
     );
@@ -1030,7 +1027,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffect(effectName: string, actor: Actor) {
-    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
+    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
       effectName,
       <string>actor.id,
     );
@@ -1044,7 +1041,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
-    return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
+    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
       <string>effectToRemove.id,
       <string>actor.id,
     );
@@ -1083,7 +1080,7 @@ export const VariantEncumbranceImpl = {
           tier: encumbranceTier,
         },
       };
-      return (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
         effectName,
         <string>actor.id,
         effect,

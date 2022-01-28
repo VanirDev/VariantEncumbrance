@@ -92,8 +92,8 @@ export default class EffectHandler {
   async hasEffectApplied(effectName, uuid) {
     const actor = await this.getActorByUuid(uuid);
     return actor?.data?.effects?.some(
-      (activeEffect) =>
-        <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      (activeEffect) => <string>activeEffect?.data?.label == effectName,
     );
   }
 
@@ -108,8 +108,8 @@ export default class EffectHandler {
     const actor = <Actor>await this.getActorByUuid(uuid);
     const effectToRemove = <any>(
       actor.data.effects.find(
-        (activeEffect: ActiveEffect) =>
-          <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+        // (activeEffect: ActiveEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+        (activeEffect: ActiveEffect) => <string>activeEffect?.data?.label == effectName,
       )
     );
 
@@ -227,8 +227,8 @@ export default class EffectHandler {
   async hasEffectAppliedOnActor(effectName: string, uuid: string): Promise<boolean> {
     const actor = await this.getActorByUuid(uuid);
     return actor?.data?.effects?.some(
-      (activeEffect) =>
-        <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+      (activeEffect) => <string>activeEffect?.data?.label == effectName,
     );
   }
 
@@ -244,7 +244,8 @@ export default class EffectHandler {
   async hasEffectAppliedFromIdOnActor(effectId: string, uuid: string): Promise<boolean> {
     const actor = await this.getActorByUuid(uuid);
     return actor?.data?.effects?.some(
-      (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effectId,
+      // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effectId,
+      (activeEffect) => <string>activeEffect?.data?._id == effectId,
     );
   }
 
@@ -259,8 +260,8 @@ export default class EffectHandler {
     const actor = <Actor>await this.getActorByUuid(uuid);
     const effectToRemove = <ActiveEffect>(
       actor.data.effects.find(
-        (activeEffect) =>
-          <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+        // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
+        (activeEffect) => <string>activeEffect?.data?.label == effectName,
       )
     );
 
@@ -287,8 +288,8 @@ export default class EffectHandler {
       // Why i need this ??? for avoid the double AE
       const effectToRemove = <ActiveEffect>(
         actor.data.effects.find(
-          (activeEffect) =>
-            <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect.id == effectToRemoveId,
+          // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect.id == effectToRemoveId,
+          (activeEffect) => <string>activeEffect.id == effectToRemoveId,
         )
       );
       await effectToRemove.update({ disabled: true });
