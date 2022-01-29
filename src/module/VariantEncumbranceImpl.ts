@@ -239,11 +239,11 @@ export const VariantEncumbranceImpl = {
     for (const effectEntity of actorEntity.effects) {
       const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
 
-      //const effectIsApplied = await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity);
+      const effectIsApplied = await VariantEncumbranceImpl.hasEffectAppliedFromId(effectEntity, actorEntity);
 
       // Remove AE with empty a label but with flag of variant encumbrance ???
       if (!effectNameToSet && hasProperty(effectEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}`)) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if (effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -261,13 +261,13 @@ export const VariantEncumbranceImpl = {
         effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
         effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if (effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
       // Remove Old settings
       if (effectEntity.data.flags && hasProperty(effectEntity.data, `flags.VariantEncumbrance`)) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if (effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -290,7 +290,7 @@ export const VariantEncumbranceImpl = {
           effectNameToSet === ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED ||
           effectNameToSet === ENCUMBRANCE_STATE.OVERBURDENED)
       ) {
-        await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+        if (effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
       }
 
@@ -304,7 +304,7 @@ export const VariantEncumbranceImpl = {
         if (!effectEntityPresent) {
           effectEntityPresent = effectEntity;
         } else {
-          await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
+          if (effectIsApplied) await VariantEncumbranceImpl.removeEffectFromId(effectEntity, actorEntity);
         }
       }
     }
@@ -324,7 +324,7 @@ export const VariantEncumbranceImpl = {
         effectName = ENCUMBRANCE_STATE.OVERBURDENED;
         break;
       default:
-        return;
+        effectName = null;
     }
 
     if (!game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'useVariantEncumbrance')) {
@@ -334,19 +334,32 @@ export const VariantEncumbranceImpl = {
     if (effectName && effectName != '') {
       if (effectName === effectEntityPresent?.data.label) {
         // Skip if name is the same and the active effect is already present.
-        return;
-      }
-      if (effectName == ENCUMBRANCE_STATE.UNENCUMBERED) {
-        if (effectEntityPresent?.id) {
-          await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-        }
       } else {
-        if (effectEntityPresent?.id) {
-          await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
-        }
-        if (!(await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity))) {
-          const origin = `Actor.${actorEntity.data._id}`;
-          await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceTier);
+        if (effectName == ENCUMBRANCE_STATE.UNENCUMBERED) {
+          if (effectEntityPresent?.id) {
+            const effectIsApplied1 = await VariantEncumbranceImpl.hasEffectAppliedFromId(
+              effectEntityPresent,
+              actorEntity,
+            );
+            if (effectIsApplied1) {
+              await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
+            }
+          }
+        } else {
+          if (effectEntityPresent?.id) {
+            const effectIsApplied2 = await VariantEncumbranceImpl.hasEffectAppliedFromId(
+              effectEntityPresent,
+              actorEntity,
+            );
+            if (effectIsApplied2) {
+              await VariantEncumbranceImpl.removeEffectFromId(<ActiveEffect>effectEntityPresent, actorEntity);
+            }
+          }
+          const effectIsApplied3 = await VariantEncumbranceImpl.hasEffectApplied(effectName, actorEntity);
+          if (!effectIsApplied3) {
+            const origin = `Actor.${actorEntity.data._id}`;
+            await VariantEncumbranceImpl.addEffect(effectName, actorEntity, origin, encumbranceTier);
+          }
         }
       }
     }
@@ -995,10 +1008,16 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
-    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
-      effectName,
-      <string>actor.id,
-    );
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+      return await (<EffectInterface>(
+        game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
+      ))._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
+    } else {
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
+        effectName,
+        <string>actor.id,
+      );
+    }
   },
 
   /**
@@ -1011,10 +1030,15 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
-    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedFromIdOnActor(
-      <string>effect.id,
-      <string>actor.id,
-    );
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+      return await (<EffectInterface>(
+        game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
+      ))._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+    } else {
+      return await (<EffectInterface>(
+        game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
+      )).hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+    }
   },
 
   /**
@@ -1025,10 +1049,17 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffect(effectName: string, actor: Actor) {
-    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
-      effectName,
-      <string>actor.id,
-    );
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface)._effectHandler.removeEffect(
+        effectName,
+        <string>actor.id,
+      );
+    } else {
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
+        effectName,
+        <string>actor.id,
+      );
+    }
   },
 
   /**
@@ -1039,10 +1070,16 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
-    return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
-      <string>effectToRemove.id,
-      <string>actor.id,
-    );
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+      return await (<EffectInterface>(
+        game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
+      ))._effectHandler.removeEffectFromIdOnActor(<string>effectToRemove.id, <string>actor.id);
+    } else {
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
+        <string>effectToRemove.id,
+        <string>actor.id,
+      );
+    }
   },
 
   /**
@@ -1078,11 +1115,17 @@ export const VariantEncumbranceImpl = {
           tier: encumbranceTier,
         },
       };
-      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
-        effectName,
-        <string>actor.id,
-        effect,
-      );
+      if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+        return await (<EffectInterface>(
+          game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
+        ))._effectHandler.addEffectOnActor(effectName, <string>actor.id, effect);
+      } else {
+        return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
+          effectName,
+          <string>actor.id,
+          effect,
+        );
+      }
     }
   },
 };

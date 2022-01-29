@@ -336,4 +336,13 @@ export const registerSettings = function () {
     type: Boolean,
     default: false,
   });
+
+  game.settings.register(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature', {
+    name: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
+    hint: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 };

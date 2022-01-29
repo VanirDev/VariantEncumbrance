@@ -86,6 +86,9 @@
   "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.name": "Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack",
   "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.hint": "I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)",
 
+  "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socket call for update the encumbrance",
+  "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is ususally useful only for avoid a socket error when use the Popout module on the character sheet",
+
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
 
