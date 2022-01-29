@@ -115,11 +115,7 @@ Hooks.once('socketlib.ready', () => {
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
-  libChangelogs.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    `- Add some check for fix [[BUG] Throwing Errors When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/56) and [[BUG] Additional Error When Used with Pop Out and Item Containers](https://github.com/VanirDev/VariantEncumbrance/issues/57)`,
-    'minor',
-  );
+  libChangelogs.register(VARIANT_ENCUMBRANCE_MODULE_NAME, `- Little update`, 'minor');
   //@ts-ignore
   libChangelogs.registerConflict(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
