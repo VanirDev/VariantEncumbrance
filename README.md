@@ -200,7 +200,7 @@ variant-encumbrance-dnd5e:
 |Remove label from buttons on the header character sheet| Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true|true||
 |Use standard calculation weight of the dnd5e system| I DON'T RECCOMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss.|false||
 |Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECCOMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|false|This make sense only with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) installed and active|
-|Disable the socket call for update the encumbrance|This is ususally useful only for avoid a socket error when use the [Popout](https://github.com/League-of-Foundry-Developers/fvtt-module-popout) module on the character sheet|false||
+|Disable the socket call for update the encumbrance|This is ususally useful only for avoid a socket collision with other modules|false||
 
 
 # Build

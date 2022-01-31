@@ -41,6 +41,10 @@ export const ENCUMBRANCE_TIERS = {
   MAX: 3,
 };
 
+export function isGMConnected(): boolean {
+  return Array.from(<Users>game.users).find((user) => user.isGM && user.active) ? true : false;
+}
+
 export const VariantEncumbranceImpl = {
   updateEncumbrance: async function (
     actorEntity: Actor,
@@ -1008,7 +1012,7 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
-    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
       ))._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
@@ -1030,7 +1034,7 @@ export const VariantEncumbranceImpl = {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
-    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
       ))._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
@@ -1049,7 +1053,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffect(effectName: string, actor: Actor) {
-    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface)._effectHandler.removeEffect(
         effectName,
         <string>actor.id,
@@ -1070,7 +1074,7 @@ export const VariantEncumbranceImpl = {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
-    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+    if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
       ))._effectHandler.removeEffectFromIdOnActor(<string>effectToRemove.id, <string>actor.id);
@@ -1115,7 +1119,7 @@ export const VariantEncumbranceImpl = {
           tier: encumbranceTier,
         },
       };
-      if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature')) {
+      if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
         return await (<EffectInterface>(
           game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
         ))._effectHandler.addEffectOnActor(effectName, <string>actor.id, effect);
