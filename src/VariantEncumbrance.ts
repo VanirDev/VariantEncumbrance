@@ -108,7 +108,10 @@ Hooks.once('socketlib.ready', () => {
   game[VARIANT_ENCUMBRANCE_MODULE_NAME] = game[VARIANT_ENCUMBRANCE_MODULE_NAME] || {};
 
   // game[VARIANT_ENCUMBRANCE_MODULE_NAME].effects = new EffectDefinitions();
-  game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface = new EffectInterface(VARIANT_ENCUMBRANCE_MODULE_NAME);
+  game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface = new EffectInterface(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    undefined,
+  );
   // game[VARIANT_ENCUMBRANCE_MODULE_NAME].statusEffects = new StatusEffects();
   game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface.initialize();
 });

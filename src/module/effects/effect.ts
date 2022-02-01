@@ -1,4 +1,3 @@
-import { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 import { game } from '../settings';
 
 /**
@@ -61,10 +60,12 @@ export default class Effect {
   /**
    * Converts the effect data to an active effect data object
    *
-   * @param {string} origin - the origin to add to the effect
+   * @param {object} params - the params to use for conversion
+   * @param {string} params.origin - the origin to add to the effect
+   * @param {boolean} params.overlay - whether the effect is an overlay or not
    * @returns The active effect data object for this effect
    */
-  convertToActiveEffectData(origin: string): Record<string, unknown> {
+  convertToActiveEffectData({ origin = '', overlay = false } = {}): Record<string, unknown> {
     return {
       id: this._id,
       name: this.name,
@@ -75,10 +76,12 @@ export default class Effect {
       flags: foundry.utils.mergeObject(this.flags, {
         core: {
           statusId: this._id,
+          overlay,
         },
         isConvenient: true,
+        convenientDescription: this.description,
       }),
-      origin: origin,
+      origin: origin ?? '',
       transfer: this.transfer ?? false,
       changes: this.changes,
     };
@@ -91,7 +94,7 @@ export default class Effect {
   _getDurationData() {
     if (game.combat) {
       return {
-        startRound: game.combat?.round,
+        startRound: game.combat.round,
         rounds: this._getCombatRounds(),
         turns: this.turns,
       };

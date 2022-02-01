@@ -967,7 +967,7 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
     });
-    
+
     effect.changes.push({
       key: 'data.attributes.movement.all',
       mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
@@ -978,7 +978,7 @@ export const VariantEncumbranceImpl = {
 
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
-    
+
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -1008,7 +1008,7 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
-    
+
     effect.changes.push({
       key: 'data.attributes.movement.all',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -1030,7 +1030,7 @@ export const VariantEncumbranceImpl = {
     if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
-      ))._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
+      ))._effectHandler.hasEffectAppliedOnActor({ effectName: effectName, uuid: <string>actor.id });
     } else {
       return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
         effectName,
@@ -1052,7 +1052,7 @@ export const VariantEncumbranceImpl = {
     if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
-      ))._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+      ))._effectHandler.hasEffectAppliedFromIdOnActor({ effectId: <string>effect.id, uuid: <string>actor.id });
     } else {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
@@ -1070,14 +1070,13 @@ export const VariantEncumbranceImpl = {
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface)._effectHandler.removeEffect(
-        effectName,
-        <string>actor.id,
+        { effectName: effectName, uuid: <string>actor.id },
       );
     } else {
-      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect(
-        effectName,
-        <string>actor.id,
-      );
+      return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffect({
+        effectName: effectName,
+        uuid: <string>actor.id,
+      });
     }
   },
 
@@ -1092,7 +1091,10 @@ export const VariantEncumbranceImpl = {
     if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await (<EffectInterface>(
         game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
-      ))._effectHandler.removeEffectFromIdOnActor(<string>effectToRemove.id, <string>actor.id);
+      ))._effectHandler.removeEffectFromIdOnActor({
+        effectToRemoveId: <string>effectToRemove.id,
+        uuid: <string>actor.id,
+      });
     } else {
       return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
         <string>effectToRemove.id,
@@ -1122,11 +1124,7 @@ export const VariantEncumbranceImpl = {
     // let effect = VariantEncumbranceImpl.findEffectByName(effectName, actor.id);
     //const actor = await VariantEncumbranceImpl._foundryHelpers.getActorByUuid(uuid);
     // if (effect.isDynamic) {
-    const effect: Effect | null = await VariantEncumbranceImpl.addDynamicEffects(
-      effectName,
-      actor,
-      <number>speedDecrease,
-    );
+    const effect = <Effect>await VariantEncumbranceImpl.addDynamicEffects(effectName, actor, <number>speedDecrease);
     // }
     if (effect) {
       effect.flags = {
@@ -1137,7 +1135,10 @@ export const VariantEncumbranceImpl = {
       if (game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
         return await (<EffectInterface>(
           game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface
-        ))._effectHandler.addEffectOnActor(effectName, <string>actor.id, effect);
+        ))._effectHandler.addEffectOnActor(
+          { effectName: effectName, uuid: <string>actor.id, origin: origin, overlay: false },
+          effect,
+        );
       } else {
         return await (<EffectInterface>game[VARIANT_ENCUMBRANCE_MODULE_NAME].effectInterface).addEffectOnActor(
           effectName,
