@@ -803,7 +803,7 @@ export const VariantEncumbranceImpl = {
       case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
         const effect = VariantEncumbranceImpl._encumbered();
         const speedDecreased = speedDecrease > 0 ? speedDecrease : 10;
-        VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: speedDecreased });
+        VariantEncumbranceImpl._addEncumbranceEffects(effect, actor, speedDecreased);
         return effect;
       }
       case ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED.toLowerCase(): {
@@ -814,7 +814,7 @@ export const VariantEncumbranceImpl = {
           effect = VariantEncumbranceImpl._heavilyEncumberedNoMidi();
         }
         const speedDecreased = speedDecrease > 0 ? speedDecrease : 20;
-        VariantEncumbranceImpl._addEncumbranceEffects({ effect, actor, value: speedDecreased });
+        VariantEncumbranceImpl._addEncumbranceEffects(effect, actor, speedDecreased);
         return effect;
       }
       case ENCUMBRANCE_STATE.UNENCUMBERED.toLowerCase(): {
@@ -827,7 +827,7 @@ export const VariantEncumbranceImpl = {
         } else {
           effect = VariantEncumbranceImpl._overburdenedEncumberedNoMidi();
         }
-        VariantEncumbranceImpl._addEncumbranceEffectsOverburdened({ effect, actor });
+        VariantEncumbranceImpl._addEncumbranceEffectsOverburdened(effect, actor);
         return effect;
       }
       default: {
@@ -934,7 +934,8 @@ export const VariantEncumbranceImpl = {
     });
   },
 
-  _addEncumbranceEffects: function ({ effect, actor, value }) {
+  _addEncumbranceEffects: function (effect:Effect, actor:Actor, value:number) {
+    /*
     const movement = actor.data.data.attributes.movement;
 
     effect.changes.push({
@@ -966,11 +967,18 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
     });
+    */
+    effect.changes.push({
+      key: 'data.attributes.movement.all',
+      mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+      value: value ? `-${value}` : `-0`,
+      priority: 5,
+    });
   },
 
-  _addEncumbranceEffectsOverburdened: function ({ effect, actor }) {
+  _addEncumbranceEffectsOverburdened: function (effect:Effect, actor:Actor) {
     // const movement = actor.data.data.attributes.movement;
-
+    /*
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -999,6 +1007,13 @@ export const VariantEncumbranceImpl = {
       key: 'data.attributes.movement.walk',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
+    });
+    */
+    effect.changes.push({
+      key: 'data.attributes.movement.all',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+      priority: 5,
     });
   },
 
