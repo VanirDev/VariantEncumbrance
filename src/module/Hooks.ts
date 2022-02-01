@@ -428,27 +428,30 @@ export const setupHooks = async () => {
   //   getEmbeddedDocument,
   //   'MIXED',
   // );
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.prototype.createEmbeddedDocuments',
-    createEmbeddedDocuments,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.prototype.deleteEmbeddedDocuments',
-    deleteEmbeddedDocuments,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.prototype.updateEmbeddedDocuments',
-    updateEmbeddedDocuments,
-    'MIXED',
-  );
+
+  // START RMOEVED 2022-02-01
+  // //@ts-ignore
+  // libWrapper.register(
+  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.createEmbeddedDocuments',
+  //   createEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // //@ts-ignore
+  // libWrapper.register(
+  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.deleteEmbeddedDocuments',
+  //   deleteEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // //@ts-ignore
+  // libWrapper.register(
+  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.updateEmbeddedDocuments',
+  //   updateEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // END RMOEVED 2022-02-01
   //@ts-ignore
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareEmbeddedEntities", prepareEmbeddedEntities, "WRAPPER");
   //@ts-ignore
@@ -468,26 +471,26 @@ export const setupHooks = async () => {
   // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
 
   //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.createDocuments',
-  //   createDocuments,
-  //   'MIXED',
-  // );
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.deleteDocuments',
-  //   deleteDocuments,
-  //   'MIXED',
-  // );
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.updateDocuments',
-  //   updateDocuments,
-  //   'MIXED',
-  // );
+  libWrapper.register(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'CONFIG.Item.documentClass.createDocuments',
+    createDocuments,
+    'MIXED',
+  );
+  //@ts-ignore
+  libWrapper.register(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'CONFIG.Item.documentClass.deleteDocuments',
+    deleteDocuments,
+    'MIXED',
+  );
+  //@ts-ignore
+  libWrapper.register(
+    VARIANT_ENCUMBRANCE_MODULE_NAME,
+    'CONFIG.Item.documentClass.updateDocuments',
+    updateDocuments,
+    'MIXED',
+  );
 };
 
 export const initHooks = () => {
@@ -574,32 +577,32 @@ export async function updateEmbeddedDocuments(wrapped, embeddedName, data, optio
   return wrapped(embeddedName, data, options);
 }
 // START REMOVED 2022-01-29
-// export async function createDocuments(wrapped, data, context = { parent: {}, pack: {}, options: {} }) {
-//   const { parent, pack, options } = context;
-//   const actorEntity: Actor = <Actor>parent;
-//   if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
-//     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
-//   }
-//   return wrapped(data, context);
-// }
+export async function createDocuments(wrapped, data, context = { parent: {}, pack: {}, options: {} }) {
+  const { parent, pack, options } = context;
+  const actorEntity: Actor = <Actor>parent;
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
+    await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
+  }
+  return wrapped(data, context);
+}
 
-// export async function updateDocuments(wrapped, updates = [], context = { parent: {}, pack: {}, options: {} }) {
-//   const { parent, pack, options } = context;
-//   const actorEntity: Actor = <Actor>parent;
-//   if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
-//     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, EncumbranceMode.UPDATE);
-//   }
-//   return wrapped(updates, context);
-// }
+export async function updateDocuments(wrapped, updates = [], context = { parent: {}, pack: {}, options: {} }) {
+  const { parent, pack, options } = context;
+  const actorEntity: Actor = <Actor>parent;
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
+    await VariantEncumbranceImpl.updateEncumbrance(actorEntity, updates, undefined, EncumbranceMode.UPDATE);
+  }
+  return wrapped(updates, context);
+}
 
-// export async function deleteDocuments(wrapped, ids = [], context = { parent: {}, pack: {}, options: {} }) {
-//   const { parent, pack, options } = context;
-//   const actorEntity: Actor = <Actor>parent;
-//   if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
-//     await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
-//   }
-//   return wrapped(ids, context);
-// }
+export async function deleteDocuments(wrapped, ids = [], context = { parent: {}, pack: {}, options: {} }) {
+  const { parent, pack, options } = context;
+  const actorEntity: Actor = <Actor>parent;
+  if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
+    await VariantEncumbranceImpl.updateEncumbrance(actorEntity, ids, undefined, EncumbranceMode.DELETE);
+  }
+  return wrapped(ids, context);
+}
 // END REMOVED 2022-01-29
 //// export function prepareEmbeddedEntities(wrapped) {
 ////   const actorEntity:Actor = this.actor;

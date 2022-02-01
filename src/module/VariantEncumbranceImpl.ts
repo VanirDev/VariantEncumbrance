@@ -934,8 +934,8 @@ export const VariantEncumbranceImpl = {
     });
   },
 
-  _addEncumbranceEffects: function (effect:Effect, actor:Actor, value:number) {
-    /*
+  _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
+    //@ts-ignore
     const movement = actor.data.data.attributes.movement;
 
     effect.changes.push({
@@ -967,7 +967,7 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
     });
-    */
+    
     effect.changes.push({
       key: 'data.attributes.movement.all',
       mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
@@ -976,9 +976,9 @@ export const VariantEncumbranceImpl = {
     });
   },
 
-  _addEncumbranceEffectsOverburdened: function (effect:Effect, actor:Actor) {
+  _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
-    /*
+    
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -1008,7 +1008,7 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
-    */
+    
     effect.changes.push({
       key: 'data.attributes.movement.all',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,

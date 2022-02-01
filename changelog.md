@@ -1,3 +1,8 @@
+### 0.7.7
+
+- Bug fix 
+- Remove dynamic effects for longstrider and encumbrance movement
+
 ### 0.7.6
 
 - Add check for verify if at least a gm is connected

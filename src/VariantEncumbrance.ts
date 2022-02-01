@@ -120,7 +120,7 @@ Hooks.once('libChangelogsReady', function () {
   libChangelogs.registerConflict(
     VARIANT_ENCUMBRANCE_MODULE_NAME,
     VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
-    '- possible minor issue with "Vehicle Cargo Capacity Unit"',
+    '- bug fix',
     'minor',
   );
   //@ts-ignore
