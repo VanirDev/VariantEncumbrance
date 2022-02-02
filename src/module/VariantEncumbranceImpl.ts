@@ -23,7 +23,7 @@ import {
   ENCUMBRANCE_STATE,
   invMidiQol,
   invPlusActive,
-  daeActive
+  daeActive,
 } from './Hooks';
 import {
   ActorData,
@@ -938,38 +938,38 @@ export const VariantEncumbranceImpl = {
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
-    if(!daeActive){
-    effect.changes.push({
-      key: 'data.attributes.movement.burrow',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
-    });
+    if (!daeActive) {
+      effect.changes.push({
+        key: 'data.attributes.movement.burrow',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.climb',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.climb',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.fly',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.fly',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.swim',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.swim',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.walk',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
-    });
-    // THIS IS THE DAE SOLUTION
-    }else{
+      effect.changes.push({
+        key: 'data.attributes.movement.walk',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
+      });
+      // THIS IS THE DAE SOLUTION
+    } else {
       effect.changes.push({
         key: 'data.attributes.movement.all',
         mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
@@ -981,44 +981,44 @@ export const VariantEncumbranceImpl = {
 
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
-    if(!daeActive){
-    effect.changes.push({
-      key: 'data.attributes.movement.burrow',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-    });
+    if (!daeActive) {
+      effect.changes.push({
+        key: 'data.attributes.movement.burrow',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.climb',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.climb',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.fly',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.fly',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.swim',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.swim',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+      });
 
-    effect.changes.push({
-      key: 'data.attributes.movement.walk',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-    });
-    // THIS IS THE DAE SOLUTION
-    }else{
-    effect.changes.push({
-      key: 'data.attributes.movement.all',
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: '0',
-      priority: 5,
-    });
+      effect.changes.push({
+        key: 'data.attributes.movement.walk',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+      });
+      // THIS IS THE DAE SOLUTION
+    } else {
+      effect.changes.push({
+        key: 'data.attributes.movement.all',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0',
+        priority: 5,
+      });
     }
   },
 
