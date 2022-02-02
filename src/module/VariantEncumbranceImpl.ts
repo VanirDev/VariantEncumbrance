@@ -23,6 +23,7 @@ import {
   ENCUMBRANCE_STATE,
   invMidiQol,
   invPlusActive,
+  daeActive
 } from './Hooks';
 import {
   ActorData,
@@ -937,7 +938,7 @@ export const VariantEncumbranceImpl = {
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
-
+    if(!daeActive){
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
@@ -967,18 +968,20 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
     });
-
-    effect.changes.push({
-      key: 'data.attributes.movement.all',
-      mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-      value: value ? `-${value}` : `-0`,
-      priority: 5,
-    });
+    // THIS IS THE DAE SOLUTION
+    }else{
+      effect.changes.push({
+        key: 'data.attributes.movement.all',
+        mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+        value: value ? `-${value}` : `-0`,
+        priority: 5,
+      });
+    }
   },
 
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
-
+    if(!daeActive){
     effect.changes.push({
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -1008,13 +1011,15 @@ export const VariantEncumbranceImpl = {
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
-
+    // THIS IS THE DAE SOLUTION
+    }else{
     effect.changes.push({
       key: 'data.attributes.movement.all',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
       priority: 5,
     });
+    }
   },
 
   /**

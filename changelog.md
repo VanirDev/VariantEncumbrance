@@ -1,3 +1,7 @@
+### 0.7.8
+
+- bug fix [Encumbrance movement penalty is doubled when DAE is enabled](https://github.com/VanirDev/VariantEncumbrance/issues/59)
+
 ### 0.7.7
 
 - Bug fix 

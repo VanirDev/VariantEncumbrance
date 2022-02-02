@@ -467,7 +467,7 @@ export default class EffectHandler {
    * @param {string} params.origin - the origin of the effect
    * @param {boolean} params.overlay - if the effect is an overlay or not
    */
-  async addEffectOnActor({ effectName, uuid, origin, overlay }, effect: Effect | null) {
+  async addEffectOnActor({ effectName, uuid, origin, overlay }, effect: Effect) {
     if (effect) {
       const actor = <Actor>await this._foundryHelpers.getActorByUuid(uuid);
       if (!origin) {

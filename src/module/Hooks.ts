@@ -8,6 +8,7 @@ import {
   VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME,
   VARIANT_ENCUMBRANCE_MODULE_NAME,
+  VARIANT_ENCUMBRANCE_DAE_MODULE_NAME,
 } from './settings';
 import { ENCUMBRANCE_TIERS, isEnabledActorType, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
@@ -25,6 +26,7 @@ export let itemContainerActive;
 export let dfredsConvenientEffectsActive;
 export let invMidiQol;
 export let dfQualityLifeActive;
+export let daeActive;
 
 // export const effectInterface = new EffectInterface();
 
@@ -541,7 +543,7 @@ export const initHooks = () => {
     game.modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
   );
   dfQualityLifeActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
-
+  daeActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_DAE_MODULE_NAME)?.active;
   // effectInterface.initialize();
 };
 
