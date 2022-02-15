@@ -1,3 +1,10 @@
+### 0.8.0 [BREAKING CHANGES]
+
+- Update typescript
+- Abbandoned 0.8.X developing
+- Update design pattern of the project and integration with socketlib
+- Update effect handler
+
 ### 0.7.8
 
 - bug fix [Encumbrance movement penalty is doubled when DAE is enabled](https://github.com/VanirDev/VariantEncumbrance/issues/59)

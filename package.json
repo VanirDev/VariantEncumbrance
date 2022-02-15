@@ -1,14 +1,14 @@
 {
   "private": true,
   "name": "variant-encumbrance-dnd5e",
-  "version": "0.7.8",
+  "version": "0.8.0",
   "description": "VariantEncumbrance+Midi",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",
     "build:watch": "gulp watch",
     "clean": "gulp clean && gulp link --clean",
-    "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@fvtt-0.8.9",
+    "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9.249.2",
     "lint": "eslint --ext .ts,.js,.vue .",
     "lintfix": "eslint --fix --ext .ts,.js,.vue ./src",
     "prettier-format": "prettier --config .prettierrc --write \"./src/**/*.(ts|js|json|scss|css)\""
@@ -16,7 +16,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@league-of-foundry-developers/foundry-vtt-types": "^0.8.9-10",
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.249.2",
     "@types/jquery": "^3.5.13",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",

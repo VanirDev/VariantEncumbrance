@@ -1,18 +1,11 @@
-import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import { warn, error, debug, i18n } from '../VariantEncumbrance';
-import {
-  VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_FLAG,
-  VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_MODULE_NAME,
-  VARIANT_ENCUMBRANCE_DAE_MODULE_NAME,
-} from './settings';
 import { ENCUMBRANCE_TIERS, isEnabledActorType, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import { EncumbranceData, EncumbranceMode, EncumbranceFlags } from './VariantEncumbranceModels';
 import { canvas, game } from './settings';
+import { debug, i18n, warn } from './lib/lib';
+import CONSTANTS from './constants';
+import { registerSocket } from './socket';
+import API from './api';
+import EffectInterface from './effects/effect-interface';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -28,16 +21,179 @@ export let invMidiQol;
 export let dfQualityLifeActive;
 export let daeActive;
 
-// export const effectInterface = new EffectInterface();
+export const initHooks = () => {
+  warn('Init Hooks processing');
+
+  Hooks.once('socketlib.ready', registerSocket);
+
+  // if (game.settings.get(CONSTANTS.MODULE_NAME, 'debugHooks')) {
+  //   for (const hook of Object.values(HOOKS)) {
+  //     if (typeof hook === 'string') {
+  //       Hooks.on(hook, (...args) => debug(`Hook called: ${hook}`, ...args));
+  //       debug(`Registered hook: ${hook}`);
+  //     } else {
+  //       for (const innerHook of Object.values(hook)) {
+  //         Hooks.on(<string>innerHook, (...args) => debug(`Hook called: ${innerHook}`, ...args));
+  //         debug(`Registered hook: ${innerHook}`);
+  //       }
+  //     }
+  //   }
+  // }
+
+  //@ts-ignore
+  window.VariantEncumbrance = {
+    API,
+  };
+
+  // CONFIG.DND5E.encumbrance = {
+  //   currencyPerWeight: {
+  //     imperial: 50,
+  //     metric: 110
+  //   },
+  //   strMultiplier: {
+  //     imperial: 15,
+  //     metric: 6.8
+  //   },
+  //   vehicleWeightMultiplier: {
+  //     imperial: 2000, // 2000 lbs in an imperial ton
+  //     metric: 1000 // 1000 kg in a metric ton
+  //   }
+  // };
+
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.strMultiplier.imperial =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier') ?? 15;
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.strMultiplier.metric =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
+
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.currencyPerWeight.imperial =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight') ?? 50;
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric') ?? 110;
+
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
+  //@ts-ignore
+  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
+    game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
+
+  // CONFIG.debug.hooks = true; // For debugging only
+
+  invPlusActive = <boolean>game.modules.get(CONSTANTS.INVENTORY_PLUS_MODULE_NAME)?.active;
+  invMidiQol = <boolean>game.modules.get(CONSTANTS.MIDI_QOL_MODULE_NAME)?.active;
+  itemContainerActive = <boolean>game.modules.get(CONSTANTS.ITEM_COLLECTION_MODULE_NAME)?.active;
+  dfredsConvenientEffectsActive = <boolean>(
+    game.modules.get(CONSTANTS.DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
+  );
+  dfQualityLifeActive = <boolean>game.modules.get(CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
+  daeActive = <boolean>game.modules.get(CONSTANTS.DAE_MODULE_NAME)?.active;
+};
+
+export const setupHooks = async () => {
+  // setup all the hooks
+
+  //@ts-ignore
+  window.VariantEncumbrance.API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
+  //@ts-ignore
+  window.VariantEncumbrance.API.effectInterface.initialize();
+
+  if (game[CONSTANTS.MODULE_NAME]) {
+    game[CONSTANTS.MODULE_NAME] = {};
+  }
+  if (game[CONSTANTS.MODULE_NAME].API) {
+    game[CONSTANTS.MODULE_NAME].API = {};
+  }
+  //@ts-ignore
+  game[CONSTANTS.MODULE_NAME].API = window.VariantEncumbrance.API;
+
+  // module specific
+  //@ts-ignore
+  game[CONSTANTS.MODULE_NAME].effectInterface = window.VariantEncumbrance.API.effectInterface;
+
+  // //@ts-ignore
+  // libWrapper.register(
+  //   CONSTANTS.MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.getEmbeddedDocument',
+  //   getEmbeddedDocument,
+  //   'MIXED',
+  // );
+
+  // START RMOEVED 2022-02-01
+  // //@ts-ignore
+  // libWrapper.register(
+  //   CONSTANTS.MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.createEmbeddedDocuments',
+  //   createEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // //@ts-ignore
+  // libWrapper.register(
+  //   CONSTANTS.MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.deleteEmbeddedDocuments',
+  //   deleteEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // //@ts-ignore
+  // libWrapper.register(
+  //   CONSTANTS.MODULE_NAME,
+  //   'CONFIG.Item.documentClass.prototype.updateEmbeddedDocuments',
+  //   updateEmbeddedDocuments,
+  //   'MIXED',
+  // );
+  // END RMOEVED 2022-02-01
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareEmbeddedEntities", prepareEmbeddedEntities, "WRAPPER");
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.getEmbeddedCollection", getEmbeddedCollection, "MIXED")
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareDerivedData", prepareDerivedData, "WRAPPER");
+
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE")
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass.prototype.delete", _delete, "MIXED")
+  //@ts-ignore
+  // libWrapper.register(MODULE_NAME, "CONFIG.Item.documentClass.prototype.isEmbedded", isEmbedded, "OVERRIDE")
+
+  //@ts-ignore
+  // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
+
+  //@ts-ignore
+  libWrapper.register(
+    CONSTANTS.MODULE_NAME,
+    'CONFIG.Item.documentClass.createDocuments',
+    createDocuments,
+    'MIXED',
+  );
+  //@ts-ignore
+  libWrapper.register(
+    CONSTANTS.MODULE_NAME,
+    'CONFIG.Item.documentClass.deleteDocuments',
+    deleteDocuments,
+    'MIXED',
+  );
+  //@ts-ignore
+  libWrapper.register(
+    CONSTANTS.MODULE_NAME,
+    'CONFIG.Item.documentClass.updateDocuments',
+    updateDocuments,
+    'MIXED',
+  );
+};
 
 export const readyHooks = async () => {
   // effectInterface.initialize();
 
   ENCUMBRANCE_STATE = {
-    UNENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.unencumbered'), // "Unencumbered",
-    ENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.encumbered'), // "Encumbered",
-    HEAVILY_ENCUMBERED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.heavily_encumbered'), // "Heavily Encumbered",
-    OVERBURDENED: i18n(VARIANT_ENCUMBRANCE_MODULE_NAME + '.effect.name.overburdened'), // "Overburdened"
+    UNENCUMBERED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.unencumbered'), // "Unencumbered",
+    ENCUMBERED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.encumbered'), // "Encumbered",
+    HEAVILY_ENCUMBERED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.heavily_encumbered'), // "Heavily Encumbered",
+    OVERBURDENED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.overburdened'), // "Overburdened"
   };
 
   Hooks.on(
@@ -50,8 +206,8 @@ export const readyHooks = async () => {
         // Do no touch the true actor again
 
         let encumbranceData;
-        // if (hasProperty(actorObject.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`)) {
-        //   encumbranceData = <EncumbranceData>getProperty(actorObject.data,`flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.DATA}`);
+        // if (hasProperty(actorObject.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`)) {
+        //   encumbranceData = <EncumbranceData>getProperty(actorObject.data,`flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`);
         // }
         if (!encumbranceData) {
           // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
@@ -156,7 +312,7 @@ export const readyHooks = async () => {
             'width: ' +
             Math.min(Math.max((encumbranceData.totalWeightToDisplay / encumbranceData.heavyMax) * 100, 0), 99.8) +
             '%;';
-          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, "units");
+          // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + game.settings.get(CONSTANTS.MODULE_NAME, "units");
           encumbranceElements[1].textContent =
             Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 +
             '/' +
@@ -220,7 +376,7 @@ export const readyHooks = async () => {
       if (
         invPlusActive &&
         data?.flags &&
-        hasProperty(data, `flags.${VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME}`)
+        hasProperty(data, `flags.${CONSTANTS.INVENTORY_PLUS_MODULE_NAME}`)
       ) {
         doTheUpdate = true;
       }
@@ -245,7 +401,7 @@ export const readyHooks = async () => {
     const actorSheet = <ActorSheet>app.object.sheet;
     const actorEntity = <Actor>actorSheet.actor;
     const enableVarianEncumbranceOnSpecificActor = <boolean>(
-      game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor')
+      game.settings.get(CONSTANTS.MODULE_NAME, 'enableVarianEncumbranceOnSpecificActor')
     );
 
     if (!actorEntity) {
@@ -257,28 +413,28 @@ export const readyHooks = async () => {
         const varianEncumbranceButtons: any[] = [];
 
         let enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
-        if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+        if (!hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
           await actorEntity.setFlag(
-            VARIANT_ENCUMBRANCE_FLAG,
+            CONSTANTS.FLAG,
             EncumbranceFlags.ENABLED_AE,
             enableVarianEncumbranceEffectsOnSpecificActorFlag,
           );
         } else {
           enableVarianEncumbranceEffectsOnSpecificActorFlag = <boolean>(
-            actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE)
+            actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE)
           );
         }
 
         let enableVarianEncumbranceWeightOnSpecificActorFlag = true;
-        if (!hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
+        if (!hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
           await actorEntity.setFlag(
-            VARIANT_ENCUMBRANCE_FLAG,
+            CONSTANTS.FLAG,
             EncumbranceFlags.ENABLED_WE,
             enableVarianEncumbranceWeightOnSpecificActorFlag,
           );
         } else {
           enableVarianEncumbranceWeightOnSpecificActorFlag = <boolean>(
-            actorEntity.getFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE)
+            actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE)
           );
         }
 
@@ -317,7 +473,7 @@ export const readyHooks = async () => {
           }
 
           const removeLabelButtonsSheetHeader = <boolean>(
-            game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'removeLabelButtonsSheetHeader')
+            game.settings.get(CONSTANTS.MODULE_NAME, 'removeLabelButtonsSheetHeader')
           );
 
           if (removeLabelButtonsSheetHeader) {
@@ -367,12 +523,12 @@ export const readyHooks = async () => {
 
               // THIS LOOP ON RENDER ACTOR ?
               await actorEntity.setFlag(
-                VARIANT_ENCUMBRANCE_FLAG,
+                CONSTANTS.FLAG,
                 EncumbranceFlags.ENABLED_AE,
                 enableVarianEncumbranceEffectsOnSpecificActorFlag,
               );
               await actorEntity.setFlag(
-                VARIANT_ENCUMBRANCE_FLAG,
+                CONSTANTS.FLAG,
                 EncumbranceFlags.ENABLED_WE,
                 enableVarianEncumbranceWeightOnSpecificActorFlag,
               );
@@ -408,143 +564,16 @@ export const readyHooks = async () => {
         }
         buttons.unshift(...varianEncumbranceButtons);
       } else {
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
-          actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_AE);
+        if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
+          actorEntity.unsetFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE);
         }
-        if (hasProperty(actorEntity.data, `flags.${VARIANT_ENCUMBRANCE_FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
-          actorEntity.unsetFlag(VARIANT_ENCUMBRANCE_FLAG, EncumbranceFlags.ENABLED_WE);
+        if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_WE}`)) {
+          actorEntity.unsetFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE);
         }
         await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.UPDATE);
       }
     }
   });
-};
-
-export const setupHooks = async () => {
-  // setup all the hooks
-
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.prototype.getEmbeddedDocument',
-  //   getEmbeddedDocument,
-  //   'MIXED',
-  // );
-
-  // START RMOEVED 2022-02-01
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.prototype.createEmbeddedDocuments',
-  //   createEmbeddedDocuments,
-  //   'MIXED',
-  // );
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.prototype.deleteEmbeddedDocuments',
-  //   deleteEmbeddedDocuments,
-  //   'MIXED',
-  // );
-  // //@ts-ignore
-  // libWrapper.register(
-  //   VARIANT_ENCUMBRANCE_MODULE_NAME,
-  //   'CONFIG.Item.documentClass.prototype.updateEmbeddedDocuments',
-  //   updateEmbeddedDocuments,
-  //   'MIXED',
-  // );
-  // END RMOEVED 2022-02-01
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareEmbeddedEntities", prepareEmbeddedEntities, "WRAPPER");
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.getEmbeddedCollection", getEmbeddedCollection, "MIXED")
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.prepareDerivedData", prepareDerivedData, "WRAPPER");
-
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.actor", getActor, "OVERRIDE")
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.update", _update, "MIXED")
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass.prototype.delete", _delete, "MIXED")
-  //@ts-ignore
-  // libWrapper.register(MODULE_NAME, "CONFIG.Item.documentClass.prototype.isEmbedded", isEmbedded, "OVERRIDE")
-
-  //@ts-ignore
-  // libWrapper.register(VARIANT_ENCUMBRANCE_MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
-
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.createDocuments',
-    createDocuments,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.deleteDocuments',
-    deleteDocuments,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    VARIANT_ENCUMBRANCE_MODULE_NAME,
-    'CONFIG.Item.documentClass.updateDocuments',
-    updateDocuments,
-    'MIXED',
-  );
-};
-
-export const initHooks = () => {
-  warn('Init Hooks processing');
-
-  // CONFIG.DND5E.encumbrance = {
-  //   currencyPerWeight: {
-  //     imperial: 50,
-  //     metric: 110
-  //   },
-  //   strMultiplier: {
-  //     imperial: 15,
-  //     metric: 6.8
-  //   },
-  //   vehicleWeightMultiplier: {
-  //     imperial: 2000, // 2000 lbs in an imperial ton
-  //     metric: 1000 // 1000 kg in a metric ton
-  //   }
-  // };
-
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.strMultiplier.imperial =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplier') ?? 15;
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.strMultiplier.metric =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
-
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.currencyPerWeight.imperial =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeight') ?? 50;
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'currencyWeightMetric') ?? 110;
-
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
-    game.settings.get(VARIANT_ENCUMBRANCE_MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
-
-  // CONFIG.debug.hooks = true; // For debugging only
-
-  invPlusActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME)?.active;
-  invMidiQol = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME)?.active;
-  itemContainerActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME)?.active;
-  dfredsConvenientEffectsActive = <boolean>(
-    game.modules.get(VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
-  );
-  dfQualityLifeActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
-  daeActive = <boolean>game.modules.get(VARIANT_ENCUMBRANCE_DAE_MODULE_NAME)?.active;
-  // effectInterface.initialize();
 };
 
 // export function getEmbeddedDocument(wrapped, embeddedName, id, { strict = false } = {}) {

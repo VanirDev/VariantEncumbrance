@@ -20,6 +20,10 @@ export default class Effect {
   tokenMagicChanges: any[] = [];
   nestedEffects: Effect[] = [];
   transfer = false;
+  // ADDED FROM 4535992
+  origin = '';
+  overlay = false;
+  // END ADDED FROM 4535992
 
   constructor({
     customId = '',
@@ -63,7 +67,7 @@ export default class Effect {
    * @param {object} params - the params to use for conversion
    * @param {string} params.origin - the origin to add to the effect
    * @param {boolean} params.overlay - whether the effect is an overlay or not
-   * @returns The active effect data object for this effect
+   * @returns {object} The active effect data object for this effect
    */
   convertToActiveEffectData({ origin = '', overlay = false } = {}): Record<string, unknown> {
     return {
@@ -76,15 +80,25 @@ export default class Effect {
       flags: foundry.utils.mergeObject(this.flags, {
         core: {
           statusId: this._id,
-          overlay,
+          overlay: overlay ? overlay : this.overlay ? this.overlay : false, // MOD 4535992
         },
         isConvenient: true,
         convenientDescription: this.description,
       }),
-      origin: origin ?? '',
+      origin: origin ? origin : this.origin ? this.origin : '', // MOD 4535992
       transfer: this.transfer ?? false,
-      changes: this.changes,
+      //changes: this.changes, // MOD 4535992
+      changes: this._handleIntegrations(),
     };
+  }
+
+  /**
+   * Converts the Effect into an object
+   *
+   * @returns {object} the object representation of this effect
+   */
+  convertToObject() {
+    return { ...this };
   }
 
   get _id() {
@@ -129,6 +143,20 @@ export default class Effect {
 
     return undefined;
   }
+
+  // =============================================
+
+  _handleIntegrations() {
+    const arrChanges = this.changes || [];
+    if (this.atlChanges.length > 0) {
+      arrChanges.push(...this.atlChanges);
+    }
+
+    if (this.tokenMagicChanges.length > 0) {
+      arrChanges.push(...this.tokenMagicChanges);
+    }
+    return arrChanges;
+  }
 }
 
 /**
@@ -139,10 +167,11 @@ export class Constants {
     COLD_FIRE: '#389888',
     FIRE: '#f98026',
     WHITE: '#ffffff',
+    MOON_TOUCHED: '#f4f1c9',
   };
 
   static SECONDS = {
-    IN_ONE_ROUND: 6,
+    IN_ONE_ROUND: CONFIG.time.roundTime || 6,
     IN_ONE_MINUTE: 60,
     IN_TEN_MINUTES: 600,
     IN_ONE_HOUR: 3600,

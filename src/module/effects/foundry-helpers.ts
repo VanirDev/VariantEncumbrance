@@ -9,7 +9,7 @@ export default class FoundryHelpers {
   }
 
   /**
-   * Gets all UUIDs for selected or targeted tokens, depending on if priortize
+   * Gets all UUIDs for selected or targeted tokens, depending on if prioritize
    * targets is enabled
    *
    * @returns {string[]} actor uuids for selected or targeted tokens
