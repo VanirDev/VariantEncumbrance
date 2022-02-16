@@ -16,7 +16,7 @@ import {
   invMidiQol,
   invPlusActive,
   daeActive,
-} from './Hooks';
+} from './modules';
 import {
   ActorData,
   ItemData,
@@ -25,6 +25,7 @@ import EffectInterface from './effects/effect-interface';
 import { canvas, game } from './settings';
 import CONSTANTS from './constants';
 import { error, i18n } from './lib/lib';
+import API from './api';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -1027,11 +1028,9 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectInterface>(
-        game[CONSTANTS.MODULE_NAME].effectInterface
-      ))._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
+      return await API.effectInterface._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
     } else {
-      return await (<EffectInterface>game[CONSTANTS.MODULE_NAME].effectInterface).hasEffectAppliedOnActor(
+      return await API.effectInterface.hasEffectAppliedOnActor(
         effectName,
         <string>actor.id,
       );
@@ -1049,13 +1048,9 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectInterface>(
-        game[CONSTANTS.MODULE_NAME].effectInterface
-      ))._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+      return await API.effectInterface._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
     } else {
-      return await (<EffectInterface>(
-        game[CONSTANTS.MODULE_NAME].effectInterface
-      )).hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+      return await API.effectInterface.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
     }
   },
 
@@ -1068,11 +1063,11 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectInterface>game[CONSTANTS.MODULE_NAME].effectInterface)._effectHandler.removeEffect(
+      return await API.effectInterface._effectHandler.removeEffect(
         { effectName: effectName, uuid: <string>actor.id },
       );
     } else {
-      return await (<EffectInterface>game[CONSTANTS.MODULE_NAME].effectInterface).removeEffect({
+      return await API.effectInterface.removeEffect({
         effectName: effectName,
         uuid: <string>actor.id,
       });
@@ -1088,14 +1083,12 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectInterface>(
-        game[CONSTANTS.MODULE_NAME].effectInterface
-      ))._effectHandler.removeEffectFromIdOnActor(
+      return await API.effectInterface._effectHandler.removeEffectFromIdOnActor(
         <string>effectToRemove.id,
         <string>actor.id,
       );
     } else {
-      return await (<EffectInterface>game[CONSTANTS.MODULE_NAME].effectInterface).removeEffectFromIdOnActor(
+      return await API.effectInterface.removeEffectFromIdOnActor(
         <string>effectToRemove.id,
         <string>actor.id,
       );
@@ -1132,14 +1125,12 @@ export const VariantEncumbranceImpl = {
         },
       };
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-        return await (<EffectInterface>(
-          game[CONSTANTS.MODULE_NAME].effectInterface
-        ))._effectHandler.addEffectOnActor(
+        return await API.effectInterface._effectHandler.addEffectOnActor(
           effectName, <string>actor.id, origin, false,
           effect,
         );
       } else {
-        return await (<EffectInterface>game[CONSTANTS.MODULE_NAME].effectInterface).addEffectOnActor(
+        return await API.effectInterface.addEffectOnActor(
           effectName,
           <string>actor.id,
           effect,

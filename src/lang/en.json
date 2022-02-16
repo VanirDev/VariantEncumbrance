@@ -89,6 +89,18 @@
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socket call for update the encumbrance",
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is ususally useful only for avoid a socket collision with other modules",
 
+  "variant-encumbrance-dnd5e.setting.reset.name": "Reset settings to default",
+  "variant-encumbrance-dnd5e.setting.reset.label": "Reset Settings To Default",
+  "variant-encumbrance-dnd5e.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",
+  "variant-encumbrance-dnd5e.setting.debug.name": "Enable debugging",
+  "variant-encumbrance-dnd5e.setting.debug.label": "Prints debug messages to the console",
+  "variant-encumbrance-dnd5e.setting.debug.hint": " ",
+
+  "variant-encumbrance-dnd5e.dialogs.resetsettings.title": "Reset Module Settings",
+  "variant-encumbrance-dnd5e.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",
+  "variant-encumbrance-dnd5e.dialogs.resetsettings.confirm": "Reset Module Settings",
+  "variant-encumbrance-dnd5e.dialogs.resetsettings.cancel": "Cancel",
+
   "variant-encumbrance-dnd5e.effect.name.unencumbered": "Unencumbered",
   "variant-encumbrance-dnd5e.effect.description.unencumbered": "",
 

@@ -16,7 +16,7 @@ import {
   registerSettings,
 } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
-import { initHooks, readyHooks, setupHooks } from './module/Hooks';
+import { initHooks, readyHooks, setupHooks } from './module/modules';
 import EffectInterface from './module/effects/effect-interface';
 import { canvas, game } from './module/settings';
 import CONSTANTS from './module/constants';

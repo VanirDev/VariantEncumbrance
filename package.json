@@ -8,7 +8,7 @@
     "build": "gulp build && gulp link",
     "build:watch": "gulp watch",
     "clean": "gulp clean && gulp link --clean",
-    "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9.249.2",
+    "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9",
     "lint": "eslint --ext .ts,.js,.vue .",
     "lintfix": "eslint --fix --ext .ts,.js,.vue ./src",
     "prettier-format": "prettier --config .prettierrc --write \"./src/**/*.(ts|js|json|scss|css)\""
@@ -43,7 +43,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "json-stringify-pretty-compact": "^2.0.0",
     "prettier": "^2.5.1",
-    "sass": "^1.48.0",
+    "sass": "^1.49.7",
     "yargs": "^15.4.1"
   },
   "lint-staged": {
@@ -51,6 +51,6 @@
     "*.(json|scss)": "prettier --write"
   },
   "dependencies": {
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.5"
   }
 }

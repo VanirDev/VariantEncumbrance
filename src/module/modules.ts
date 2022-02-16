@@ -111,8 +111,6 @@ export const setupHooks = async () => {
   game[CONSTANTS.MODULE_NAME].API = window.VariantEncumbrance.API;
 
   // module specific
-  //@ts-ignore
-  game[CONSTANTS.MODULE_NAME].effectInterface = window.VariantEncumbrance.API.effectInterface;
 
   // //@ts-ignore
   // libWrapper.register(
