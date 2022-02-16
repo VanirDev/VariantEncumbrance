@@ -212,9 +212,7 @@ export const VariantEncumbranceImpl = {
     // SEEM NOT NECESSARY Add pre check for encumbrance tier
     if (<boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
       if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`)) {
-        const encumbranceDataCurrent = <EncumbranceData>(
-          actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA)
-        );
+        const encumbranceDataCurrent = <EncumbranceData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA);
         if (encumbranceDataCurrent.encumbranceTier == encumbranceData.encumbranceTier) {
           //We ignore all the AE check
           await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA, encumbranceData);
@@ -384,10 +382,7 @@ export const VariantEncumbranceImpl = {
     const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE)
     );
-    const useStandardWeightCalculation = game.settings.get(
-      CONSTANTS.MODULE_NAME,
-      'useStandardWeightCalculation',
-    );
+    const useStandardWeightCalculation = game.settings.get(CONSTANTS.MODULE_NAME, 'useStandardWeightCalculation');
     if (!enableVarianEncumbranceWeightOnActorFlag && !useStandardWeightCalculation) {
       if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`)) {
         return <EncumbranceData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA);
@@ -467,9 +462,7 @@ export const VariantEncumbranceImpl = {
         // Start inventory+ module is active
         if (invPlusActive) {
           // Retrieve flag 'categorys' from inventory plus module
-          const inventoryPlusCategories = <any[]>(
-            actorEntity.getFlag(CONSTANTS.INVENTORY_PLUS_MODULE_NAME, 'categorys')
-          );
+          const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.INVENTORY_PLUS_MODULE_NAME, 'categorys');
           if (inventoryPlusCategories) {
             // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
             let actorHasCustomCategories = false;
@@ -697,9 +690,7 @@ export const VariantEncumbranceImpl = {
               break;
           }
         } else if (dfQualityLifeActive && actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA)) {
-          const encumbranceData = <EncumbranceData>(
-            actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA)
-          );
+          const encumbranceData = <EncumbranceData>actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA);
           const dfVehicleUnitLabel = encumbranceData.unit;
           switch (dfVehicleUnitLabel) {
             case 'L.Ton':
@@ -933,7 +924,7 @@ export const VariantEncumbranceImpl = {
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
-    if (!daeActive) {
+    // if (!daeActive) {
       effect.changes.push({
         key: 'data.attributes.movement.burrow',
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
@@ -964,19 +955,19 @@ export const VariantEncumbranceImpl = {
         value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
       });
       // THIS IS THE DAE SOLUTION
-    } else {
-      effect.changes.push({
-        key: 'data.attributes.movement.all',
-        mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-        value: value ? `-${value}` : `-0`,
-        priority: 5,
-      });
-    }
+    // } else {
+    //   effect.changes.push({
+    //     key: 'data.attributes.movement.all',
+    //     mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+    //     value: value ? `-${value}` : `-0`,
+    //     priority: 5,
+    //   });
+    // }
   },
 
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
-    if (!daeActive) {
+    // if (!daeActive) {
       effect.changes.push({
         key: 'data.attributes.movement.burrow',
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -1007,14 +998,14 @@ export const VariantEncumbranceImpl = {
         value: '0',
       });
       // THIS IS THE DAE SOLUTION
-    } else {
-      effect.changes.push({
-        key: 'data.attributes.movement.all',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-        priority: 5,
-      });
-    }
+    // } else {
+    //   effect.changes.push({
+    //     key: 'data.attributes.movement.all',
+    //     mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+    //     value: '0',
+    //     priority: 5,
+    //   });
+    // }
   },
 
   /**
@@ -1030,10 +1021,7 @@ export const VariantEncumbranceImpl = {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
       return await API.effectInterface._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
     } else {
-      return await API.effectInterface.hasEffectAppliedOnActor(
-        effectName,
-        <string>actor.id,
-      );
+      return await API.effectInterface.hasEffectAppliedOnActor(effectName, <string>actor.id);
     }
   },
 
@@ -1048,7 +1036,10 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+      return await API.effectInterface._effectHandler.hasEffectAppliedFromIdOnActor(
+        <string>effect.id,
+        <string>actor.id,
+      );
     } else {
       return await API.effectInterface.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
     }
@@ -1063,9 +1054,7 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.removeEffect(
-        { effectName: effectName, uuid: <string>actor.id },
-      );
+      return await API.effectInterface._effectHandler.removeEffect({ effectName: effectName, uuid: <string>actor.id });
     } else {
       return await API.effectInterface.removeEffect({
         effectName: effectName,
@@ -1088,10 +1077,7 @@ export const VariantEncumbranceImpl = {
         <string>actor.id,
       );
     } else {
-      return await API.effectInterface.removeEffectFromIdOnActor(
-        <string>effectToRemove.id,
-        <string>actor.id,
-      );
+      return await API.effectInterface.removeEffectFromIdOnActor(<string>effectToRemove.id, <string>actor.id);
     }
   },
 
@@ -1126,15 +1112,14 @@ export const VariantEncumbranceImpl = {
       };
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
         return await API.effectInterface._effectHandler.addEffectOnActor(
-          effectName, <string>actor.id, origin, false,
+          effectName,
+          <string>actor.id,
+          origin,
+          false,
           effect,
         );
       } else {
-        return await API.effectInterface.addEffectOnActor(
-          effectName,
-          <string>actor.id,
-          effect,
-        );
+        return await API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
       }
     }
   },
@@ -1333,9 +1318,7 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
           break;
       }
     } else if (dfQualityLifeActive && actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA)) {
-      const encumbranceData = <EncumbranceData>(
-        actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA)
-      );
+      const encumbranceData = <EncumbranceData>actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA);
       const dfVehicleUnitLabel = encumbranceData.unit;
       switch (dfVehicleUnitLabel) {
         case 'L.Ton':

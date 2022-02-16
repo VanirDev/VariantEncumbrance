@@ -4,7 +4,6 @@ import EffectInterface from './effects/effect-interface';
 import Effect from './effects/effect';
 
 export default class API {
-
   static effectInterface: EffectInterface;
 
   static addEffect(actorId: string, effectName: string, effect: Effect) {
@@ -30,5 +29,4 @@ export default class API {
   static removeEffectOnActor(actorId: string, effectName: string) {
     return API.effectInterface.removeEffectOnActor(effectName, <string>actorId);
   }
-
 }

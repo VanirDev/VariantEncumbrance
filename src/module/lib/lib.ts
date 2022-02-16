@@ -21,7 +21,7 @@ export function wait(ms) {
 
 export function debug(msg, args = '') {
   // if (game.settings.get(CONSTANTS.MODULE_NAME, 'debug')) {
-    console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
+  console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
   // }
   return msg;
 }

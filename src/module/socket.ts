@@ -48,9 +48,13 @@ export function registerSocket() {
   /**
    * Effects
    */
-  variantEncumbranceSocket.register('toggleEffect', (...args) => API.effectInterface._effectHandler.toggleEffectArr(...args));
+  variantEncumbranceSocket.register('toggleEffect', (...args) =>
+    API.effectInterface._effectHandler.toggleEffectArr(...args),
+  );
   variantEncumbranceSocket.register('addEffect', (...args) => API.effectInterface._effectHandler.addEffectArr(...args));
-  variantEncumbranceSocket.register('removeEffect', (...args) => API.effectInterface._effectHandler.removeEffectArr(...args));
+  variantEncumbranceSocket.register('removeEffect', (...args) =>
+    API.effectInterface._effectHandler.removeEffectArr(...args),
+  );
   // variantEncumbranceSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
   // variantEncumbranceSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
   variantEncumbranceSocket.register('addEffectOnActor', (...args) =>

@@ -86,9 +86,7 @@ export const initHooks = () => {
   invPlusActive = <boolean>game.modules.get(CONSTANTS.INVENTORY_PLUS_MODULE_NAME)?.active;
   invMidiQol = <boolean>game.modules.get(CONSTANTS.MIDI_QOL_MODULE_NAME)?.active;
   itemContainerActive = <boolean>game.modules.get(CONSTANTS.ITEM_COLLECTION_MODULE_NAME)?.active;
-  dfredsConvenientEffectsActive = <boolean>(
-    game.modules.get(CONSTANTS.DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active
-  );
+  dfredsConvenientEffectsActive = <boolean>game.modules.get(CONSTANTS.DFREDS_CONVENIENT_EFFECTS_MODULE_NAME)?.active;
   dfQualityLifeActive = <boolean>game.modules.get(CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME)?.active;
   daeActive = <boolean>game.modules.get(CONSTANTS.DAE_MODULE_NAME)?.active;
 };
@@ -162,26 +160,11 @@ export const setupHooks = async () => {
   // libWrapper.register(CONSTANTS.MODULE_NAME, "CONFIG.Item.documentClass._onCreateDocuments", _onCreateDocuments, "MIXED")
 
   //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Item.documentClass.createDocuments',
-    createDocuments,
-    'MIXED',
-  );
+  libWrapper.register(CONSTANTS.MODULE_NAME, 'CONFIG.Item.documentClass.createDocuments', createDocuments, 'MIXED');
   //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Item.documentClass.deleteDocuments',
-    deleteDocuments,
-    'MIXED',
-  );
+  libWrapper.register(CONSTANTS.MODULE_NAME, 'CONFIG.Item.documentClass.deleteDocuments', deleteDocuments, 'MIXED');
   //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Item.documentClass.updateDocuments',
-    updateDocuments,
-    'MIXED',
-  );
+  libWrapper.register(CONSTANTS.MODULE_NAME, 'CONFIG.Item.documentClass.updateDocuments', updateDocuments, 'MIXED');
 };
 
 export const readyHooks = async () => {
@@ -371,11 +354,7 @@ export const readyHooks = async () => {
         doTheUpdate = true;
       }
       // For our purpose we filter only the invenctory-plus modifier action
-      if (
-        invPlusActive &&
-        data?.flags &&
-        hasProperty(data, `flags.${CONSTANTS.INVENTORY_PLUS_MODULE_NAME}`)
-      ) {
+      if (invPlusActive && data?.flags && hasProperty(data, `flags.${CONSTANTS.INVENTORY_PLUS_MODULE_NAME}`)) {
         doTheUpdate = true;
       }
       // Check change on the cargo property of vehicle

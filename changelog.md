@@ -4,6 +4,9 @@
 - Abbandoned 0.8.X developing
 - Update design pattern of the project and integration with socketlib
 - Update effect handler
+- Bug fix overburdened not applied
+- Remove check of dae because DAE has some strange bug ??? (to ask to tim posney about it )
+- Update the labels and module settings
 
 ### 0.7.8
 

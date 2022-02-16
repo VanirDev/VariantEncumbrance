@@ -1,4 +1,3 @@
-
 import API from './api';
 import CONSTANTS from './constants';
 import { i18n } from './lib/lib';
@@ -52,7 +51,6 @@ export function getAPI(): API {
 }
 
 export const registerSettings = function () {
-
   game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
     name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
@@ -63,7 +61,7 @@ export const registerSettings = function () {
 
   const settings = defaultSettings();
   for (const [name, data] of Object.entries(settings)) {
-      game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
+    game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
   }
 
   // for (const [name, data] of Object.entries(otherSettings)) {
@@ -706,8 +704,6 @@ function defaultSettings(apply = false) {
       config: true,
       type: Boolean,
       default: false,
-    }
-  }
+    },
+  };
 }
-
-

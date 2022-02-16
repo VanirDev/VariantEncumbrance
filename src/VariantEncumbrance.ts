@@ -12,9 +12,7 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import {
-  registerSettings,
-} from './module/settings';
+import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/modules';
 import EffectInterface from './module/effects/effect-interface';
@@ -81,9 +79,7 @@ Hooks.once('socketlib.ready', () => {
   game[CONSTANTS.MODULE_NAME] = game[CONSTANTS.MODULE_NAME] || {};
 
   // game[CONSTANTS.MODULE_NAME].effects = new EffectDefinitions();
-  game[CONSTANTS.MODULE_NAME].effectInterface = new EffectInterface(
-    CONSTANTS.MODULE_NAME
-  );
+  game[CONSTANTS.MODULE_NAME].effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
   // game[CONSTANTS.MODULE_NAME].statusEffects = new StatusEffects();
   game[CONSTANTS.MODULE_NAME].effectInterface.initialize();
 });
