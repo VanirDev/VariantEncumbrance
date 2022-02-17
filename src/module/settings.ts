@@ -371,7 +371,7 @@ export const registerSettings = function () {
   });
 };
 
-class ResetSettingsDialog extends FormApplication {
+class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
   constructor(...args) {
     //@ts-ignore
     super(...args);
