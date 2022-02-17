@@ -59,10 +59,10 @@ export const registerSettings = function () {
     restricted: true,
   });
 
-  const settings = defaultSettings();
-  for (const [name, data] of Object.entries(settings)) {
-    game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
-  }
+  // const settings = defaultSettings();
+  // for (const [name, data] of Object.entries(settings)) {
+  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
+  // }
 
   // for (const [name, data] of Object.entries(otherSettings)) {
   //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
@@ -372,7 +372,7 @@ export const registerSettings = function () {
 };
 
 class ResetSettingsDialog extends FormApplication {
-  constructor(...args: any) {
+  constructor(...args: any[]) {
     super(args);
     //@ts-ignore
     return new Dialog({
