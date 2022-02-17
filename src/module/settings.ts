@@ -372,7 +372,7 @@ export const registerSettings = function () {
 };
 
 class ResetSettingsDialog extends FormApplication {
-  constructor(...args: any[]) {
+  constructor(...args: any) {
     super(args);
     //@ts-ignore
     return new Dialog({
