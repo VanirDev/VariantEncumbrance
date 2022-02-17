@@ -92,13 +92,7 @@ Hooks.once('libChangelogsReady', function () {
     CONSTANTS.MODULE_NAME,
     CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME,
     `
-    - Update typescript
-    - Abbandoned 0.8.X developing, now is only 9
-    - Update design pattern of the project and integration with socketlib
-    - Update effect handler
-    - Bug fix overburdened not applied
-    - Remove check of dae because DAE has some strange bug ??? (to ask to tim posney about it )
-    - Update the labels and module settings
+    - Small bug fix
     `,
     'minor',
   );

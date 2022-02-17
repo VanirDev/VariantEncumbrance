@@ -73,7 +73,7 @@ export const i18nFormat = (key: string, data = {}): string => {
 export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
   return `<p class="${CONSTANTS.MODULE_NAME}-dialog">
         <i style="font-size:3rem;" class="${icon}"></i><br><br>
-        <strong style="font-size:1.2rem;">Item Piles</strong>
+        <strong style="font-size:1.2rem;">${CONSTANTS.MODULE_NAME}</strong>
         <br><br>${message}
     </p>`;
 }

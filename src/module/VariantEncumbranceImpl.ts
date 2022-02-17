@@ -925,36 +925,36 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
-      effect.changes.push({
-        key: 'data.attributes.movement.burrow',
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.burrow',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.climb',
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.climb',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.fly',
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.fly',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.swim',
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.swim',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.walk',
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
-      });
-      // THIS IS THE DAE SOLUTION
+    effect.changes.push({
+      key: 'data.attributes.movement.walk',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
+    });
+    // THIS IS THE DAE SOLUTION
     // } else {
     //   effect.changes.push({
     //     key: 'data.attributes.movement.all',
@@ -968,36 +968,36 @@ export const VariantEncumbranceImpl = {
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
-      effect.changes.push({
-        key: 'data.attributes.movement.burrow',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.burrow',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.climb',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.climb',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.fly',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.fly',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.swim',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-      });
+    effect.changes.push({
+      key: 'data.attributes.movement.swim',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+    });
 
-      effect.changes.push({
-        key: 'data.attributes.movement.walk',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0',
-      });
-      // THIS IS THE DAE SOLUTION
+    effect.changes.push({
+      key: 'data.attributes.movement.walk',
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: '0',
+    });
+    // THIS IS THE DAE SOLUTION
     // } else {
     //   effect.changes.push({
     //     key: 'data.attributes.movement.all',
