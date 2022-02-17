@@ -1,3 +1,7 @@
+### 0.8.1
+
+- Some small bug fix
+
 ### 0.8.0 [BREAKING CHANGES]
 
 - Update typescript
