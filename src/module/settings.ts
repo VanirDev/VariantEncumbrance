@@ -59,15 +59,6 @@ export const registerSettings = function () {
     restricted: true,
   });
 
-  // const settings = defaultSettings();
-  // for (const [name, data] of Object.entries(settings)) {
-  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
-  // }
-
-  // for (const [name, data] of Object.entries(otherSettings)) {
-  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
-  // }
-
   // Removed on 0.6.5
   // game.settings.register(CONSTANTS.MODULE_NAME, 'enabled', {
   //   name: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.name'),
@@ -369,6 +360,15 @@ export const registerSettings = function () {
     type: Boolean,
     default: false,
   });
+
+  // const settings = defaultSettings();
+  // for (const [name, data] of Object.entries(settings)) {
+  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
+  // }
+
+  // for (const [name, data] of Object.entries(otherSettings)) {
+  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  // }
 };
 
 class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
