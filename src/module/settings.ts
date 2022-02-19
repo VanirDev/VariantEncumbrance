@@ -406,13 +406,23 @@ class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object
 }
 
 async function applyDefaultSettings() {
-  const settings = defaultSettings(true);
-  for (const [name, data] of Object.entries(settings)) {
+  // const settings = defaultSettings(true);
+  // for (const [name, data] of Object.entries(settings)) {
+  //   await game.settings.set(CONSTANTS.MODULE_NAME, name, data.default);
+  // }
+  const settings2 = otherSettings(true);
+  for (const [name, data] of Object.entries(settings2)) {
     await game.settings.set(CONSTANTS.MODULE_NAME, name, data.default);
   }
 }
 
-function defaultSettings(apply = false) {
+// function defaultSettings(apply = false) {
+//   return {
+//     //
+//   };
+// }
+
+function otherSettings(apply = false) {
   return {
     useVarianEncumbranceWithSpecificType: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
