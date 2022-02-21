@@ -5,6 +5,9 @@
   "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificType.name": "Use Variant Encumbrance with specific type of actor",
   "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificType.hint": "Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive",
 
+  "variant-encumbrance-dnd5e.setting.fakeMetricSystem.name": "Fake the metric system calculation, but we using the imperial one",
+  "variant-encumbrance-dnd5e.setting.fakeMetricSystem.hint": "Use this only with the system setting 'Use Metric Weight Units' checked. Because that settig doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl",
+
   "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.name": "Enable or disable the strength multiplier feature",
   "variant-encumbrance-dnd5e.setting.useStrengthMultiplier.hint": "I DON'T RECOMMENDED it, this will multiply the carriage value with CONFIG.DND5E.encumbrance.strMultiplier.imperial/CONFIG.DND5E.encumbrance.strMultiplier.metric value, USUALLY YOU DON'T NEED THIS because the module already do this with the setting \"Heavily Encumbered\" multiplier",
 

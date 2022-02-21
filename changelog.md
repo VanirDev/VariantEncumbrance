@@ -1,3 +1,8 @@
+### 0.8.2
+
+- Add new Feature: Fake the metric system calculation, but we using the imperial one under the hood
+- Add new module setting 'Fake the metric system calculation, but we using the imperial one'
+
 ### 0.8.1
 
 - Some small bug fix

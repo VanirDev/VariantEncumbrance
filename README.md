@@ -141,6 +141,17 @@ Some preview:
 
 **NOTE: from 0.6.11 the button are colored !!!**
 
+### Fake the metric system calculation, but we using the imperial one
+
+This feature is enabled with the module setitng _'Fake the metric system calculation, but we using the imperial one'_
+
+**Use this only with the system setting 'Use Metric Weight Units' checked.** because that settig doesn't update the value in lbs. to kg. of the itme the calculation is 'visually wrong', si with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl
+
+The calculation should be correct, the metric values ​​2.3, 4.5, 6.8 are the official ones of the dnd5e system, the problem is that checking the metric system checkbox does not consequently update the item values ​​as we would expect _1lb = 0.45kg_ but remains _1lb = 1kg_ therefore an object that weighs 6lb will result in weighing 6kg and this gives the illusion of displacing the weight, the description clearly says so **Replaces all reference to lbs with kgs and updates the encumbrance calculations to use metric weight units.** where with reference we mean the label 'lbs' in 'kg' not the value .... this is done on purpose to avoid a massive update of the items, consequently it does not update the weight on the objects, you can also check with the module deactivated. However, I attach an image for clarity.
+
+![img](./wiki/explain_metric_system.png)
+
+
 ### Variant Encumbrance Flag
 
 Should you wish to integrate some of Variant Encumbrance's calculations into your own modules, there is now a flag which stores the actor's encumbrance tier, weight, and modified speed. Encumbrance tier is presented as 0, 1, 2, 3, as Unencumbered, Encumbered, Heavily Encumbered, Over Encumbered, respectively.
@@ -173,6 +184,7 @@ variant-encumbrance-dnd5e:
 | Name | Hint | Default Value | More Details |
 |:-----|:-----|:-------------:|:-------------|
 |Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. | character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
+| Fake the metric system calculation, but we using the imperial one | Use this only with the system setting 'Use Metric Weight Units' checked. Because that settig doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl | false | |
 |Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|5||
 |Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|2.3||
 |Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|10||

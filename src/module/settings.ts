@@ -77,6 +77,15 @@ export const registerSettings = function () {
     default: 'character,vehicle',
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'fakeMetricSystem', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.fakeMetricSystem.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.fakeMetricSystem.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'lightMultiplier', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.lightMultiplier.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.lightMultiplier.hint'),
@@ -431,6 +440,15 @@ function otherSettings(apply = false) {
       config: true,
       type: String,
       default: 'character,vehicle',
+    },
+
+    fakeMetricSystem: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.fakeMetricSystem.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.fakeMetricSystem.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
     },
 
     lightMultiplier: {

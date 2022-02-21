@@ -573,7 +573,10 @@ export const VariantEncumbranceImpl = {
         );
 
         const currencyPerWeight = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
+          ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+            ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight')
+            :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
+          )
           : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight');
 
         totalWeight += numCoins / currencyPerWeight;
@@ -615,7 +618,11 @@ export const VariantEncumbranceImpl = {
       let strengthMultiplier = 1;
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'useStrengthMultiplier')) {
         strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
+          ? (
+            game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+            ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier')
+            : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
+          )
           : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier');
       }
 
@@ -624,17 +631,28 @@ export const VariantEncumbranceImpl = {
         : <string>game.settings.get(CONSTANTS.MODULE_NAME, 'units');
 
       const lightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplierMetric')
+        ? (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+          ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier')
+          :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplierMetric')
+        )
         : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier');
       let lightMax = lightMultiplier; // lightMultiplier * strengthScore;
 
       const mediumMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplierMetric')
+        ? (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+          ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier')
+          :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplierMetric')
+        )
         : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier');
       let mediumMax = mediumMultiplier; // mediumMultiplier * strengthScore;
 
       const heavyMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplierMetric')
+        ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+          ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier')
+          :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplierMetric')
+        )
         : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier');
       let heavyMax = heavyMultiplier; // heavyMultiplier * strengthScore;
 
@@ -662,7 +680,10 @@ export const VariantEncumbranceImpl = {
         // MOD 4535992 FROM 2000 to 1 SO I REMOVED ???
         /*
         const vehicleWeightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric')
+          ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+            ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier')
+            :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric')
+          )
           : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier');
 
         // Vehicle weights are an order of magnitude greater.
@@ -1196,7 +1217,10 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
     const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
 
     const currencyPerWeight = game.settings.get('dnd5e', 'metricWeightUnits')
-      ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
+      ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+        ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight')
+        :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
+      )
       : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight');
 
     weight = Math.round(weight + numCoins / currencyPerWeight);
@@ -1265,7 +1289,10 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   let strengthMultiplier = 1;
   if (game.settings.get(CONSTANTS.MODULE_NAME, 'useStrengthMultiplier')) {
     strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-      ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
+      ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+        ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier')
+        :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
+      )
       : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier');
   }
 
@@ -1276,17 +1303,26 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
   // const strengthScore = actorEntity.data.data.abilities.str.value * modForSize;
 
   const lightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplierMetric')
+    ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+      ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier')
+      :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplierMetric')
+    )
     : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier');
   let lightMax = lightMultiplier; // lightMultiplier * strengthScore;
 
   const mediumMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplierMetric')
+    ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+      ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier')
+      :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplierMetric')
+    )
     : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier');
   let mediumMax = mediumMultiplier; // mediumMultiplier * strengthScore;
 
   const heavyMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-    ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplierMetric')
+    ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+      ?<number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier')
+      :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplierMetric')
+    )
     : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier');
   let heavyMax = heavyMultiplier; // heavyMultiplier * strengthScore;
 

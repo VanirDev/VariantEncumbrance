@@ -63,24 +63,44 @@ export const initHooks = () => {
   //@ts-ignore
   CONFIG.DND5E.encumbrance.strMultiplier.imperial =
     game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier') ?? 15;
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.strMultiplier.metric =
-    game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
+
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')) {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.strMultiplier.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier') ?? 15;
+  } else {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.strMultiplier.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric') ?? 6.8;
+  }
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.currencyPerWeight.imperial =
     game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight') ?? 50;
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
-    game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric') ?? 110;
+
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')) {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight') ?? 50;
+  } else {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.currencyPerWeight.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric') ?? 110;
+  }
 
   //@ts-ignore
   CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial =
     game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
-  //@ts-ignore
-  CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
-    game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
 
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')) {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier') ?? 2000; // 2000 lbs in an imperial ton
+  } else {
+    //@ts-ignore
+    CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.metric =
+      game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric') ?? 1000; // 1000 kg in a metric ton
+  }
   // CONFIG.debug.hooks = true; // For debugging only
 
   invPlusActive = <boolean>game.modules.get(CONSTANTS.INVENTORY_PLUS_MODULE_NAME)?.active;
