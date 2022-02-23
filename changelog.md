@@ -1,3 +1,8 @@
+### 0.8.3
+
+- Bug fix for the metric system: fail to calculate with modules setting 'enable Varian Encumbrance Weight On Actor Flag'
+- Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5 
+
 ### 0.8.2
 
 - Add new Feature: Fake the metric system calculation, but we using the imperial one under the hood

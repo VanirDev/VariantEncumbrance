@@ -19,6 +19,8 @@ For D&D5e 1.4.2 and newer the system supports a core implementation of this encu
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
+![tutorial](./wiki/tutorial_ve_2022.gif)
+
 ## Installation
 
 It's always easiest to install modules from the in game add-on browser.
@@ -147,7 +149,7 @@ This feature is enabled with the module setitng _'Fake the metric system calcula
 
 **Use this only with the system setting 'Use Metric Weight Units' checked.** because that setting doesn't update the value in lbs. to kg. of the item so the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl
 
-The calculation should be correct, the metric values ​​2.3, 4.5, 6.8 are the official ones of the dnd5e system, the problem is that checking the metric system checkbox does not consequently update the item values ​​as we would expect _1lb = 0.45kg_ but remains _1lb = 1kg_ therefore an object that weighs 6lb will result in weighing 6kg and this gives the illusion of displacing the weight, the description clearly says so **Replaces all reference to lbs with kgs and updates the encumbrance calculations to use metric weight units.** where with reference we mean the label 'lbs' in 'kg' not the value .... this is done on purpose to avoid a massive update of the items, consequently it does not update the weight on the objects, you can also check with the module deactivated. However, I attach an image for clarity.
+The calculation should be correct, the metric values ​​2.5, 5, 7.5 are the official ones of the dnd5e system, the problem is that checking the metric system checkbox does not consequently update the item values ​​as we would expect _1lb = 0.45kg_ but remains _1lb = 1kg_ therefore an object that weighs 6lb will result in weighing 6kg and this gives the illusion of displacing the weight, the description clearly says so **Replaces all reference to lbs with kgs and updates the encumbrance calculations to use metric weight units.** where with reference we mean the label 'lbs' in 'kg' not the value .... this is done on purpose to avoid a massive update of the items, consequently it does not update the weight on the objects, you can also check with the module deactivated. However, I attach an image for clarity.
 
 ![img](./wiki/explain_metric_system.png)
 
@@ -184,16 +186,16 @@ variant-encumbrance-dnd5e:
 | Name | Hint | Default Value | More Details |
 |:-----|:-----|:-------------:|:-------------|
 |Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. | character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
-| Fake the metric system calculation, but we using the imperial one | Use this only with the system setting 'Use Metric Weight Units' checked. Because that settig doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl | false | |
+| Fake the metric system calculation, but we using the imperial one | Use this only with the system setting 'Use Metric Weight Units' checked. Because that settig doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl | false | THIS WILL MADE IGNORE THE FOLLOWING MODULE SETTINGS 'Unencumbered Strength Multiplier (Metric System)', 'Encumbered Strength Multiplier (Metric System)' and 'Heavily Encumbered (old Strength Multiplier) (Metric System)' |
 |Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|5||
-|Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|2.3||
+|Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|2.5||
 |Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|10||
-|Encumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).|4.5||
+|Encumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score (Metric System).|5||
 |Heavily Encumbered (old Strength Multiplier)| Multiplier used to calculate maximum carrying weight from the strength ability score.|15||
-|Heavily Encumbered (old Strength Multiplier) (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|6.8||
+|Heavily Encumbered (old Strength Multiplier) (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|7.5||
 |Enable or disable the strength multiplier feature| Enable or disable the strength multiplier feature.|false|I DON'T RECOMMENDED it, this will multiply the carriage value with CONFIG.DND5E.encumbrance.strMultiplier.imperial/CONFIG.DND5E.encumbrance.strMultiplier.metric value, USUALLY YOU DON'T NEED THIS because the module already do this with the setting "Heavily Encumbered" multiplier|
 |Strength Multiplier| Work only with strength multiplier feature enabled. Multiplier used to calculate maximum carrying weight from the strength ability score.|15|Usually you never need this except for some homebrew rule|
-|Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|6.8|Usually you never need this except for some homebrew rule|
+|Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight from the strength ability score (Metric System).|7.5|Usually you never need this except for some homebrew rule|
 |Variant Encumbrance Speed Penalties| Enable automatic speed penalties from carry weight.|true||
 |Unequipped Item Weight Multiplier| Multiplier for items when not equipped.|1||
 |Equipped Item Weight Multiplier| Multiplier for items when equipped, can be used to reduce effective weight for armour and weapons.|1||

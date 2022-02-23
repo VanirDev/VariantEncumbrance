@@ -101,7 +101,7 @@ export const registerSettings = function () {
     scope: 'world',
     config: true,
     type: Number,
-    default: 2.3,
+    default: 2.5,
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'mediumMultiplier', {
@@ -119,7 +119,7 @@ export const registerSettings = function () {
     scope: 'world',
     config: true,
     type: Number,
-    default: 4.5,
+    default: 5,
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'heavyMultiplier', {
@@ -141,7 +141,7 @@ export const registerSettings = function () {
     scope: 'world',
     config: true,
     type: Number,
-    default: 6.8,
+    default: 7.5,
     onChange: (value) => {
       // NOT NECESSARY WE USE THE VALUE ON THE SETTING
       // DND5E.encumbrance.strMultiplier = value;
@@ -176,7 +176,7 @@ export const registerSettings = function () {
     scope: 'world',
     config: true,
     type: Number,
-    default: 6.8,
+    default: 7.5,
     onChange: (value) => {
       // NOT NECESSARY WE USE THE VALUE ON THE SETTING
       // DND5E.encumbrance.strMultiplier = value;
@@ -466,7 +466,7 @@ function otherSettings(apply = false) {
       scope: 'world',
       config: true,
       type: Number,
-      default: 2.3,
+      default: 2.5,
     },
 
     mediumMultiplier: {
@@ -484,7 +484,7 @@ function otherSettings(apply = false) {
       scope: 'world',
       config: true,
       type: Number,
-      default: 4.5,
+      default: 5,
     },
 
     heavyMultiplier: {
@@ -506,7 +506,7 @@ function otherSettings(apply = false) {
       scope: 'world',
       config: true,
       type: Number,
-      default: 6.8,
+      default: 7.5,
       onChange: (value) => {
         // NOT NECESSARY WE USE THE VALUE ON THE SETTING
         // DND5E.encumbrance.strMultiplier = value;
@@ -541,7 +541,7 @@ function otherSettings(apply = false) {
       scope: 'world',
       config: true,
       type: Number,
-      default: 6.8,
+      default: 7.5,
       onChange: (value) => {
         // NOT NECESSARY WE USE THE VALUE ON THE SETTING
         // DND5E.encumbrance.strMultiplier = value;

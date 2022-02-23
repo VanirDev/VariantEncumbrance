@@ -92,7 +92,8 @@ Hooks.once('libChangelogsReady', function () {
     CONSTANTS.MODULE_NAME,
     CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME,
     `
-    - Small bug fix
+    - Bug fix for the metric system: fail to calculate with modules setting 'enable Varian Encumbrance Weight On Actor Flag'
+    - Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5 
     `,
     'minor',
   );
