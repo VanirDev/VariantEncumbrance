@@ -303,6 +303,15 @@ export const registerSettings = function () {
     default: 10,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseMetric', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseMetric.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 3,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecrease.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecrease.hint'),
@@ -310,6 +319,15 @@ export const registerSettings = function () {
     config: true,
     type: Number,
     default: 20,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseMetric', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseMetric.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseMetric.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 6,
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier', {
@@ -668,6 +686,15 @@ function otherSettings(apply = false) {
       default: 10,
     },
 
+    lightWeightDecreaseMetric: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseMetric.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseMetric.hint'),
+      scope: 'world',
+      config: true,
+      type: Number,
+      default: 3,
+    },
+
     heavyWeightDecrease: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecrease.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecrease.hint'),
@@ -675,6 +702,15 @@ function otherSettings(apply = false) {
       config: true,
       type: Number,
       default: 20,
+    },
+
+    heavyWeightDecreaseMetric: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseMetric.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseMetric.hint'),
+      scope: 'world',
+      config: true,
+      type: Number,
+      default: 6,
     },
 
     enablePreCheckEncumbranceTier: {

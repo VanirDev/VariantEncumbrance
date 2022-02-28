@@ -1,3 +1,10 @@
+### 0.8.4 [BREAKING CHANGE]
+
+- Big update of the manager effect
+- Bug fix for the metric system: Add support for metric ssystem on active effect (convert 10ft to 3mt and 20 ft to 6 mt)
+- Bug fix for the metric system: Add module setting 'lightWeightDecreaseMetric'
+- Bug fix for the metric system: Add module settings 'heavyWeightDecreaseMetric'
+
 ### 0.8.3
 
 - Bug fix for the metric system: fail to calculate with modules setting 'enable Varian Encumbrance Weight On Actor Flag'

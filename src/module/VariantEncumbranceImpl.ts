@@ -756,11 +756,15 @@ export const VariantEncumbranceImpl = {
 
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
       if (totalWeight > lightMax && totalWeight <= mediumMax) {
-        speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecrease');
+        speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseMetric')
+          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecrease');
         encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
       }
       if (totalWeight > mediumMax && totalWeight <= heavyMax) {
-        speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease');
+        speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseMetric')
+          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease');
         encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
       }
       if (totalWeight > heavyMax) {
@@ -804,7 +808,8 @@ export const VariantEncumbranceImpl = {
     switch (effectName.toLowerCase()) {
       case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
         const effect = VariantEncumbranceImpl._encumbered();
-        const speedDecreased = speedDecrease > 0 ? speedDecrease : 10;
+        const speedDecreased =
+          speedDecrease > 0 ? speedDecrease : game.settings.get('dnd5e', 'metricWeightUnits') ? 3 : 10;
         VariantEncumbranceImpl._addEncumbranceEffects(effect, actor, speedDecreased);
         return effect;
       }
@@ -815,7 +820,8 @@ export const VariantEncumbranceImpl = {
         } else {
           effect = VariantEncumbranceImpl._heavilyEncumberedNoMidi();
         }
-        const speedDecreased = speedDecrease > 0 ? speedDecrease : 20;
+        const speedDecreased =
+          speedDecrease > 0 ? speedDecrease : game.settings.get('dnd5e', 'metricWeightUnits') ? 6 : 20;
         VariantEncumbranceImpl._addEncumbranceEffects(effect, actor, speedDecreased);
         return effect;
       }
@@ -1034,7 +1040,11 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedOnActor(effectName, <string>actor.id, true);
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedOnActor(
+        effectName,
+        <string>actor.id,
+        true,
+      );
     } else {
       return await API.hasEffectAppliedOnActor(<string>actor.id, effectName, true);
     }
@@ -1070,7 +1080,10 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectOnActor(effectName, <string>actor.id);
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectOnActor(
+        effectName,
+        <string>actor.id,
+      );
     } else {
       return await API.removeEffectOnActor(<string>actor.id, effectName);
     }
@@ -1106,9 +1119,13 @@ export const VariantEncumbranceImpl = {
     if (encumbranceTier == ENCUMBRANCE_TIERS.NONE) {
       speedDecrease = 0;
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.LIGHT) {
-      speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecrease');
+      speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseMetric')
+        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecrease');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.HEAVY) {
-      speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease');
+      speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseMetric')
+        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.MAX) {
       speedDecrease = null;
     }

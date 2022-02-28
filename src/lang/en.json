@@ -71,8 +71,14 @@
   "variant-encumbrance-dnd5e.setting.lightWeightDecrease.name": "Lightly Encumbered Speed Decrease",
   "variant-encumbrance-dnd5e.setting.lightWeightDecrease.hint": "The number of speed units subtracted when lightly encumbered, default is 10.",
 
+  "variant-encumbrance-dnd5e.setting.lightWeightDecreaseMetric.name": "Lightly Encumbered Speed Decrease (Metric System)",
+  "variant-encumbrance-dnd5e.setting.lightWeightDecreaseMetric.hint": "The number of speed units subtracted when lightly encumbered, default is 3.",
+
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.name": "Encumbered Speed Decrease",
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered, default is 20.",
+
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseMetric.name": "Encumbered Speed Decrease (Metric System)",
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseMetric.hint": "The number of speed units subtracted when heavily encumbered, default is 6.",
 
   "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.name": "Enable pre check encumbrance tier",
   "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.hint": "I DON'T RECOMMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item",

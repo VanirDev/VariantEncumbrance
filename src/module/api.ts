@@ -7,8 +7,8 @@ import { error } from './lib/lib';
 const API = {
   effectInterface: EffectInterface,
 
-  async removeEffect({uuid, effectName}){
-    const result = await (<EffectInterface>this.effectInterface).removeEffect({effectName, uuid});
+  async removeEffect({ uuid, effectName }) {
+    const result = await (<EffectInterface>this.effectInterface).removeEffect({ effectName, uuid });
     return result;
   },
 
@@ -193,12 +193,20 @@ const API = {
   },
 
   async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(effectName, <string>actorId, includeDisabled);
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(
+      effectName,
+      <string>actorId,
+      includeDisabled,
+    );
     return result;
   },
 
   async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(effectId, <string>actorId, includeDisabled);
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(
+      effectId,
+      <string>actorId,
+      includeDisabled,
+    );
     return result;
   },
 
@@ -249,12 +257,20 @@ const API = {
   },
 
   async hasEffectAppliedOnToken(tokenId: string, effectName: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnToken(effectName, <string>tokenId, includeDisabled);
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnToken(
+      effectName,
+      <string>tokenId,
+      includeDisabled,
+    );
     return result;
   },
 
   async hasEffectAppliedFromIdOnToken(tokenId: string, effectId: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnToken(effectId, <string>tokenId, includeDisabled);
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnToken(
+      effectId,
+      <string>tokenId,
+      includeDisabled,
+    );
     return result;
   },
 
