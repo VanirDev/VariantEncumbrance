@@ -33,9 +33,12 @@ export function registerSocket() {
    */
   variantEncumbranceSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
 
-  /**
-   * Sense walls sockets
-   */
+  // /**
+  //  * Conditional Visibility sockets
+  //  */
+  // conditionalVisibilitySocket.register(SOCKET_HANDLERS.ON_RENDER_TOKEN_CONFIG, (...args) =>
+  //   API._onRenderTokenConfig(...args),
+  // );
 
   /**
    * UI sockets
@@ -48,34 +51,32 @@ export function registerSocket() {
   /**
    * Effects
    */
-  variantEncumbranceSocket.register('toggleEffect', (...args) =>
-    API.effectInterface._effectHandler.toggleEffectArr(...args),
-  );
-  variantEncumbranceSocket.register('addEffect', (...args) => API.effectInterface._effectHandler.addEffectArr(...args));
-  variantEncumbranceSocket.register('removeEffect', (...args) =>
-    API.effectInterface._effectHandler.removeEffectArr(...args),
-  );
-  // variantEncumbranceSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
-  // variantEncumbranceSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
-  variantEncumbranceSocket.register('addEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.addEffectOnActorArr(...args),
-  );
-  variantEncumbranceSocket.register('removeEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.removeEffectOnActorArr(...args),
-  );
+
+  // conditionalVisibilitySocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
+  // conditionalVisibilitySocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
+  variantEncumbranceSocket.register('toggleEffect', (...args) => API.toggleEffectArr(...args));
+  variantEncumbranceSocket.register('addEffect', (...args) => API.addEffectArr(...args));
+  variantEncumbranceSocket.register('removeEffect', (...args) => API.removeEffectArr(...args));
+
+  variantEncumbranceSocket.register('addEffectOnActor', (...args) => API.addEffectOnActorArr(...args));
+  variantEncumbranceSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
   variantEncumbranceSocket.register('removeEffectFromIdOnActor', (...args) =>
-    API.effectInterface._effectHandler.removeEffectFromIdOnActorArr(...args),
+    API.removeEffectFromIdOnActorArr(...args),
   );
   variantEncumbranceSocket.register('toggleEffectFromIdOnActor', (...args) =>
-    API.effectInterface._effectHandler.toggleEffectFromIdOnActorArr(...args),
+    API.toggleEffectFromIdOnActorArr(...args),
   );
-  variantEncumbranceSocket.register('findEffectByNameOnActor', (...args) =>
-    API.effectInterface._effectHandler.findEffectByNameOnActorArr(...args),
-  );
-  variantEncumbranceSocket.register('addActiveEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.addActiveEffectOnActorArr(...args),
-  );
+  variantEncumbranceSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
 
+  variantEncumbranceSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
+  variantEncumbranceSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
+  variantEncumbranceSocket.register('removeEffectFromIdOnToken', (...args) =>
+    API.removeEffectFromIdOnTokenArr(...args),
+  );
+  variantEncumbranceSocket.register('toggleEffectFromIdOnToken', (...args) =>
+    API.toggleEffectFromIdOnTokenArr(...args),
+  );
+  variantEncumbranceSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
   return variantEncumbranceSocket;
 }
 

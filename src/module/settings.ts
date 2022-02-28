@@ -46,10 +46,6 @@ function getGame(): Game {
   return game;
 }
 
-export function getAPI(): API {
-  return game[CONSTANTS.MODULE_NAME].API;
-}
-
 export const registerSettings = function () {
   game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
     name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,

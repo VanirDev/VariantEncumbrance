@@ -26,6 +26,8 @@ import { canvas, game } from './settings';
 import CONSTANTS from './constants';
 import { error, i18n } from './lib/lib';
 import API from './api';
+import EffectHandler from './effects/effect-handler';
+import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -938,31 +940,31 @@ export const VariantEncumbranceImpl = {
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
@@ -981,31 +983,31 @@ export const VariantEncumbranceImpl = {
   _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
     // const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
     });
 
-    effect.changes.push({
+    effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       value: '0',
@@ -1032,9 +1034,9 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.hasEffectAppliedOnActor(effectName, <string>actor.id);
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedOnActor(effectName, <string>actor.id, true);
     } else {
-      return await API.effectInterface.hasEffectAppliedOnActor(effectName, <string>actor.id);
+      return await API.hasEffectAppliedOnActor(<string>actor.id, effectName, true);
     }
   },
 
@@ -1049,12 +1051,13 @@ export const VariantEncumbranceImpl = {
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.hasEffectAppliedFromIdOnActor(
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedFromIdOnActor(
         <string>effect.id,
         <string>actor.id,
+        true,
       );
     } else {
-      return await API.effectInterface.hasEffectAppliedFromIdOnActor(<string>effect.id, <string>actor.id);
+      return await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>effect.id, true);
     }
   },
 
@@ -1067,12 +1070,9 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.removeEffect({ effectName: effectName, uuid: <string>actor.id });
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectOnActor(effectName, <string>actor.id);
     } else {
-      return await API.effectInterface.removeEffect({
-        effectName: effectName,
-        uuid: <string>actor.id,
-      });
+      return await API.removeEffectOnActor(<string>actor.id, effectName);
     }
   },
 
@@ -1085,12 +1085,12 @@ export const VariantEncumbranceImpl = {
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await API.effectInterface._effectHandler.removeEffectFromIdOnActor(
+      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectFromIdOnActor(
         <string>effectToRemove.id,
         <string>actor.id,
       );
     } else {
-      return await API.effectInterface.removeEffectFromIdOnActor(<string>effectToRemove.id, <string>actor.id);
+      return await API.removeEffectFromIdOnActor(<string>actor.id, <string>effectToRemove.id);
     }
   },
 
@@ -1123,16 +1123,17 @@ export const VariantEncumbranceImpl = {
           tier: encumbranceTier,
         },
       };
+      effect.isTemporary = true;
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-        return await API.effectInterface._effectHandler.addEffectOnActor(
+        return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).addEffectOnActor(
           effectName,
           <string>actor.id,
-          origin,
+          '',
           false,
           effect,
         );
       } else {
-        return await API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
+        return await API.addEffectOnActor(<string>actor.id, effectName, effect);
       }
     }
   },

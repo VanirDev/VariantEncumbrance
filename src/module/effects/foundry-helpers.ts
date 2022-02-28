@@ -32,10 +32,22 @@ export default class FoundryHelpers {
    * @param {string} uuid - the actor UUID
    * @returns {Actor5e} the actor that was found via the UUID
    */
-  async getActorByUuid(uuid: string) {
+  async getActorByUuid(uuid: string): Promise<Actor> {
     //const actorToken = <TokenDocument>await fromUuid(uuid);
     //const actor = actorToken?.actor ? actorToken?.actor : actorToken;
     const actor = <Actor>game.actors?.get(uuid);
     return actor;
+  }
+
+  /**
+   * Gets the actor object by the actor UUID
+   *
+   * @param {string} uuid - the actor UUID
+   * @returns {Actor5e} the actor that was found via the UUID
+   */
+  async getTokenByUuid(uuid: string): Promise<Token> {
+    const tokens = <Token[]>canvas.tokens?.placeables;
+    const token = <Token>tokens.find((token) => token.id == uuid);
+    return token;
   }
 }
