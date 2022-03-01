@@ -208,7 +208,9 @@ variant-encumbrance-dnd5e:
 |Weight Units| Units displayed in the encumbrance bar (just graphics).|lbs.||
 |Weight Units (Metric System)| Units displayed in the encumbrance bar (just graphics) (Metric System).|kg.||
 |Lightly Encumbered Speed Decrease| The number of speed units subtracted when lightly encumbered, default is 10.|10||
+|Lightly Encumbered Speed Decrease (Metric System)| The number of speed units subtracted when lightly encumbered, default is 3.|3||
 |Encumbered Speed Decrease| The number of speed units subtracted when heavily encumbered, default is 20.|20||
+|Encumbered Speed Decrease (Metric System)| The number of speed units subtracted when heavily encumbered, default is 6.|6||
 |Enable pre check encumbrance tier| I DON'T RECOMMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item|false||
 |Enable/Disable the feature for applying the variant encumbrance active effects for specific actor| If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues|true||
 |Remove label from buttons on the header character sheet| Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true|true||
