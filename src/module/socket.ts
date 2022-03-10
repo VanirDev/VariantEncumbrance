@@ -36,7 +36,7 @@ export function registerSocket() {
   // /**
   //  * Conditional Visibility sockets
   //  */
-  // conditionalVisibilitySocket.register(SOCKET_HANDLERS.ON_RENDER_TOKEN_CONFIG, (...args) =>
+  // variantEncumbranceSocket.register(SOCKET_HANDLERS.ON_RENDER_TOKEN_CONFIG, (...args) =>
   //   API._onRenderTokenConfig(...args),
   // );
 
@@ -52,8 +52,8 @@ export function registerSocket() {
    * Effects
    */
 
-  // conditionalVisibilitySocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
-  // conditionalVisibilitySocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
+  // variantEncumbranceSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
+  // variantEncumbranceSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
   variantEncumbranceSocket.register('toggleEffect', (...args) => API.toggleEffectArr(...args));
   variantEncumbranceSocket.register('addEffect', (...args) => API.addEffectArr(...args));
   variantEncumbranceSocket.register('removeEffect', (...args) => API.removeEffectArr(...args));
@@ -77,6 +77,19 @@ export function registerSocket() {
     API.toggleEffectFromIdOnTokenArr(...args),
   );
   variantEncumbranceSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
+  variantEncumbranceSocket.register('updateEffectFromIdOnToken', (...args) =>
+    API.updateEffectFromIdOnTokenArr(...args),
+  );
+  variantEncumbranceSocket.register('updateEffectFromNameOnToken', (...args) =>
+    API.updateEffectFromNameOnTokenArr(...args),
+  );
+  variantEncumbranceSocket.register('updateActiveEffectFromIdOnToken', (...args) =>
+    API.updateActiveEffectFromIdOnTokenArr(...args),
+  );
+  variantEncumbranceSocket.register('updateActiveEffectFromNameOnToken', (...args) =>
+    API.updateActiveEffectFromNameOnTokenArr(...args),
+  );
+
   return variantEncumbranceSocket;
 }
 

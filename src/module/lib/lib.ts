@@ -78,6 +78,28 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
     </p>`;
 }
 
+export function cleanUpString(stringToCleanUp: string) {
+  // regex expression to match all non-alphanumeric characters in string
+  const regex = /[^A-Za-z0-9]/g;
+  if (stringToCleanUp) {
+    return i18n(stringToCleanUp).replace(regex, '').toLowerCase();
+  } else {
+    return stringToCleanUp;
+  }
+}
+
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+  if (stringToCheck1 && stringToCheck2) {
+    if (startsWith) {
+      return cleanUpString(stringToCheck1).startsWith(cleanUpString(stringToCheck2));
+    } else {
+      return cleanUpString(stringToCheck1) === cleanUpString(stringToCheck2);
+    }
+  } else {
+    return stringToCheck1 === stringToCheck2;
+  }
+}
+
 // =============================
 // Module specific function
 // =============================

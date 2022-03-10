@@ -669,4 +669,62 @@ export default class EffectInterface {
       return this._effectHandler.findEffectByNameOnToken(effectName, uuid);
     }
   }
+
+  async updateEffectFromIdOnToken(effectId: string, uuid: string, origin, overlay, effectUpdated: Effect) {
+    if (isGMConnected()) {
+      return this._socket.executeAsGM('updateEffectFromIdOnToken', effectId, uuid, origin, overlay, effectUpdated);
+    } else {
+      return this._effectHandler.updateEffectFromIdOnToken(effectId, uuid, origin, overlay, effectUpdated);
+    }
+  }
+
+  async updateEffectFromNameOnToken(effectName: string, uuid: string, origin, overlay, effectUpdated: Effect) {
+    if (isGMConnected()) {
+      return this._socket.executeAsGM('updateEffectFromNameOnToken', effectName, uuid, origin, overlay, effectUpdated);
+    } else {
+      return this._effectHandler.updateEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
+    }
+  }
+
+  async updateActiveEffectFromIdOnToken(
+    effectId: string,
+    uuid: string,
+    origin,
+    overlay,
+    effectUpdated: ActiveEffectData,
+  ) {
+    if (isGMConnected()) {
+      return this._socket.executeAsGM(
+        'updateActiveEffectFromIdOnToken',
+        effectId,
+        uuid,
+        origin,
+        overlay,
+        effectUpdated,
+      );
+    } else {
+      return this._effectHandler.updateActiveEffectFromIdOnToken(effectId, uuid, origin, overlay, effectUpdated);
+    }
+  }
+
+  async updateActiveEffectFromNameOnToken(
+    effectName: string,
+    uuid: string,
+    origin,
+    overlay,
+    effectUpdated: ActiveEffectData,
+  ) {
+    if (isGMConnected()) {
+      return this._socket.executeAsGM(
+        'updateActiveEffectFromNameOnToken',
+        effectName,
+        uuid,
+        origin,
+        overlay,
+        effectUpdated,
+      );
+    } else {
+      return this._effectHandler.updateActiveEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
+    }
+  }
 }
