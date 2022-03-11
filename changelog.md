@@ -1,3 +1,7 @@
+### 0.8.5
+
+- Avoid reset of the socket handler
+
 ### 0.8.4 [BREAKING CHANGE]
 
 - Big update of the manager effect

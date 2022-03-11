@@ -25,6 +25,9 @@ export let variantEncumbranceSocket;
 
 export function registerSocket() {
   debug('Registered variantEncumbranceSocket');
+  if(variantEncumbranceSocket){
+    return variantEncumbranceSocket;
+  }
   //@ts-ignore
   variantEncumbranceSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
 
