@@ -189,36 +189,44 @@ export const setupHooks = async () => {
 
 export const readyHooks = async () => {
   // effectInterface.initialize();
-  if(game.settings.get(CONSTANTS.MODULE_NAME,'enableBulkSystem')){
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
     // ===================
     // Bulk management
     // ===================
     //@ts-ignore
-    CONFIG.DND5E.itemCapacityTypes['bulk'] = 'DND5E.ItemContainerCapacityBulk';
+    //CONFIG.DND5E.itemCapacityTypes['bulk'] = 'DND5E.ItemContainerCapacityBulk';
     //@ts-ignore
-    CONFIG.DND5E.consumableResources.item.bulk = true;
+    // CONFIG.DND5E.consumableResources.item.bulk = true;
+    //@ts-ignore
+    //CONFIG.DND5E.consumableResources.push("item.bulk");
     // //@ts-ignore
     // Actor.prototype.sheet.data.bulkUnit = {};
     // //@ts-ignore
     // Actor.prototype.sheet.data.bulkUnit = i18n("DND5E.ItemContainerCapacityBulk");
-
+    // Register Tidy5e Item Sheet and make default
+    //@ts-ignore
+    // Items.registerSheet('dnd5e', Tidy5eItemSheetBulk, { makeDefault: false });
     Hooks.on('renderItemSheet', (app: ItemSheet, html: JQuery<HTMLElement>, data: any) => {
+      if (!app.object) {
+        return;
+      }
+      const item: Item = app.object;
       html
         .find('.item-properties') // <div class="item-properties">
         .append(
           `
-          <div class="form-group">
-            <label>${i18n('DND5E.Bulk')}</label>
-            <input type="text" name="data.bulk" value="${data.data.bulk ?? 0}" data-dtype="Number"/>
-          </div>
-          `,
+            <div class="form-group">
+              <label>${i18n('DND5E.Bulk')}</label>
+              <input type="text" name="data.bulk" value="${data.data.bulk ?? 0}" data-dtype="Number"/>
+            </div>
+            `,
         );
     });
     // =====================
     // End bulk management
     // =====================
   }
-  
+
   ENCUMBRANCE_STATE = {
     UNENCUMBERED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.unencumbered'), // "Unencumbered",
     ENCUMBERED: i18n(CONSTANTS.MODULE_NAME + '.effect.name.encumbered'), // "Encumbered",
@@ -231,7 +239,7 @@ export const readyHooks = async () => {
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
       const actorEntityTmp: any = <Actor>game.actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
       if (isEnabledActorType(actorEntityTmp)) {
-        if(game.settings.get(CONSTANTS.MODULE_NAME,'enableBulkSystem')){
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
           // =============================
           // Start bulk management
           // =============================
@@ -272,7 +280,9 @@ export const readyHooks = async () => {
               const totalBulk = (quantity * bulk).toNearest(0.1);
               liItem.append(
                 `
-                <div class="item-detail item-bulk" title="Bulk: ${totalBulk ?? 0} ${i18n('DND5E.ItemContainerCapacityBulk')}">
+                <div class="item-detail item-bulk" title="Bulk: ${totalBulk ?? 0} ${i18n(
+                  'DND5E.ItemContainerCapacityBulk',
+                )}">
                   ${totalBulk ?? 0} ${i18n('DND5E.ItemContainerCapacityBulk')}
                 </div>
                 `,
