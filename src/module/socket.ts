@@ -25,7 +25,7 @@ export let variantEncumbranceSocket;
 
 export function registerSocket() {
   debug('Registered variantEncumbranceSocket');
-  if(variantEncumbranceSocket){
+  if (variantEncumbranceSocket) {
     return variantEncumbranceSocket;
   }
   //@ts-ignore

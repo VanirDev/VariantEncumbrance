@@ -375,6 +375,15 @@ export const registerSettings = function () {
     default: false,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableBulkSystem', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
@@ -752,6 +761,15 @@ function otherSettings(apply = false) {
     useEquippedUnequippedItemCollectionFeature: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.useEquippedUnequippedItemCollectionFeature.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
+    enableBulkSystem: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.hint'),
       scope: 'world',
       config: true,
       type: Boolean,

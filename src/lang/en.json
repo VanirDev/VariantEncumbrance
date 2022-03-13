@@ -130,11 +130,17 @@
   "variant-encumbrance-dnd5e.setting.vehicleUnit.name": "Enable Unit of weight for Vehicles",
   "variant-encumbrance-dnd5e.setting.vehicleUnit.hint": "Enables ability to change the base unit for weight used by vehicles",
 
+  "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "Enable Bulk system",
+  "variant-encumbrance-dnd5e.setting.enableBulkSystem.hint": "Enables the bulk system explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html",
+
   "variant-encumbrance-dnd5e.config.name": "Weight Unit",
   "variant-encumbrance-dnd5e.config.hint": "Unit of measurement to be used for weight calculation.",
   "variant-encumbrance-dnd5e.label.units_LongTon": "Long Ton (2240 lb.)",
   "variant-encumbrance-dnd5e.label.units_ShortTon": "Short Ton (2000 lb.)",
   "variant-encumbrance-dnd5e.label.units_Pounds": "Pounds (1 lb.)",
   "variant-encumbrance-dnd5e.label.convertTitle": "Convert Cargo Capacity",
-  "variant-encumbrance-dnd5e.label.convertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?"
+  "variant-encumbrance-dnd5e.label.convertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?",
+
+  "DND5E.ItemContainerCapacityBulk": "Bulk",
+  "DND5E.Bulk": "Bulk"
 }

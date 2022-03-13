@@ -90,10 +90,12 @@ export function cleanUpString(stringToCleanUp: string) {
 
 export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
   if (stringToCheck1 && stringToCheck2) {
+    const s1 = cleanUpString(stringToCheck1) ?? '';
+    const s2 = cleanUpString(stringToCheck2) ?? '';
     if (startsWith) {
-      return cleanUpString(stringToCheck1).startsWith(cleanUpString(stringToCheck2));
+      return s1.startsWith(s2) || s2.startsWith(s1);
     } else {
-      return cleanUpString(stringToCheck1) === cleanUpString(stringToCheck2);
+      return s1 === s2;
     }
   } else {
     return stringToCheck1 === stringToCheck2;
