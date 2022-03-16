@@ -35,6 +35,18 @@ export class EncumbranceData {
   unit: string;
 }
 
+export class EncumbranceBulkData {
+  totalWeight: number;
+  totalWeightToDisplay: number;
+  lightMax: number;
+  mediumMax: number;
+  heavyMax: number;
+  // totalMax:number;
+  encumbranceTier: number;
+  speedDecrease: number;
+  unit: string;
+}
+
 export enum EncumbranceFlags {
   // TIER = 'tier',
   // WEIGHT = 'weight',
@@ -46,7 +58,11 @@ export enum EncumbranceFlags {
   DATA = 'data',
   ENABLED_AE = 'enabledae',
   ENABLED_WE = 'enabledwe',
-  UNIT = 'unit',
+  // UNIT = 'unit',
+  // System bulk
+  BULK = 'bulk',
+  ENABLED_AE_BULK = 'enabledaebulk',
+  ENABLED_WE_BULK = 'enabledwebulk',
 }
 
 // export class EncumbranceFlagData {
@@ -70,3 +86,10 @@ export enum EncumbranceActorType {
   NPC = 'NPC', // Non-Player Character
   VEHICLE = 'vehicle', // Vehicle
 }
+
+export const ENCUMBRANCE_TIERS = {
+  NONE: 0,
+  LIGHT: 1,
+  HEAVY: 2,
+  MAX: 3,
+};

@@ -119,13 +119,13 @@ In the module settings, custom multipliers are available for unequipped, equippe
 
 ### Buttons header sheet for enable/disable the features (Weight Calculation and Active Effects) actor by actor
 
-Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best soltuion for the single individual
+Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best solution for the single individual
 
 | Symbol Button Header Sheet  | Description  |
 |:----:|:----:|
-|![weight-hanging-solid](./wiki/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
-|![balance-scale-right-solid](./wiki/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects feature on your actor make sure to have the "balance" symbol on the header sheet. ATTENTION the weight calculation feature is still active|
-|![feather-solid](./wiki/feather-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "feather" symbol on the header sheet. *The weight is not calculated anymore and remain frozen (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calculation of the system dnd5e)* |
+|![weight-hanging-solid](./wiki/icons/weight-hanging-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "weight" symbol on the header sheet (this is the default) |
+|![balance-scale-right-solid](./wiki/icons/balance-scale-right-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects feature on your actor make sure to have the "balance" symbol on the header sheet. ATTENTION the weight calculation feature is still active|
+|![feather-solid](./wiki/icons/feather-solid.svg)| If you don't  want to have the Variant Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "feather" symbol on the header sheet. *The weight is not calculated anymore and remain frozen (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calculation of the system dnd5e)* |
 
 Some preview:
 
@@ -174,19 +174,53 @@ variant-encumbrance-dnd5e:
     heavyMax: 150,
     encumbranceTier: 0,
     speedDecrease: 0,
-    unit 'lbs'
+    unit: 'lbs'
+  },
+  bulk: {
+    totalWeight: 0,
+    totalWeightToDisplay: 0,
+    lightMax: 50,
+    mediumMax: 100,
+    heavyMax: 150,
+    encumbranceTier: 0,
+    speedDecrease: 0,
+    unit: 'bulk'
   },
   enabledae: true,
-  enabledwe: true
+  enabledwe: true,
+  enabledaebulk: false,
+  enabledwebulk: true,
 }
 ```
+
+- **burrow:** the value in units for the burrow movement get from property `actor.data.data.attributes.movement.burrow`.
+- **climb:** the value in units for the climb movement get from property `actor.data.data.attributes.movement.climb`.
+- **fly:** the value in units for the fly movement get from property `actor.data.data.attributes.movement.fly`.
+- **swim:** the value in units for the swim movement get from property `actor.data.data.attributes.movement.swim`.
+- **walk:** the value in units for the walk movement get from property `actor.data.data.attributes.movement.walk`.
+- **totalWeight:** the 'real' total weight synced with the core system of dnd5e.
+- **totalWeightToDisplay:** the 'fake'  total weight not synced with the core system of dnd5e, is used for manage on a display level feature from other module like "Vehicle Cargo Capacity Unit" from the module 'DF QUALITY OF LIFE'.
+- **lightMax:** the weight value for pass from 'unencumbered' to 'encumbered' and back.
+- **mediumMax:** the weight value for pass from 'encumbered' to 'heavily encumbered' and back.
+- **heavyMax:** the weight value for pass from 'heavily encumbered' to 'overburdened' and back.
+- **encumbranceTier:** the number given the current tier applied don the actor 
+    - 0 = Unencumbered
+    - 1 = Encumbered
+    - 2 = Heavily Encumbered
+    - 3 = Over Encumbered (Overburdened)
+- **speedDecrease:** the value in units of the decreased movement (this change if the metric system is active or not).
+- **unit:** the label applied to the unit weight, just a visual effect (default is lbs. on metric system is kg.).
+- **enabledae:** if true it's mean on the actor is applied the management of the active effects of the weight from the module. _NOTE: if you set true this is better to set to false 'enabledwe'_
+- **enabledwe:** if true it's mean on the actor is applied the calculation of the weight from the module.
+- **enabledaebulk:** if true it's mean on the actor is applied the system bulk the management of the active effects of the weight from the module. _NOTE: if you set true this is better to set to false 'enabledwe'_
+- **enabledwebulk:** if true it's mean on the actor is applied the system bulk and the calculation of the weight from the module.
 
 # Settings
 
 | Name | Hint | Default Value | More Details |
 |:-----|:-----|:-------------:|:-------------|
 |Use Variant Encumbrance with specific type of actor | Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive. | character,vehicle | A list of actor type where the module is enabled, if empty is like disable the module |
-| Fake the metric system calculation, but we using the imperial one | Use this only with the system setting 'Use Metric Weight Units' checked. Because that settig doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance costants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl | false | THIS WILL MADE IGNORE THE FOLLOWING MODULE SETTINGS 'Unencumbered Strength Multiplier (Metric System)', 'Encumbered Strength Multiplier (Metric System)' and 'Heavily Encumbered (old Strength Multiplier) (Metric System)' |
+| Fake the metric system calculation, but we using the imperial one | Use this only with the system setting 'Use Metric Weight Units' checked. Because that setting doesn't update the value in lbs. to kg. of the item the calculation is 'visually wrong', with this setting set to true we use the same imperial encumbrance constants, and avoid the problem, but this is a patch not a solution, this is why there it was this module in the past https://github.com/HadaIonut/Foundry-mgl | false | THIS WILL MADE IGNORE THE FOLLOWING MODULE SETTINGS 'Unencumbered Strength Multiplier (Metric System)', 'Encumbered Strength Multiplier (Metric System)' and 'Heavily Encumbered (old Strength Multiplier) (Metric System)' |
 |Unencumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score.|5||
 |Unencumbered Strength Multiplier (Metric System)| Multiplier used to calculate maximum carrying weight before being encumbered from the strength ability score (Metric System).|2.5||
 |Encumbered Strength Multiplier| Multiplier used to calculate maximum carrying weight before being heavily encumbered from the strength ability score.|10||

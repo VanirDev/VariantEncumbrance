@@ -85,15 +85,13 @@ Hooks.once('socketlib.ready', () => {
 });
 
 Hooks.once('libChangelogsReady', function () {
-  //@ts-ignore
-  libChangelogs.register(CONSTANTS.MODULE_NAME, `- Little update`, 'minor');
+
   //@ts-ignore
   libChangelogs.registerConflict(
     CONSTANTS.MODULE_NAME,
     CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME,
     `
-    - Bug fix for the metric system: fail to calculate with modules setting 'enable Varian Encumbrance Weight On Actor Flag'
-    - Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5 
+    - possible wrong calculation on vehicle sheet with the feature "Vehicle Cargo Capacity Unit", it should work, but i'm not tested all the use case, open a issue if you encounter any problem"
     `,
     'minor',
   );
@@ -104,4 +102,11 @@ Hooks.once('libChangelogsReady', function () {
   //   'no particular errors, but it is still not recommended to use this module with version of inventory +',
   //   'minor',
   // );
+
+  //@ts-ignore
+  libChangelogs.register(CONSTANTS.MODULE_NAME,
+  `
+  - Bug fix for the metric system: fail to calculate with modules setting 'enable Variant Encumbrance Weight On Actor Flag'
+  - Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5
+  `, 'minor');
 });

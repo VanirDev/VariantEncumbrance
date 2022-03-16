@@ -71,3 +71,35 @@
   color: lightgreen;
   text-shadow: 0 0 8px lightgreen;
 }
+
+/* system bulk */
+
+.encumbrance-bar-bulk {
+  background: #6eb313 !important;
+}
+
+.encumbrance-bar-bulk.medium {
+  background: #ea7e20 !important;
+}
+
+.encumbrance-bar-bulk.heavy {
+  background: #e40000 !important;
+}
+.encumbrance-bar-bulk.max {
+  background: repeating-linear-gradient(135deg, #2d2d2d, #2d2d2d 10px, #efd00e 10px, #efd00e 20px) !important;
+}
+
+.enable-disable-variant-encumbrance-bulk .fa-bold {
+  color: #f6ff33;
+  text-shadow: 0 0 8px #f6ff33;
+}
+
+.enable-disable-variant-encumbrance-bulk .fa-balance-scale-left {
+  color: #ffe033;
+  text-shadow: 0 0 8px #ffe033;
+}
+
+.enable-disable-variant-encumbrance-bulk .fa-feather-alt {
+  color: #beff33;
+  text-shadow: 0 0 8px #beff33;
+}

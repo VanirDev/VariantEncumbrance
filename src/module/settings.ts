@@ -776,6 +776,24 @@ function otherSettings(apply = false) {
       default: false,
     },
 
+    lightWeightDecreaseBulk: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseBulk.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseBulk.hint'),
+      scope: 'world',
+      config: true,
+      type: Number,
+      default: 0.5,
+    },
+
+    // heavyWeightDecreaseBulk: {
+    //   name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.name'),
+    //   hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.hint'),
+    //   scope: 'world',
+    //   config: true,
+    //   type: Number,
+    //   default: 20,
+    // },
+
     doNotUseSocketLibFeature: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
