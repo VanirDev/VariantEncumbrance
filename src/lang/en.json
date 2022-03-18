@@ -63,22 +63,22 @@
   "variant-encumbrance-dnd5e.setting.sizeMultipliers.hint": "Enable multipliers from creature size.",
 
   "variant-encumbrance-dnd5e.setting.units.name": "Weight Units",
-  "variant-encumbrance-dnd5e.setting.units.hint": "Units displayed in the encumbrance bar (just graphics).",
+  "variant-encumbrance-dnd5e.setting.units.hint": "Units displayed in the encumbrance bar (just graphics).Default is 'lbs.'",
 
   "variant-encumbrance-dnd5e.setting.unitsMetric.name": "Weight Units (Metric System)",
-  "variant-encumbrance-dnd5e.setting.unitsMetric.hint": "Units displayed in the encumbrance bar (just graphics) (Metric System).",
+  "variant-encumbrance-dnd5e.setting.unitsMetric.hint": "Units displayed in the encumbrance bar (just graphics) (Metric System). Default is 'kg'",
 
   "variant-encumbrance-dnd5e.setting.lightWeightDecrease.name": "Lightly Encumbered Speed Decrease",
-  "variant-encumbrance-dnd5e.setting.lightWeightDecrease.hint": "The number of speed units subtracted when lightly encumbered, default is 10.",
+  "variant-encumbrance-dnd5e.setting.lightWeightDecrease.hint": "The number of speed units subtracted when lightly encumbered, default is '10'.",
 
   "variant-encumbrance-dnd5e.setting.lightWeightDecreaseMetric.name": "Lightly Encumbered Speed Decrease (Metric System)",
-  "variant-encumbrance-dnd5e.setting.lightWeightDecreaseMetric.hint": "The number of speed units subtracted when lightly encumbered, default is 3.",
+  "variant-encumbrance-dnd5e.setting.lightWeightDecreaseMetric.hint": "The number of speed units subtracted when lightly encumbered, default is '3'.",
 
   "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.name": "Encumbered Speed Decrease",
-  "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered, default is 20.",
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecrease.hint": "The number of speed units subtracted when heavily encumbered, default is '20'.",
 
   "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseMetric.name": "Encumbered Speed Decrease (Metric System)",
-  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseMetric.hint": "The number of speed units subtracted when heavily encumbered, default is 6.",
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseMetric.hint": "The number of speed units subtracted when heavily encumbered, default is '6'.",
 
   "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.name": "Enable pre check encumbrance tier",
   "variant-encumbrance-dnd5e.setting.enablePreCheckEncumbranceTier.hint": "I DON'T RECOMMENDED it, but does anyone seem to use this strange rule? If true the add/remove of the AE is launched only when there is a change on the value level of the tier so the refresh is ignored when add/remove/update item",
@@ -97,6 +97,14 @@
 
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socket call for update the encumbrance",
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is usually useful only for avoid a socket collision with other modules",
+
+
+  "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "[EXPERIMENTAL] Enable Bulk system",
+  "variant-encumbrance-dnd5e.setting.enableBulkSystem.hint": "Enable integration with the Bulk System explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html",
+  "variant-encumbrance-dnd5e.setting.unitsBulk.name": "Weight Units (Bulk System)",
+  "variant-encumbrance-dnd5e.setting.unitsBulk.hint": "Units displayed in the encumbrance bar (just graphics) (Bulk System). Default is 'bulk'",
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseBulk.name": "Encumbered Speed Decrease (Bulk System)",
+  "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseBulk.hint": "The number of speed units multiply when heavily encumbered, default is '0.5'.",
 
   "variant-encumbrance-dnd5e.setting.reset.name": "Reset settings to default",
   "variant-encumbrance-dnd5e.setting.reset.label": "Reset Settings To Default",
@@ -129,10 +137,6 @@
 
   "variant-encumbrance-dnd5e.setting.vehicleUnit.name": "Enable Unit of weight for Vehicles",
   "variant-encumbrance-dnd5e.setting.vehicleUnit.hint": "Enables ability to change the base unit for weight used by vehicles",
-
-  "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "[EXPERIMENTAL] Enable Bulk system",
-  "variant-encumbrance-dnd5e.setting.enableBulkSystem.hint": "Enables the bulk system explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html",
-
   "variant-encumbrance-dnd5e.config.name": "Weight Unit",
   "variant-encumbrance-dnd5e.config.hint": "Unit of measurement to be used for weight calculation.",
   "variant-encumbrance-dnd5e.label.units_LongTon": "Long Ton (2240 lb.)",
@@ -141,6 +145,13 @@
   "variant-encumbrance-dnd5e.label.convertTitle": "Convert Cargo Capacity",
   "variant-encumbrance-dnd5e.label.convertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?",
 
-  "DND5E.ItemContainerCapacityBulk": "Bulk",
-  "DND5E.Bulk": "Bulk"
+  "variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk": "Bulk",
+  "variant-encumbrance-dnd5e.label.Bulk": "Bulk",
+  "variant-encumbrance-dnd5e.label.bulk.category.tiny.description": "Smaller than the palm of your hand. You can hold many of these in one hand. A negligible or trivial weight.",
+  "variant-encumbrance-dnd5e.label.bulk.category.small.description": "Up to a handspan / 9 inches. Can be held comfortably with one hand. Up to 2 lbs. The weight of a loaf of bread or a bag of sugar.",
+  "variant-encumbrance-dnd5e.label.bulk.category.medium.description": "Up to an arms-length / 2 feet long. Can be held with one hand. Up to 5 lbs. About as heavy as a few big bags of sugar.",
+  "variant-encumbrance-dnd5e.label.bulk.category.large.description": "Longer than an arm. Usually can be held with one hand, but us most comfortable with two. Up to 10 lbs. About as heavy as a cat or a sack of potatoes.",
+  "variant-encumbrance-dnd5e.label.bulk.category.x-large.description": "Longer than the height of an average person. Requires two hands to hold. Up to 35 lbs. About a quarter of the weight of an average person.",
+  "variant-encumbrance-dnd5e.label.bulk.category.xx-large.description": "Longer than the height of two people. Requires two hands to hold. Up to 70 lbs. About half as heavy as an average person."
+
 }

@@ -375,15 +375,6 @@ export const registerSettings = function () {
     default: false,
   });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'enableBulkSystem', {
-    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.name'),
-    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.hint'),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
-
   game.settings.register(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
@@ -393,14 +384,43 @@ export const registerSettings = function () {
     default: false,
   });
 
+  // BULK SYSTEM
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableBulkSystem', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'unitsBulk', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.unitsBulk.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.unitsBulk.hint'),
+    scope: 'world',
+    config: true,
+    type: String,
+    default: 'bulk',
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.hint'),
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 6,
+  });
+
   // const settings = defaultSettings();
   // for (const [name, data] of Object.entries(settings)) {
   //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
   // }
 
-  // for (const [name, data] of Object.entries(otherSettings)) {
-  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
-  // }
+  for (const [name, data] of Object.entries(otherSettings)) {
+      game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  }
 };
 
 class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
@@ -767,6 +787,17 @@ function otherSettings(apply = false) {
       default: false,
     },
 
+    doNotUseSocketLibFeature: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
+    // BULK SYSTEM
+
     enableBulkSystem: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableBulkSystem.hint'),
@@ -776,31 +807,23 @@ function otherSettings(apply = false) {
       default: false,
     },
 
-    lightWeightDecreaseBulk: {
-      name: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseBulk.name'),
-      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.lightWeightDecreaseBulk.hint'),
+    unitsBulk: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.unitsBulk.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.unitsBulk.hint'),
+      scope: 'world',
+      config: true,
+      type: String,
+      default: 'bulk',
+    },
+
+    heavyWeightDecreaseBulk: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.hint'),
       scope: 'world',
       config: true,
       type: Number,
       default: 0.5,
     },
 
-    // heavyWeightDecreaseBulk: {
-    //   name: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.name'),
-    //   hint: i18n(CONSTANTS.MODULE_NAME + '.setting.heavyWeightDecreaseBulk.hint'),
-    //   scope: 'world',
-    //   config: true,
-    //   type: Number,
-    //   default: 20,
-    // },
-
-    doNotUseSocketLibFeature: {
-      name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
-      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    },
   };
 }

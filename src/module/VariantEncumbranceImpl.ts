@@ -854,7 +854,32 @@ export const VariantEncumbranceImpl = {
       transfer: true,
       changes: [
         {
-          key: 'flags.midi-qol.disadvantage.attack.all',
+          key: 'flags.midi-qol.disadvantage.attack.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.con',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.con',
           mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
           value: '1',
         },
@@ -898,7 +923,32 @@ export const VariantEncumbranceImpl = {
       transfer: true,
       changes: [
         {
-          key: 'flags.midi-qol.disadvantage.attack.all',
+          key: 'flags.midi-qol.disadvantage.attack.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.con',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.con',
           mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
           value: '1',
         },
@@ -1208,7 +1258,7 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
     if (ignoreTypes?.some((name) => item.name.includes(name))) return acc;
     //@ts-ignore
     if (ignoreItems?.includes(item.name)) return acc;
-    return acc + (item.calcWeight() ?? 0);
+    return acc + (item.calcWeight() ?? 0); // TODO convert this in a static method ???
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore

@@ -103,3 +103,11 @@
   color: #beff33;
   text-shadow: 0 0 8px #beff33;
 }
+
+/* from dnd5e sysetm */
+
+.dnd5e.sheet.actor .inventory-list .item-bulk {
+  flex: 0 0 60px;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+}

@@ -1,3 +1,4 @@
+import { BULK_CATEGORY } from './../VariantEncumbranceModels';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api.js';
@@ -105,3 +106,33 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
 // =============================
 // Module specific function
 // =============================
+
+export function convertPoundsToKg(valNum:number):number{
+  return valNum / 2.20462262;
+}
+
+export function convertKgToPounds(valNum:number):number{
+  return valNum * 2.20462262;
+}
+
+export function checkBulkCategory(weight:number) {
+  let bulkRef = weight;
+  if(game.settings.get('dnd5e', 'metricWeightUnits')){
+    bulkRef = convertKgToPounds(weight);
+  }
+  if(weight <= 2){
+    return BULK_CATEGORY.TINY;
+  }else if(weight > 2 &&  weight <= 5){
+    return BULK_CATEGORY.SMALL;
+  }else if(weight > 5 &&  weight <= 10){
+    return BULK_CATEGORY.SMALL;
+  }else if(weight > 10 &&  weight <= 35){
+    return BULK_CATEGORY.LARGE;
+  }else if(weight > 35 &&  weight <= 70){
+    return BULK_CATEGORY.X_LARGE;
+  }else if(weight > 70){
+    return BULK_CATEGORY.XX_LARGE;
+  }else{
+    return BULK_CATEGORY.XX_LARGE;
+  }
+}

@@ -13,7 +13,16 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/total?style=for-the-badge)
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
-The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are intended for a future version.
+
+```
+The rules for Lifting and Carrying are intentionally simple. Here is a variant if you are looking for more detailed rules for determining how a character is hindered by the weight of Equipment. When you use this variant, ignore the Strength column of the Armor table.
+
+If you carry weight in excess of 5 times your Strength score, you are encumbered, which means your speed drops by 10 feet.
+
+If you carry weight in excess of 10 times your Strength score, up to your maximum carrying Capacity, you are instead heavily encumbered, which means your speed drops by 20 feet and you have disadvantage on Ability Checks, Attack rolls, and Saving Throws that use Strength, Dexterity, or Constitution.
+```
+
+The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are applied with the new active effect mechanism.
 
 For D&D5e 1.4.2 and newer the system supports a core implementation of this encumbrance rule. The module should be synchronized with the core functionality, but this module will permit more customised rules for your weight calculations/thresholds and the speed penalties are integrated with active effect.
 
@@ -110,6 +119,8 @@ The default character weight bar has received a lick of paint, giving labels for
 Your encumbrance status is automatically used to provide a modified speed value, taking your default character speed and modifying it by -10 and -20 for encumbered and heavily encumbered, and reducing to 0 when over encumbered. (For 0.1.5, the speed value must be separated by a space from its units).
 
 ### Character Size & Powerful Build (Optional)
+
+_Powerful Build Feature: You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift._
 
 Enabled by default, the module will modify your maximum carry weight according to your character's size, and whether you have the powerful build special trait. This feature can be disabled in the module settings. (Credit to [Eruestani](https://github.com/Eruestani) for implementing this).
 

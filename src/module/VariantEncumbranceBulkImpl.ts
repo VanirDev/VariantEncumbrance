@@ -131,10 +131,11 @@ export const VariantEncumbranceBulkImpl = {
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE_BULK)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
-      VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
+      // TODO VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
     }
   },
 
+  /*
   manageActiveEffect: async function (actorEntity: Actor, encumbranceTier: number) {
     let effectEntityPresent: ActiveEffect | undefined;
 
@@ -266,6 +267,7 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
   },
+  */
 
   /**
    * Compute the level and percentage of encumbrance for an Actor.
@@ -446,7 +448,8 @@ export const VariantEncumbranceBulkImpl = {
       // End inventory+ module is active 2
       // END TOTAL WEIGHT
 
-      // [Optional] add Currency Weight (for non-transformed actors)
+      // ON BULK SYSTEM THERE ISN'T [Optional] add Currency Weight (for non-transformed actors)
+      /*
       //@ts-ignore
       if (game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
         //@ts-ignore
@@ -463,207 +466,147 @@ export const VariantEncumbranceBulkImpl = {
 
         totalWeight += numCoins / currencyPerWeight;
       }
-
+      */
       // Compute Encumbrance percentage
       totalWeight = totalWeight.toNearest(0.1);
 
-      let speedDecrease = 0;
+      let minimumBulk = 0;
+      let inventorySlot = 0;
 
-      let modForSize = 1; //actorEntity.data.data.abilities.str.value;
-      if (game.settings.get(CONSTANTS.MODULE_NAME, 'sizeMultipliers')) {
-        //@ts-ignore
-        const size = actorEntity.data.data.traits.size;
+      //@ts-ignore
+      const sizeOri = actorEntity.data.data.traits.size;
+      let size = sizeOri;
+      // Manage pworful build for bulk inveotry slot
+      //@ts-ignore
+      if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
         if (size === 'tiny') {
-          modForSize *= 0.5;
+          size =  'sm';
         } else if (size === 'sm') {
-          modForSize *= 1;
+          size = 'med';
         } else if (size === 'med') {
-          modForSize *= 1;
+          size = 'lg';
         } else if (size === 'lg') {
-          modForSize *= 2;
+          size = 'huge';
         } else if (size === 'huge') {
-          modForSize *= 4;
+          size = 'grg';
         } else if (size === 'grg') {
-          modForSize *= 8;
-        } else {
-          modForSize *= 1;
-        }
-        // Powerful build support
-        //@ts-ignore
-        if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
-          //jshint ignore:line
-          // mod *= 2;
-          modForSize = Math.min(modForSize * 2, 8);
+          size = 'grg';
         }
       }
-
-      let strengthMultiplier = 1;
-      if (game.settings.get(CONSTANTS.MODULE_NAME, 'useStrengthMultiplier')) {
-        strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
-            ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier')
-            : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
-          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier');
-      }
-
-      let displayedUnits = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <string>game.settings.get(CONSTANTS.MODULE_NAME, 'unitsMetric')
-        : <string>game.settings.get(CONSTANTS.MODULE_NAME, 'units');
-
-      const lightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier')
-          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplierMetric')
-        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightMultiplier');
-      let lightMax = lightMultiplier; // lightMultiplier * strengthScore;
-
-      const mediumMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier')
-          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplierMetric')
-        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'mediumMultiplier');
-      let mediumMax = mediumMultiplier; // mediumMultiplier * strengthScore;
-
-      const heavyMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
-          ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier')
-          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplierMetric')
-        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyMultiplier');
-      let heavyMax = heavyMultiplier; // heavyMultiplier * strengthScore;
-
-      let max = 0;
-      let pct = 0;
-      const totalWeightOriginal = totalWeight;
 
       if (actorEntity.type == EncumbranceActorType.CHARACTER) {
-        // ==================
-        // CHARACTER
-        // ==================
-        // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
-        //@ts-ignore
-        max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
-        pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-        //@ts-ignore
-        const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
-        lightMax = lightMultiplier * strengthScore;
-        mediumMax = mediumMultiplier * strengthScore;
-        heavyMax = heavyMultiplier * strengthScore;
-      } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
-        // ===============================
-        // VEHICLE
-        // ===============================
-        // MOD 4535992 FROM 2000 to 1 SO I REMOVED ???
-        /*
-        const vehicleWeightMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? (game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
-            ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier')
-            :<number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplierMetric')
-          )
-          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'vehicleWeightMultiplier');
-
-        // Vehicle weights are an order of magnitude greater.
-
-        totalWeight /= vehicleWeightMultiplier;
-        */
-        // TODO
-        //totalWeight /= <number>this.document.getFlag(SETTINGS.MOD_NAME, 'unit') || vehicleWeightMultiplier;
-
-        // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
-        if (dfQualityLifeActive && actorEntity.getFlag(CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME, `unit`)) {
-          const dfVehicleUnit = actorEntity.getFlag(CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME, `unit`);
-          switch (dfVehicleUnit) {
-            case 2240:
-              totalWeight /= dfVehicleUnit;
-              displayedUnits = 'L.Ton';
-              break;
-            case 2000:
-              totalWeight /= dfVehicleUnit;
-              displayedUnits = 'S.Ton';
-              break;
-            case 1:
-              totalWeight /= dfVehicleUnit;
-              displayedUnits = 'lbs';
-              break;
-          }
-        } else if (dfQualityLifeActive && actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA)) {
-          const encumbranceData = <EncumbranceBulkData>actorEntity.getFlag(CONSTANTS.MODULE_NAME, EncumbranceFlags.DATA);
-          const dfVehicleUnitLabel = encumbranceData.unit;
-          switch (dfVehicleUnitLabel) {
-            case 'L.Ton':
-              totalWeight /= 2240;
-              displayedUnits = 'L.Ton';
-              break;
-            case 'S.Ton':
-              totalWeight /= 2000;
-              displayedUnits = 'S.Ton';
-              break;
-            case 'lbs':
-              totalWeight /= 1;
-              displayedUnits = 'lbs';
-              break;
-            default:
-              totalWeight /= 1;
-              displayedUnits = 'lbs';
-              break;
-          }
+        if (size === 'tiny') {
+          minimumBulk = 5;
+          //@ts-ignore
+          inventorySlot = 6 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'sm') {
+          minimumBulk = 10;
+          //@ts-ignore
+          inventorySlot = 14 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'med') {
+          minimumBulk = 20;
+          //@ts-ignore
+          inventorySlot = 18 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'lg') {
+          minimumBulk = 40;
+          //@ts-ignore
+          inventorySlot = 22 + (actorEntity.data.data.abilities.str.mod * 2);
+        } else if (size === 'huge') {
+          minimumBulk = 80;
+          //@ts-ignore
+          inventorySlot = 30 + (actorEntity.data.data.abilities.str.mod * 4);
+        } else if (size === 'grg') {
+          minimumBulk = 160;
+          //@ts-ignore
+          inventorySlot = 46 + (actorEntity.data.data.abilities.str.mod * 8);
+        } else {
+          minimumBulk = 20;
+          //@ts-ignore
+          inventorySlot = 18 + actorEntity.data.data.abilities.str.mod;
         }
+      } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
         //@ts-ignore
-        const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
-        // Compute overall encumbrance
-        // const max = actorData.data.attributes.capacity.cargo;
-        max = capacityCargo * strengthMultiplier * modForSize;
-        pct = Math.clamped((totalWeightOriginal * 100) / max, 0, 100);
-        // Manage vehicle specific case
-        // lightMax = lightMultiplier * capacityCargo * strengthMultiplier * modForSize;
-        // mediumMax = mediumMultiplier * capacityCargo * strengthMultiplier * modForSize;
-        // heavyMax = heavyMultiplier * capacityCargo * strengthMultiplier * modForSize;
-        lightMax = capacityCargo * strengthMultiplier * modForSize * 0.33;
-        mediumMax = capacityCargo * strengthMultiplier * modForSize * 0.66;
-        heavyMax = capacityCargo * strengthMultiplier * modForSize;
+        // const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
+        if (size === 'tiny') {
+          minimumBulk = 20;
+          //@ts-ignore
+          inventorySlot = 20;
+        } else if (size === 'sm') {
+          minimumBulk = 60;
+          //@ts-ignore
+          inventorySlot = 60;
+        } else if (size === 'med') {
+          minimumBulk = 180;
+          //@ts-ignore
+          inventorySlot = 180;
+        } else if (size === 'lg') {
+          minimumBulk = 540;
+          //@ts-ignore
+          inventorySlot = 540;
+        } else if (size === 'huge') {
+          minimumBulk = 1620;
+          //@ts-ignore
+          inventorySlot = 1620;
+        } else if (size === 'grg') {
+          minimumBulk = 4860;
+          //@ts-ignore
+          inventorySlot = 4860;
+        } else {
+          minimumBulk = 180;
+          //@ts-ignore
+          inventorySlot = 180;
+        }
       } else {
-        // ===========================
-        // NO CHARACTER, NO VEHICLE (BY DEFAULT THE CHARACTER)
-        // ===========================
-        // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
-        //@ts-ignore
-        max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
-        pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-        //@ts-ignore
-        const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
-        lightMax = lightMultiplier * strengthScore;
-        mediumMax = mediumMultiplier * strengthScore;
-        heavyMax = heavyMultiplier * strengthScore;
+        // Like character by default
+        if (size === 'tiny') {
+          minimumBulk = 5;
+          //@ts-ignore
+          inventorySlot = 6 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'sm') {
+          minimumBulk = 10;
+          //@ts-ignore
+          inventorySlot = 14 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'med') {
+          minimumBulk = 20;
+          //@ts-ignore
+          inventorySlot = 18 + actorEntity.data.data.abilities.str.mod;
+        } else if (size === 'lg') {
+          minimumBulk = 40;
+          //@ts-ignore
+          inventorySlot = 22 + (actorEntity.data.data.abilities.str.mod * 2);
+        } else if (size === 'huge') {
+          minimumBulk = 80;
+          //@ts-ignore
+          inventorySlot = 30 + (actorEntity.data.data.abilities.str.mod * 4);
+        } else if (size === 'grg') {
+          minimumBulk = 160;
+          //@ts-ignore
+          inventorySlot = 46 + (actorEntity.data.data.abilities.str.mod * 8);
+        } else {
+          minimumBulk = 20;
+          //@ts-ignore
+          inventorySlot = 18 + actorEntity.data.data.abilities.str.mod;
+        }
       }
 
+      if(inventorySlot < minimumBulk){
+        inventorySlot = minimumBulk;
+      }
+
+      const displayedUnits = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'unitsBulk');
+      const lightMax = 0;
+      const mediumMax = inventorySlot * 0.5;
+      const heavyMax = inventorySlot;
+
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
-      // if (totalWeight > lightMax && totalWeight <= mediumMax) {
-      //   speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseBulk');
-      //   encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
-      // }
-      // if (totalWeight > mediumMax && totalWeight <= heavyMax) {
-      //   speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk')
-      //   encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
-      // }
-      // if (totalWeight > heavyMax) {
-      //   encumbranceTier = ENCUMBRANCE_TIERS.MAX;
-      // }
-      if (totalWeight > lightMax && totalWeight <= heavyMax) {
-        speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseBulk');
-        encumbranceTier = ENCUMBRANCE_TIERS.LIGHT;
+      const totalWeightOriginal = totalWeight;
+
+      if (totalWeight > mediumMax) {
+        encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
       }
       if (totalWeight > heavyMax) {
         encumbranceTier = ENCUMBRANCE_TIERS.MAX;
       }
-
-      // Inventory encumbrance
-      // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
-      //@ts-ignore
-      (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
-        value: totalWeightOriginal.toNearest(0.1),
-        max: max.toNearest(0.1),
-        pct,
-        encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
-      };
 
       return {
         totalWeight: totalWeightOriginal.toNearest(0.1),
@@ -671,10 +614,11 @@ export const VariantEncumbranceBulkImpl = {
         lightMax: lightMax.toNearest(0.1),
         mediumMax: mediumMax.toNearest(0.1),
         heavyMax: heavyMax.toNearest(0.1),
-        // totalMax: max,
         encumbranceTier: encumbranceTier,
-        speedDecrease: speedDecrease,
+        speedDecrease: 0,
         unit: displayedUnits,
+        inventorySlot: inventorySlot,
+        minimumBulk: minimumBulk
       };
     } else {
       throw new Error('Something is wrong');
@@ -690,19 +634,13 @@ export const VariantEncumbranceBulkImpl = {
   addDynamicEffects: async function (effectName: string, actor: Actor, speedDecrease: number): Promise<Effect | null> {
     // const invMidiQol = <boolean>game.modules.get(CONSTANTS.MIDI_QOL_MODULE_NAME)?.active;
     switch (effectName.toLowerCase()) {
-      case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase(): {
-        const effect = VariantEncumbranceBulkImpl._encumbered();
-        const speedDecreased =
-          speedDecrease > 0 ? speedDecrease : game.settings.get('dnd5e', 'metricWeightUnits') ? 3 : 10;
-        VariantEncumbranceBulkImpl._addEncumbranceEffects(effect, actor, speedDecreased);
-        return effect;
-      }
+      case ENCUMBRANCE_STATE.ENCUMBERED.toLowerCase():
       case ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED.toLowerCase(): {
         let effect: Effect;
         if (invMidiQol) {
-          effect = VariantEncumbranceBulkImpl._heavilyEncumbered();
+          effect = VariantEncumbranceBulkImpl._bulkHeavilyEncumbered();
         } else {
-          effect = VariantEncumbranceBulkImpl._heavilyEncumberedNoMidi();
+          effect = VariantEncumbranceBulkImpl._bulkHeavilyEncumberedNoMidi();
         }
         const speedDecreased =
           speedDecrease > 0 ? speedDecrease : game.settings.get('dnd5e', 'metricWeightUnits') ? 6 : 20;
@@ -715,9 +653,9 @@ export const VariantEncumbranceBulkImpl = {
       case ENCUMBRANCE_STATE.OVERBURDENED.toLowerCase(): {
         let effect: Effect;
         if (invMidiQol) {
-          effect = VariantEncumbranceBulkImpl._overburdenedEncumbered();
+          effect = VariantEncumbranceBulkImpl._bulkOverburdenedEncumbered();
         } else {
-          effect = VariantEncumbranceBulkImpl._overburdenedEncumberedNoMidi();
+          effect = VariantEncumbranceBulkImpl._bulkOverburdenedEncumberedNoMidi();
         }
         VariantEncumbranceBulkImpl._addEncumbranceEffectsOverburdened(effect, actor);
         return effect;
@@ -728,17 +666,7 @@ export const VariantEncumbranceBulkImpl = {
     }
   },
 
-  _encumbered: function (): Effect {
-    return new Effect({
-      name: ENCUMBRANCE_STATE.ENCUMBERED,
-      description: i18n('variant-encumbrance-dnd5e.effect.description.encumbered'),
-      icon: 'icons/svg/down.svg',
-      isDynamic: true,
-      transfer: true,
-    });
-  },
-
-  _heavilyEncumbered: function (): Effect {
+  _bulkHeavilyEncumbered: function (): Effect {
     return new Effect({
       name: ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,
       description: i18n('variant-encumbrance-dnd5e.effect.description.heavily_encumbered'),
@@ -747,7 +675,32 @@ export const VariantEncumbranceBulkImpl = {
       transfer: true,
       changes: [
         {
-          key: 'flags.midi-qol.disadvantage.attack.all',
+          key: 'flags.midi-qol.disadvantage.attack.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.con',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.con',
           mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
           value: '1',
         },
@@ -770,7 +723,7 @@ export const VariantEncumbranceBulkImpl = {
     });
   },
 
-  _heavilyEncumberedNoMidi: function (): Effect {
+  _bulkHeavilyEncumberedNoMidi: function (): Effect {
     return new Effect({
       name: ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED,
       description: i18n('variant-encumbrance-dnd5e.effect.description.heavily_encumbered'),
@@ -781,7 +734,7 @@ export const VariantEncumbranceBulkImpl = {
     });
   },
 
-  _overburdenedEncumbered: function (): Effect {
+  _bulkOverburdenedEncumbered: function (): Effect {
     return new Effect({
       name: ENCUMBRANCE_STATE.OVERBURDENED,
       description: i18n('variant-encumbrance-dnd5e.effect.description.overburdened'),
@@ -791,7 +744,32 @@ export const VariantEncumbranceBulkImpl = {
       transfer: true,
       changes: [
         {
-          key: 'flags.midi-qol.disadvantage.attack.all',
+          key: 'flags.midi-qol.disadvantage.attack.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.attack.con',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.str',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.dex',
+          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+          value: '1',
+        },
+        {
+          key: 'flags.midi-qol.disadvantage.ability.check.con',
           mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
           value: '1',
         },
@@ -814,7 +792,7 @@ export const VariantEncumbranceBulkImpl = {
     });
   },
 
-  _overburdenedEncumberedNoMidi: function (): Effect {
+  _bulkOverburdenedEncumberedNoMidi: function (): Effect {
     return new Effect({
       name: ENCUMBRANCE_STATE.OVERBURDENED,
       description: i18n('variant-encumbrance-dnd5e.effect.description.overburdened'),
@@ -832,39 +810,39 @@ export const VariantEncumbranceBulkImpl = {
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.burrow > value ? `-${value}` : `-${movement.burrow}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      value: `${value * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.climb > value ? `-${value}` : `-${movement.climb}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      value: `${value * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.fly > value ? `-${value}` : `-${movement.fly}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      value: `${value * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.swim > value ? `-${value}` : `-${movement.swim}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      value: `${value * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: movement.walk > value ? `-${value}` : `-${movement.walk}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      value: `${value * 0.5}`,
     });
     // THIS IS THE DAE SOLUTION
     // } else {
     //   effect.changes.push({
     //     key: 'data.attributes.movement.all',
-    //     mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-    //     value: value ? `-${value}` : `-0`,
+    //     mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+    //     value: `${value * 0.5}`,
     //     priority: 5,
     //   });
     // }
@@ -1040,23 +1018,6 @@ export const VariantEncumbranceBulkImpl = {
   },
 };
 
-export const isEnabledActorType = function (actorEntity: Actor): boolean {
-  const useVarianEncumbranceWithSpecificType: string[] = game.settings.get(
-    CONSTANTS.MODULE_NAME,
-    'useVarianEncumbranceWithSpecificType',
-  )
-    ? String(game.settings.get(CONSTANTS.MODULE_NAME, 'useVarianEncumbranceWithSpecificType')).split(',')
-    : [];
-  if (
-    actorEntity &&
-    useVarianEncumbranceWithSpecificType.length > 0 &&
-    useVarianEncumbranceWithSpecificType.includes(<string>actorEntity?.type)
-  ) {
-    return true;
-  }
-  return false;
-};
-
 // ===========================
 // Item Collection/Container SUPPORT
 // ===========================
@@ -1101,7 +1062,7 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
     if (ignoreTypes?.some((name) => item.name.includes(name))) return acc;
     //@ts-ignore
     if (ignoreItems?.includes(item.name)) return acc;
-    return acc + (item.calcWeight() ?? 0);
+    return acc + (item.calcWeight() ?? 0); // TODO convert this in a static method ???
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore

@@ -1,7 +1,7 @@
 import { isEnabledActorType, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
-import { EncumbranceData, EncumbranceMode, EncumbranceFlags, ENCUMBRANCE_TIERS } from './VariantEncumbranceModels';
+import { EncumbranceData, EncumbranceMode, EncumbranceFlags, ENCUMBRANCE_TIERS, BULK_CATEGORIES, BULK_CATEGORY, BulkData } from './VariantEncumbranceModels';
 import { canvas, game } from './settings';
-import { debug, i18n, warn } from './lib/lib';
+import { checkBulkCategory, convertPoundsToKg, debug, i18n, warn } from './lib/lib';
 import CONSTANTS from './constants';
 import { registerSocket } from './socket';
 import API from './api';
@@ -193,34 +193,12 @@ export const readyHooks = async () => {
     // ===================
     // Bulk management
     // ===================
-    //@ts-ignore
-    //CONFIG.DND5E.itemCapacityTypes['bulk'] = 'DND5E.ItemContainerCapacityBulk';
-    //@ts-ignore
-    // CONFIG.DND5E.consumableResources.item.bulk = true;
-    //@ts-ignore
-    //CONFIG.DND5E.consumableResources.push("item.bulk");
-    // //@ts-ignore
-    // Actor.prototype.sheet.data.bulkUnit = {};
-    // //@ts-ignore
-    // Actor.prototype.sheet.data.bulkUnit = i18n("DND5E.ItemContainerCapacityBulk");
-    // Register Tidy5e Item Sheet and make default
-    //@ts-ignore
-    // Items.registerSheet('dnd5e', Tidy5eItemSheetBulk, { makeDefault: false });
     Hooks.on('renderItemSheet', (app: ItemSheet, html: JQuery<HTMLElement>, data: any) => {
       if (!app.object) {
         return;
       }
       const item: Item = app.object;
-      html
-        .find('.item-properties') // <div class="item-properties">
-        .append(
-          `
-            <div class="form-group">
-              <label>${i18n('DND5E.Bulk')}</label>
-              <input type="text" name="data.bulk" value="${data.data.bulk ?? 0}" data-dtype="Number"/>
-            </div>
-            `,
-        );
+      module.renderItemSheetBulkSystem(app, html, data, item);
     });
     // =====================
     // End bulk management
@@ -239,60 +217,7 @@ export const readyHooks = async () => {
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
       const actorEntityTmp: any = <Actor>game.actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
       if (isEnabledActorType(actorEntityTmp)) {
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
-          // =============================
-          // Start bulk management
-          // =============================
-          const listHeaders = htmlElement.find('li.items-header .item-weight');
-          for (let liHeader of listHeaders) {
-            //@ts-ignore
-            liHeader = $(liHeader);
-            liHeader.append(
-              `
-              <div class="item-detail item-weight">${i18n('DND5E.Bulk')}</div>
-              `,
-            );
-          }
-
-          const inventoryItems: Item[] = [];
-          const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-          actorEntityTmp.data.items.contents.forEach((im: Item) => {
-            if (im && physicalItems.includes(im.type)) {
-              inventoryItems.push(im);
-            }
-          });
-          const listItem = htmlElement.find('li.item .item-weight');
-          for (let liItem of listItem) {
-            //@ts-ignore
-            liItem = $(liItem);
-            //@ts-ignore
-            const itemId = liItem.parent().attr('data-item-id');
-            //@ts-ignore
-            const itemName = liItem.parent().find('.item-name h4').html().replace(/\n/g, '').trim();
-            const item = <Item>inventoryItems.find((im: Item) => {
-              return im.id === itemId || im.name === itemName;
-            });
-            if (item) {
-              //@ts-ignore
-              const quantity = item.data.data.quantity ?? 0;
-              //@ts-ignore
-              const bulk = item.data.data.bulk ?? 0;
-              const totalBulk = (quantity * bulk).toNearest(0.1);
-              liItem.append(
-                `
-                <div class="item-detail item-bulk" title="Bulk: ${totalBulk ?? 0} ${i18n(
-                  'DND5E.ItemContainerCapacityBulk',
-                )}">
-                  ${totalBulk ?? 0} ${i18n('DND5E.ItemContainerCapacityBulk')}
-                </div>
-                `,
-              );
-            }
-          }
-          // =====================
-          // End bulk management
-          // =====================
-        }
+        module.renderActorSheetBulkSystem(actorSheet, htmlElement, actorObject, actorEntityTmp);
 
         //if (actorObject.isCharacter || actorObject.isVehicle) {
         // const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
@@ -874,3 +799,80 @@ export async function deleteDocuments(wrapped, ids = [], context = { parent: {},
 //   VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, "delete");
 //   return wrapped(data);
 // }
+
+const module = {
+  renderActorSheetBulkSystem(actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any,actorEntityTmp:Actor):void {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
+      const listHeaders = htmlElement.find('li.items-header .item-weight');
+      for (let liHeader of listHeaders) {
+        //@ts-ignore
+        liHeader = $(liHeader);
+        liHeader.append(
+          `
+          <div class="item-detail item-weight">${i18n('variant-encumbrance-dnd5e.label.Bulk')}</div>
+          `,
+        );
+      }
+
+      const inventoryItems: Item[] = [];
+      const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+      actorEntityTmp.data.items.contents.forEach((im: Item) => {
+        if (im && physicalItems.includes(im.type)) {
+          inventoryItems.push(im);
+        }
+      });
+      const listItem = htmlElement.find('li.item .item-weight');
+      for (const liItemB of listItem) {
+        const liItem = <JQuery<HTMLElement>>$(liItemB);
+        const itemId = liItem.parent().attr('data-item-id');
+        const itemName = liItem.parent().find('.item-name h4').html().replace(/\n/g, '').trim();
+        const item = <Item>inventoryItems.find((im: Item) => {
+          return im.id === itemId || im.name === itemName;
+        });
+        if (item) {
+          //@ts-ignore
+          const quantity = item.data.data.quantity ?? 0;
+          //@ts-ignore
+          const bulk = item.data.data.bulk ?? 0;
+          const totalBulk = (quantity * bulk).toNearest(0.1);
+          liItem.parent().closest('item-weight').after(
+            `
+            <div class="item-detail item-bulk" title="Bulk: ${totalBulk ?? 0} ${i18n(
+              'variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk',
+            )}">
+              ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}
+            </div>
+            `,
+          );
+        }
+      }
+    }
+  },
+  renderItemSheetBulkSystem(app: ItemSheet, html: JQuery<HTMLElement>, data: any, itemTmp:Item):void {
+
+    // Size
+
+    const options: string[] = [];
+    // options.push(
+    //   `<option data-image="icons/svg/mystery-man.svg" value="">${i18n(`${CONSTANTS.MODULE_NAME}.default`)}</option>`,
+    // );
+    const weight = data.data.weight ?? 0;
+    const bulk = data.data.bulk ?? 0;
+    const bulkCategory = checkBulkCategory(weight);
+    if(bulk > 0){
+      bulkCategory.bulk = bulk;
+    }
+
+    html
+    .find('.item-properties') // <div class="item-properties">
+    // .closest('item-weight').after(
+    .append(
+      `
+        <div class="form-group">
+          <label>${i18n('variant-encumbrance-dnd5e.label.Bulk')}</label>
+          <input type="text" name="data.bulk" value="${bulk}" data-dtype="Number"/>
+        </div>
+        `,
+    );
+  }
+}
