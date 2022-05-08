@@ -424,7 +424,7 @@ export const readyHooks = async () => {
 
     if (isEnabledActorType(actorEntity)) {
       if (enableVarianEncumbranceOnSpecificActor) {
-        const varianEncumbranceButtons: any[] = [];
+        // const varianEncumbranceButtons: any[] = [];
 
         const removeLabelButtonsSheetHeader = <boolean>(
           game.settings.get(CONSTANTS.MODULE_NAME, 'removeLabelButtonsSheetHeader')
@@ -461,7 +461,8 @@ export const readyHooks = async () => {
           let myicon = 'fas fa-weight-hanging';
           let index = 0;
 
-          if (enableVarianEncumbranceEffectsOnSpecificActorFlag && enableVarianEncumbranceWeightOnSpecificActorFlag) {
+          if (enableVarianEncumbranceEffectsOnSpecificActorFlag && 
+            enableVarianEncumbranceWeightOnSpecificActorFlag) {
             mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
             myicon = 'fas fa-weight-hanging';
             index = 0;
@@ -491,20 +492,11 @@ export const readyHooks = async () => {
             throw new Error('Something is wrong');
           }
 
-          //if (app.object.isOwner) {
-          // only prototype actors
-          //if (!app.object.token) {
-            //   varianEncumbranceButtons.push({
-            //       label: removeLabelSheetHeader ? "" : "Theatre.UI.Config.Theatre",
-            //       class: "configure-theatre",
-            //       icon: "fas fa-user-edit",
-            //       onclick: ev => Theatre.onConfigureInsert(ev, app.object.sheet)
-            //   });
-          //}
-          varianEncumbranceButtons.push({
-            label: mylabel,
-            class: 'enable-disable-variant-encumbrance',
+          // varianEncumbranceButtons.push({
+          buttons.unshift({
             icon: myicon,
+            class: 'enable-disable-variant-encumbrance',
+            label: removeLabelButtonsSheetHeader ? '' : mylabel,
             onclick: async (ev) => {
               if (index == 0) {
                 enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
@@ -596,7 +588,8 @@ export const readyHooks = async () => {
             let myiconBulk = 'fas fa-bold';
             let indexBulk = 0;
 
-            if (enableVarianEncumbranceEffectsBulkOnSpecificActorFlag && enableVarianEncumbranceWeightBulkOnSpecificActorFlag) {
+            if (enableVarianEncumbranceEffectsBulkOnSpecificActorFlag && 
+              enableVarianEncumbranceWeightBulkOnSpecificActorFlag) {
               mylabelBulk = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEBulkOnSpecificActor');
               myiconBulk = 'fas fa-bold';
               indexBulk = 0;
@@ -626,10 +619,11 @@ export const readyHooks = async () => {
               throw new Error('Something is wrong');
             }
 
-            varianEncumbranceButtons.push({
-              label: mylabelBulk,
-              class: 'enable-disable-variant-encumbrance-bulk',
+            // varianEncumbranceButtons.push({
+            buttons.unshift({
               icon: myiconBulk,
+              class: 'enable-disable-variant-encumbrance-bulk',
+              label: removeLabelButtonsSheetHeader ? '' : mylabelBulk,
               onclick: async (ev) => {
                 if (indexBulk == 0) {
                   enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = false;
@@ -683,15 +677,15 @@ export const readyHooks = async () => {
                   // );
                 }
                 if (removeLabelButtonsSheetHeader) {
-                  mylabel = '';
+                  mylabelBulk = '';
                 }
-                ev.currentTarget.innerHTML = `<i class="${myicon}"></i>${mylabel}`;
+                ev.currentTarget.innerHTML = `<i class="${myiconBulk}"></i>${mylabelBulk}`;
               }
             });
           }
         }
 
-        buttons.unshift(...varianEncumbranceButtons);
+        //buttons.unshift(...varianEncumbranceButtons);
       } else {
         if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_AE}`)) {
           actorEntity.unsetFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE);
@@ -804,13 +798,12 @@ const module = {
   renderActorSheetBulkSystem(actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any,actorEntityTmp:Actor):void {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
       const listHeaders = htmlElement.find('li.items-header .item-weight');
-      for (let liHeader of listHeaders) {
+      for (const liHeaderB of listHeaders) {
         //@ts-ignore
-        liHeader = $(liHeader);
+        const liHeader = <JQuery<HTMLElement>>$(liHeaderB);
         liHeader.append(
-          `
-          <div class="item-detail item-weight">${i18n('variant-encumbrance-dnd5e.label.Bulk')}</div>
-          `,
+          //`<div class="item-detail item-weight">${i18n('variant-encumbrance-dnd5e.label.Bulk')}</div>`,
+          `<br>/${i18n('variant-encumbrance-dnd5e.label.Bulk')}`,
         );
       }
 
@@ -835,6 +828,16 @@ const module = {
           //@ts-ignore
           const bulk = item.data.data.bulk ?? 0;
           const totalBulk = (quantity * bulk).toNearest(0.1);
+          liItem.parent().find('.item-detail.item-weight').append(
+            `
+            <div class="item-detail" 
+              title="Bulk: ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk',)}"
+            >
+              ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}
+            </div>
+            `,
+          );
+          /*
           liItem.parent().closest('item-weight').after(
             `
             <div class="item-detail item-bulk" title="Bulk: ${totalBulk ?? 0} ${i18n(
@@ -844,6 +847,7 @@ const module = {
             </div>
             `,
           );
+          */
         }
       }
     }

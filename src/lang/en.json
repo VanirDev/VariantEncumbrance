@@ -135,6 +135,11 @@
   "variant-encumbrance-dnd5e.label.disableVEOnSpecificActor": "Disabled VE",
   "variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor": "Enabled VE+WE",
 
+  "variant-encumbrance-dnd5e.label.disableVEAndWEBulkOnSpecificActor": "Disabled Bulk VE+WE",
+  "variant-encumbrance-dnd5e.label.enableWEBulkOnSpecificActor": "Enabled Bulk WE",
+  "variant-encumbrance-dnd5e.label.disableVEBulkOnSpecificActor": "Disabled Bulk VE",
+  "variant-encumbrance-dnd5e.label.enableVEAndWEBulkOnSpecificActor": "Enabled Bulk VE+WE",
+
   "variant-encumbrance-dnd5e.setting.vehicleUnit.name": "Enable Unit of weight for Vehicles",
   "variant-encumbrance-dnd5e.setting.vehicleUnit.hint": "Enables ability to change the base unit for weight used by vehicles",
   "variant-encumbrance-dnd5e.config.name": "Weight Unit",

@@ -120,17 +120,17 @@ export function checkBulkCategory(weight:number) {
   if(game.settings.get('dnd5e', 'metricWeightUnits')){
     bulkRef = convertKgToPounds(weight);
   }
-  if(weight <= 2){
+  if(bulkRef <= 2){
     return BULK_CATEGORY.TINY;
-  }else if(weight > 2 &&  weight <= 5){
+  }else if(bulkRef > 2 &&  bulkRef <= 5){
     return BULK_CATEGORY.SMALL;
-  }else if(weight > 5 &&  weight <= 10){
+  }else if(bulkRef > 5 &&  bulkRef <= 10){
     return BULK_CATEGORY.SMALL;
-  }else if(weight > 10 &&  weight <= 35){
+  }else if(bulkRef > 10 &&  bulkRef <= 35){
     return BULK_CATEGORY.LARGE;
-  }else if(weight > 35 &&  weight <= 70){
+  }else if(bulkRef > 35 &&  bulkRef <= 70){
     return BULK_CATEGORY.X_LARGE;
-  }else if(weight > 70){
+  }else if(bulkRef > 70){
     return BULK_CATEGORY.XX_LARGE;
   }else{
     return BULK_CATEGORY.XX_LARGE;
