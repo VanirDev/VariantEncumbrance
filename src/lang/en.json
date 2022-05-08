@@ -98,7 +98,6 @@
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socketLib feature integration",
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is usually useful only for avoid a socket collision with other modules",
 
-
   "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "[EXPERIMENTAL] Enable Bulk system",
   "variant-encumbrance-dnd5e.setting.enableBulkSystem.hint": "Enable integration with the Bulk System explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html",
   "variant-encumbrance-dnd5e.setting.unitsBulk.name": "Weight Units (Bulk System)",
@@ -158,5 +157,4 @@
   "variant-encumbrance-dnd5e.label.bulk.category.large.description": "Longer than an arm. Usually can be held with one hand, but us most comfortable with two. Up to 10 lbs. About as heavy as a cat or a sack of potatoes.",
   "variant-encumbrance-dnd5e.label.bulk.category.x-large.description": "Longer than the height of an average person. Requires two hands to hold. Up to 35 lbs. About a quarter of the weight of an average person.",
   "variant-encumbrance-dnd5e.label.bulk.category.xx-large.description": "Longer than the height of two people. Requires two hands to hold. Up to 70 lbs. About half as heavy as an average person."
-
 }

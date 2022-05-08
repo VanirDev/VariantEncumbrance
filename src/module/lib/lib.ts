@@ -107,32 +107,32 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
 // Module specific function
 // =============================
 
-export function convertPoundsToKg(valNum:number):number{
+export function convertPoundsToKg(valNum: number): number {
   return valNum / 2.20462262;
 }
 
-export function convertKgToPounds(valNum:number):number{
+export function convertKgToPounds(valNum: number): number {
   return valNum * 2.20462262;
 }
 
-export function checkBulkCategory(weight:number) {
+export function checkBulkCategory(weight: number) {
   let bulkRef = weight;
-  if(game.settings.get('dnd5e', 'metricWeightUnits')){
+  if (game.settings.get('dnd5e', 'metricWeightUnits')) {
     bulkRef = convertKgToPounds(weight);
   }
-  if(bulkRef <= 2){
+  if (bulkRef <= 2) {
     return BULK_CATEGORY.TINY;
-  }else if(bulkRef > 2 &&  bulkRef <= 5){
+  } else if (bulkRef > 2 && bulkRef <= 5) {
     return BULK_CATEGORY.SMALL;
-  }else if(bulkRef > 5 &&  bulkRef <= 10){
+  } else if (bulkRef > 5 && bulkRef <= 10) {
     return BULK_CATEGORY.SMALL;
-  }else if(bulkRef > 10 &&  bulkRef <= 35){
+  } else if (bulkRef > 10 && bulkRef <= 35) {
     return BULK_CATEGORY.LARGE;
-  }else if(bulkRef > 35 &&  bulkRef <= 70){
+  } else if (bulkRef > 35 && bulkRef <= 70) {
     return BULK_CATEGORY.X_LARGE;
-  }else if(bulkRef > 70){
+  } else if (bulkRef > 70) {
     return BULK_CATEGORY.XX_LARGE;
-  }else{
+  } else {
     return BULK_CATEGORY.XX_LARGE;
   }
 }

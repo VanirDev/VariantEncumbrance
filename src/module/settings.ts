@@ -419,7 +419,7 @@ export const registerSettings = function () {
   // }
 
   for (const [name, data] of Object.entries(otherSettings)) {
-      game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+    game.settings.register(CONSTANTS.MODULE_NAME, name, data);
   }
 };
 
@@ -824,6 +824,5 @@ function otherSettings(apply = false) {
       type: Number,
       default: 0.5,
     },
-
   };
 }

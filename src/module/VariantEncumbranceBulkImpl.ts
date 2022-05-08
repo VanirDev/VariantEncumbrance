@@ -57,7 +57,6 @@ export const VariantEncumbranceBulkImpl = {
     updatedEffect?: ActiveEffect | undefined,
     mode?: EncumbranceMode,
   ): Promise<void> {
-
     if (updatedItem) {
       let itemID: any;
       if (typeof updatedItem === 'string' || updatedItem instanceof String) {
@@ -121,18 +120,31 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
 
-    const encumbrancedataBulk = <EncumbranceBulkData>await actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.BULK);
-
     const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(actorEntity, inventoryItems);
 
+    // SEEM NOT NECESSARY Add pre check for encumbrance tier
+    if (<boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
+      if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA_BULK}`)) {
+        const encumbranceDataCurrent = <EncumbranceBulkData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK);
+        if (encumbranceDataCurrent.encumbranceTier == encumbranceDataBulk.encumbranceTier) {
+          //We ignore all the AE check
+          await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
+          return;
+        }
+      }
+    }
 
+    await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
 
+    // TODO
+    /*
     const enableVarianEncumbranceEffectsOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE_BULK)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
-      // TODO VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
+      VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
     }
+    */
   },
 
   /*
@@ -289,7 +301,7 @@ export const VariantEncumbranceBulkImpl = {
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE_BULK)
     );
     if (!enableVarianEncumbranceWeightBulkOnActorFlag) {
-      return <EncumbranceBulkData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.BULK) || {};
+      return <EncumbranceBulkData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK) || {};
     } else if (enableVarianEncumbranceWeightBulkOnActorFlag) {
       const invPlusCategoriesWeightToAdd = new Map<string, number>();
 
@@ -480,7 +492,7 @@ export const VariantEncumbranceBulkImpl = {
       //@ts-ignore
       if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
         if (size === 'tiny') {
-          size =  'sm';
+          size = 'sm';
         } else if (size === 'sm') {
           size = 'med';
         } else if (size === 'med') {
@@ -510,15 +522,15 @@ export const VariantEncumbranceBulkImpl = {
         } else if (size === 'lg') {
           minimumBulk = 40;
           //@ts-ignore
-          inventorySlot = 22 + (actorEntity.data.data.abilities.str.mod * 2);
+          inventorySlot = 22 + actorEntity.data.data.abilities.str.mod * 2;
         } else if (size === 'huge') {
           minimumBulk = 80;
           //@ts-ignore
-          inventorySlot = 30 + (actorEntity.data.data.abilities.str.mod * 4);
+          inventorySlot = 30 + actorEntity.data.data.abilities.str.mod * 4;
         } else if (size === 'grg') {
           minimumBulk = 160;
           //@ts-ignore
-          inventorySlot = 46 + (actorEntity.data.data.abilities.str.mod * 8);
+          inventorySlot = 46 + actorEntity.data.data.abilities.str.mod * 8;
         } else {
           minimumBulk = 20;
           //@ts-ignore
@@ -573,15 +585,15 @@ export const VariantEncumbranceBulkImpl = {
         } else if (size === 'lg') {
           minimumBulk = 40;
           //@ts-ignore
-          inventorySlot = 22 + (actorEntity.data.data.abilities.str.mod * 2);
+          inventorySlot = 22 + actorEntity.data.data.abilities.str.mod * 2;
         } else if (size === 'huge') {
           minimumBulk = 80;
           //@ts-ignore
-          inventorySlot = 30 + (actorEntity.data.data.abilities.str.mod * 4);
+          inventorySlot = 30 + actorEntity.data.data.abilities.str.mod * 4;
         } else if (size === 'grg') {
           minimumBulk = 160;
           //@ts-ignore
-          inventorySlot = 46 + (actorEntity.data.data.abilities.str.mod * 8);
+          inventorySlot = 46 + actorEntity.data.data.abilities.str.mod * 8;
         } else {
           minimumBulk = 20;
           //@ts-ignore
@@ -589,7 +601,7 @@ export const VariantEncumbranceBulkImpl = {
         }
       }
 
-      if(inventorySlot < minimumBulk){
+      if (inventorySlot < minimumBulk) {
         inventorySlot = minimumBulk;
       }
 
@@ -618,7 +630,7 @@ export const VariantEncumbranceBulkImpl = {
         speedDecrease: 0,
         unit: displayedUnits,
         inventorySlot: inventorySlot,
-        minimumBulk: minimumBulk
+        minimumBulk: minimumBulk,
       };
     } else {
       throw new Error('Something is wrong');
@@ -1106,4 +1118,3 @@ function _calcItemWeight(item: Item) {
         item.data.data?.bulk) || 0;
   return Math.round(weight * quantity * 100) / 100;
 }
-

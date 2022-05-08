@@ -1,11 +1,20 @@
 import { isEnabledActorType, VariantEncumbranceImpl } from './VariantEncumbranceImpl';
-import { EncumbranceData, EncumbranceMode, EncumbranceFlags, ENCUMBRANCE_TIERS, BULK_CATEGORIES, BULK_CATEGORY, BulkData } from './VariantEncumbranceModels';
+import {
+  EncumbranceData,
+  EncumbranceMode,
+  EncumbranceFlags,
+  ENCUMBRANCE_TIERS,
+  BULK_CATEGORIES,
+  BULK_CATEGORY,
+  BulkData,
+} from './VariantEncumbranceModels';
 import { canvas, game } from './settings';
 import { checkBulkCategory, convertPoundsToKg, debug, i18n, warn } from './lib/lib';
 import CONSTANTS from './constants';
 import { registerSocket } from './socket';
 import API from './api';
 import EffectInterface from './effects/effect-interface';
+import { VariantEncumbranceBulkImpl } from './VariantEncumbranceBulkImpl';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -217,7 +226,38 @@ export const readyHooks = async () => {
     async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
       const actorEntityTmp: any = <Actor>game.actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
       if (isEnabledActorType(actorEntityTmp)) {
-        module.renderActorSheetBulkSystem(actorSheet, htmlElement, actorObject, actorEntityTmp);
+
+        const htmlElementEncumbranceVariant = htmlElement.find('.encumbrance')
+          .addClass('encumbrance-variant');
+
+        module.renderActorSheetBulkSystem(
+          actorSheet,
+          htmlElement,
+          actorObject,
+          actorEntityTmp,
+          htmlElementEncumbranceVariant,
+        );
+      
+        // ===============================
+        // CUSTOMIZE ENCUMBRANCE VARIANT
+        // =============================
+
+        htmlElementEncumbranceVariant.find('.encumbrance-breakpoint').each(function(this) {
+          $(this)
+            .addClass('encumbrance-breakpoint-variant');
+        });
+        htmlElementEncumbranceVariant.find('.encumbrance-breakpoint-label').each(function(this) {
+          $(this)
+          .addClass('encumbrance-breakpoint-label-variant');
+        });
+  
+
+        let encumbranceElements;
+        if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
+          encumbranceElements = htmlElementEncumbranceVariant[0]?.children;
+        } else {
+          encumbranceElements = htmlElementEncumbranceVariant[0]?.children;
+        }
 
         //if (actorObject.isCharacter || actorObject.isVehicle) {
         // const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
@@ -245,12 +285,6 @@ export const readyHooks = async () => {
             //@ts-ignore
             actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
           );
-        }
-        let encumbranceElements;
-        if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
-          encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
-        } else {
-          encumbranceElements = htmlElement.find('.encumbrance')[0]?.children;
         }
 
         const displayedUnits = encumbranceData.unit;
@@ -351,13 +385,13 @@ export const readyHooks = async () => {
             encumbranceElements[0].classList.add('max');
           }
 
-          htmlElement.find('.encumbrance-breakpoint.encumbrance-33.arrow-up').parent().css('margin-bottom', '4px');
-          htmlElement
-            .find('.encumbrance-breakpoint.encumbrance-33.arrow-up')
-            .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.lightMax}<div>`);
-          htmlElement
+          htmlElementEncumbranceVariant.find('.encumbrance-breakpoint-variant.encumbrance-33.arrow-up').parent().css('margin-bottom', '4px');
+          htmlElementEncumbranceVariant
+            .find('.encumbrance-breakpoint-variant.encumbrance-33.arrow-up')
+            .append(`<div class="encumbrance-breakpoint-label-variant VELabel">${encumbranceData.lightMax}<div>`);
+          htmlElementEncumbranceVariant
             .find('.encumbrance-breakpoint.encumbrance-66.arrow-up')
-            .append(`<div class="encumbrance-breakpoint-label VELabel">${encumbranceData.mediumMax}<div>`);
+            .append(`<div class="encumbrance-breakpoint-label-variant VELabel">${encumbranceData.mediumMax}<div>`);
           encumbranceElements[1].insertAdjacentHTML(
             'afterend',
             `<span class="VELabel" style="right:0%">${encumbranceData.heavyMax}</span>`,
@@ -461,8 +495,7 @@ export const readyHooks = async () => {
           let myicon = 'fas fa-weight-hanging';
           let index = 0;
 
-          if (enableVarianEncumbranceEffectsOnSpecificActorFlag && 
-            enableVarianEncumbranceWeightOnSpecificActorFlag) {
+          if (enableVarianEncumbranceEffectsOnSpecificActorFlag && enableVarianEncumbranceWeightOnSpecificActorFlag) {
             mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
             myicon = 'fas fa-weight-hanging';
             index = 0;
@@ -556,8 +589,7 @@ export const readyHooks = async () => {
 
           // Bulk system
 
-          if(game.settings.get(CONSTANTS.MODULE_NAME,'enableBulkSystem')){
-
+          if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
             let enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = true;
             if (!hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.ENABLED_AE_BULK}`)) {
               await actorEntity.setFlag(
@@ -588,8 +620,10 @@ export const readyHooks = async () => {
             let myiconBulk = 'fas fa-bold';
             let indexBulk = 0;
 
-            if (enableVarianEncumbranceEffectsBulkOnSpecificActorFlag && 
-              enableVarianEncumbranceWeightBulkOnSpecificActorFlag) {
+            if (
+              enableVarianEncumbranceEffectsBulkOnSpecificActorFlag &&
+              enableVarianEncumbranceWeightBulkOnSpecificActorFlag
+            ) {
               mylabelBulk = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEBulkOnSpecificActor');
               myiconBulk = 'fas fa-bold';
               indexBulk = 0;
@@ -680,7 +714,7 @@ export const readyHooks = async () => {
                   mylabelBulk = '';
                 }
                 ev.currentTarget.innerHTML = `<i class="${myiconBulk}"></i>${mylabelBulk}`;
-              }
+              },
             });
           }
         }
@@ -795,8 +829,18 @@ export async function deleteDocuments(wrapped, ids = [], context = { parent: {},
 // }
 
 const module = {
-  renderActorSheetBulkSystem(actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any,actorEntityTmp:Actor):void {
+  renderActorSheetBulkSystem(
+    actorSheet: ActorSheet,
+    htmlElement: JQuery<HTMLElement>,
+    actorObject: any,
+    actorEntityTmp: Actor,
+    encumbranceElement,
+  ): void {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
+      // ======================================================
+      // CUSTOMIZE INVENTORY
+      // ======================================================
+
       const listHeaders = htmlElement.find('li.items-header .item-weight');
       for (const liHeaderB of listHeaders) {
         //@ts-ignore
@@ -828,15 +872,18 @@ const module = {
           //@ts-ignore
           const bulk = item.data.data.bulk ?? 0;
           const totalBulk = (quantity * bulk).toNearest(0.1);
-          liItem.parent().find('.item-detail.item-weight').append(
-            `
+          liItem
+            .parent()
+            .find('.item-detail.item-weight')
+            .append(
+              `
             <div class="item-detail" 
-              title="Bulk: ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk',)}"
+              title="Bulk: ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}"
             >
               ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}
             </div>
             `,
-          );
+            );
           /*
           liItem.parent().closest('item-weight').after(
             `
@@ -850,10 +897,143 @@ const module = {
           */
         }
       }
+
+      // ===============================
+      // CUSTOMIZE ENCUMBRANCE
+      // ===============================
+
+      $(encumbranceElement).clone()
+        .removeClass('encumbrance-variant')
+        .addClass('encumbrance-bulk')
+        .appendTo(encumbranceElement.parent());
+
+      //htmlElement.find('.encumbrance-bulk').css('margin-bottom', '16px');
+      // htmlElement.find('.encumbrance-bulk')[0].style.marginBottom = '16px';
+
+      const htmlElementEncumbranceBulk = htmlElement.find('.encumbrance-bulk');
+
+      htmlElementEncumbranceBulk.find('.encumbrance-breakpoint').each(function(this) {
+        $(this)
+          .addClass('encumbrance-breakpoint-bulk')
+          .removeClass('encumbrance-breakpoint-variant');
+      });
+      htmlElementEncumbranceBulk.find('.encumbrance-breakpoint-label').each(function(this) {
+        $(this)
+        .addClass('encumbrance-breakpoint-label-bulk')
+        .removeClass('encumbrance-breakpoint-label-variant')
+      });
+
+      let encumbranceElementsBulk;
+      if (htmlElementEncumbranceBulk[0].tagName === 'FORM' && htmlElementEncumbranceBulk[0].id === '') {
+        encumbranceElementsBulk = htmlElementEncumbranceBulk[0]?.children;
+      } else {
+        encumbranceElementsBulk = htmlElementEncumbranceBulk[0]?.children;
+      }
+
+      let encumbranceDataBulk;
+      // if (hasProperty(actorObject.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`)) {
+      //   encumbranceDataBulk = <EncumbranceData>getProperty(actorObject.data,`flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA}`);
+      // }
+      if (!encumbranceDataBulk) {
+        // const itemsCurrent = <Item[]>actorEntity.data.items.contents;//actorObject.items;// STRANGE BUG actorEntity.data.items.contents
+        // const actorEntityCurrent = <ActorData>actorObject.actor; // STRANGE BUG <Actor>game.actors?.get(actorObject.actor._id);
+        // STRANGE BEHAVIOUR
+        if (actorObject.actor?.flags) {
+          // mergeObject(<any>actorEntity.data.flags, <any>actorObject.actor.flags);
+          setProperty(actorEntityTmp.data, 'flags', actorObject.actor.flags);
+        }
+        if (actorObject.data) {
+          // mergeObject(<any>actorEntity.data.data, <any>actorObject.data);
+          setProperty(actorEntityTmp.data, 'data', actorObject.data);
+        }
+        // mergeObject(actorEntity.data.items, actorObject.items);
+        encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(
+          actorEntityTmp,
+          //@ts-ignore
+          actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
+        );
+      }
+
+      const displayedUnitsBulk = encumbranceDataBulk.unit;
+
+      if (
+        !encumbranceElementsBulk &&
+        ((game.modules.get('compact-beyond-5e-sheet')?.active &&
+          actorSheet.template.includes('compact-beyond-5e-sheet')) ||
+          (game.modules.get('dndbeyond-character-sheet')?.active &&
+            actorSheet.template.includes('dndbeyond-character-sheet')))
+      ) {
+        const encumbranceElementsTmp: any = htmlElementEncumbranceBulk[0]?.children;
+
+        encumbranceElementsTmp[0].textContent =
+          'Bulk Carried: ' + Math.round(encumbranceDataBulk.totalWeightToDisplay * 100) / 100 + ' ' + displayedUnitsBulk;
+
+        encumbranceElementsTmp[1].textContent = 'Max: ' + encumbranceDataBulk.heavyMax + ' ' + displayedUnitsBulk;
+        // TODO visual integration with compact-beyond-5e-sheet
+      }
+
+      if (encumbranceElementsBulk) {
+        encumbranceElementsBulk[2].style.left =
+          (encumbranceDataBulk.lightMax / encumbranceDataBulk.heavyMax) * 100 + '%';
+        encumbranceElementsBulk[3].style.left =
+          (encumbranceDataBulk.lightMax / encumbranceDataBulk.heavyMax) * 100 + '%';
+        encumbranceElementsBulk[4].style.left =
+          (encumbranceDataBulk.mediumMax / encumbranceDataBulk.heavyMax) * 100 + '%';
+        encumbranceElementsBulk[5].style.left =
+          (encumbranceDataBulk.mediumMax / encumbranceDataBulk.heavyMax) * 100 + '%';
+        encumbranceElementsBulk[0].style.cssText =
+          'width: ' +
+          Math.min(Math.max((encumbranceDataBulk.totalWeightToDisplay / encumbranceDataBulk.heavyMax) * 100, 0), 99.8) +
+          '%;';
+        // encumbranceElements[1].textContent = Math.round(encumbranceData.totalWeightToDisplay * 100) / 100 + " " + game.settings.get(CONSTANTS.MODULE_NAME, "units");
+        encumbranceElementsBulk[1].textContent =
+          Math.round(encumbranceDataBulk.totalWeightToDisplay * 100) / 100 +
+          '/' +
+          encumbranceDataBulk.heavyMax +
+          ' ' +
+          displayedUnitsBulk;
+
+        encumbranceElementsBulk[1].classList.remove('medium');
+        encumbranceElementsBulk[1].classList.remove('heavy');
+
+        if (encumbranceDataBulk.encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
+          encumbranceElementsBulk[1].classList.add('medium');
+        }
+        if (encumbranceDataBulk.encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
+          encumbranceElementsBulk[1].classList.add('heavy');
+        }
+        if (encumbranceDataBulk.encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
+          encumbranceElementsBulk[1].classList.add('max');
+        }
+
+        // htmlElementEncumbranceBulk
+        //   .find('.encumbrance-breakpoint-bulk.encumbrance-33.arrow-up').parent().css('margin-bottom', '4px');
+        // htmlElementEncumbranceBulk
+        //   .find('.encumbrance-breakpoint-bulk.encumbrance-33.arrow-up')
+        //   .append(`<div class="encumbrance-breakpoint-label-bulk VELabel">${encumbranceDataBulk.lightMax}<div>`);
+
+        htmlElementEncumbranceBulk
+          .find('.encumbrance-breakpoint-bulk.encumbrance-66.arrow-up')
+          .html(`<div class="encumbrance-breakpoint-label-bulk VELabel">${encumbranceDataBulk.mediumMax}<div>`);
+        
+        $(encumbranceElementsBulk).parent()
+          .find('.encumbrance-breakpoint.encumbrance-33.arrow-up.encumbrance-breakpoint-bulk')[0].style.display = 'none';
+        $(encumbranceElementsBulk).parent()
+          .find('.encumbrance-breakpoint.encumbrance-33.arrow-down.encumbrance-breakpoint-bulk')[0].style.display = 'none';
+
+        $(encumbranceElementsBulk)
+          .find('.encumbrance-breakpoint-bulk.encumbrance-66.arrow-up')
+          .append(`<div class="encumbrance-breakpoint-label-bulk VELabel">${encumbranceDataBulk.mediumMax}<div>`);
+        
+        encumbranceElementsBulk[1].insertAdjacentHTML(
+          'afterend',
+          `<span class="VELabel" style="right:0%">${encumbranceDataBulk.heavyMax}</span>`,
+        );
+        encumbranceElementsBulk[1].insertAdjacentHTML('afterend', `<span class="VELabel">0</span>`);
+      }
     }
   },
-  renderItemSheetBulkSystem(app: ItemSheet, html: JQuery<HTMLElement>, data: any, itemTmp:Item):void {
-
+  renderItemSheetBulkSystem(app: ItemSheet, html: JQuery<HTMLElement>, data: any, itemTmp: Item): void {
     // Size
 
     const options: string[] = [];
@@ -863,20 +1043,20 @@ const module = {
     const weight = data.data.weight ?? 0;
     const bulk = data.data.bulk ?? 0;
     const bulkCategory = checkBulkCategory(weight);
-    if(bulk > 0){
+    if (bulk > 0) {
       bulkCategory.bulk = bulk;
     }
 
     html
-    .find('.item-properties') // <div class="item-properties">
-    // .closest('item-weight').after(
-    .append(
-      `
+      .find('.item-properties') // <div class="item-properties">
+      // .closest('item-weight').after(
+      .append(
+        `
         <div class="form-group">
           <label>${i18n('variant-encumbrance-dnd5e.label.Bulk')}</label>
           <input type="text" name="data.bulk" value="${bulk}" data-dtype="Number"/>
         </div>
         `,
-    );
-  }
-}
+      );
+  },
+};

@@ -85,7 +85,6 @@ Hooks.once('socketlib.ready', () => {
 });
 
 Hooks.once('libChangelogsReady', function () {
-
   //@ts-ignore
   libChangelogs.registerConflict(
     CONSTANTS.MODULE_NAME,
@@ -104,9 +103,12 @@ Hooks.once('libChangelogsReady', function () {
   // );
 
   //@ts-ignore
-  libChangelogs.register(CONSTANTS.MODULE_NAME,
-  `
+  libChangelogs.register(
+    CONSTANTS.MODULE_NAME,
+    `
   - Bug fix for the metric system: fail to calculate with modules setting 'enable Variant Encumbrance Weight On Actor Flag'
   - Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5
-  `, 'minor');
+  `,
+    'minor',
+  );
 });

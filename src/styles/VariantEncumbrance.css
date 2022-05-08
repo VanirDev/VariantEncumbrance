@@ -34,7 +34,9 @@
   text-align: left !important;
 }
 
-.encumbrance-breakpoint-label {
+.encumbrance-breakpoint-label, 
+.encumbrance-breakpoint-label-variant, 
+.encumbrance-breakpoint-label-bulk {
   font-style: normal !important;
   bottom: -22px;
   width: 100px;
@@ -73,6 +75,18 @@
 }
 
 /* system bulk */
+
+.encumbrance-bulk {
+  margin-bottom: 16px!important;
+  margin-top: 25px!important;
+}
+
+/* 
+.encumbrance-breakpoint.encumbrance-33 .arrow-up .encumbrance-breakpoint-bulk,
+.encumbrance-breakpoint.encumbrance-33 .arrow-down .encumbrance-breakpoint-bulk{
+  display: none;
+} 
+*/
 
 .encumbrance-bar-bulk {
   background: #6eb313 !important;
