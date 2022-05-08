@@ -34,8 +34,8 @@
   text-align: left !important;
 }
 
-.encumbrance-breakpoint-label, 
-.encumbrance-breakpoint-label-variant, 
+.encumbrance-breakpoint-label,
+.encumbrance-breakpoint-label-variant,
 .encumbrance-breakpoint-label-bulk {
   font-style: normal !important;
   bottom: -22px;
@@ -77,8 +77,8 @@
 /* system bulk */
 
 .encumbrance-bulk {
-  margin-bottom: 16px!important;
-  margin-top: 25px!important;
+  margin-bottom: 16px !important;
+  margin-top: 25px !important;
 }
 
 /* 

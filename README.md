@@ -164,6 +164,9 @@ The calculation should be correct, the metric values ​​2.5, 5, 7.5 are the o
 
 ![img](./wiki/explain_metric_system.png)
 
+### Integration with System Bulk by [Giffyglyph](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
+
+Working in progress...
 
 ### Variant Encumbrance Flag
 

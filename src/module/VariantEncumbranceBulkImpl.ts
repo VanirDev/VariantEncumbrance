@@ -125,7 +125,9 @@ export const VariantEncumbranceBulkImpl = {
     // SEEM NOT NECESSARY Add pre check for encumbrance tier
     if (<boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
       if (hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.DATA_BULK}`)) {
-        const encumbranceDataCurrent = <EncumbranceBulkData>actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK);
+        const encumbranceDataCurrent = <EncumbranceBulkData>(
+          actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK)
+        );
         if (encumbranceDataCurrent.encumbranceTier == encumbranceDataBulk.encumbranceTier) {
           //We ignore all the AE check
           await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
@@ -136,18 +138,14 @@ export const VariantEncumbranceBulkImpl = {
 
     await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
 
-    // TODO
-    /*
     const enableVarianEncumbranceEffectsOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE_BULK)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
-      VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
+      VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceDataBulk.encumbranceTier);
     }
-    */
   },
 
-  /*
   manageActiveEffect: async function (actorEntity: Actor, encumbranceTier: number) {
     let effectEntityPresent: ActiveEffect | undefined;
 
@@ -279,7 +277,6 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
   },
-  */
 
   /**
    * Compute the level and percentage of encumbrance for an Actor.
@@ -822,32 +819,32 @@ export const VariantEncumbranceBulkImpl = {
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-      value: `${value * 0.5}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `${movement.burrow * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-      value: `${value * 0.5}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `${movement.climb * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-      value: `${value * 0.5}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `${movement.fly * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-      value: `${value * 0.5}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `${movement.swim * 0.5}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-      value: `${value * 0.5}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `${movement.walk * 0.5}`,
     });
     // THIS IS THE DAE SOLUTION
     // } else {
@@ -1041,7 +1038,7 @@ function calcWeight(
 ) {
   if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item);
   // if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
-  // MOD 4535992 Removed variant encumbrance take care of this
+  // MOD 4535992 Removed variant encumbrance take care of thicalcWeights
   // const useEquippedUnequippedItemCollectionFeature = game.settings.get(
   //   CONSTANTS.MODULE_NAME,
   //   'useEquippedUnequippedItemCollectionFeature',
@@ -1074,7 +1071,8 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
     if (ignoreTypes?.some((name) => item.name.includes(name))) return acc;
     //@ts-ignore
     if (ignoreItems?.includes(item.name)) return acc;
-    return acc + (item.calcWeight() ?? 0); // TODO convert this in a static method ???
+    //@ts-ignore
+    return acc + (item.data.data.bulk ?? 0); // TODO convert this in a static method ???
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore
