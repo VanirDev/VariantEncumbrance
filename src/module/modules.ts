@@ -49,11 +49,6 @@ export const initHooks = () => {
   //   }
   // }
 
-  //@ts-ignore
-  window.VariantEncumbrance = {
-    API,
-  };
-
   // CONFIG.DND5E.encumbrance = {
   //   currencyPerWeight: {
   //     imperial: 50,
@@ -122,20 +117,12 @@ export const initHooks = () => {
 
 export const setupHooks = async () => {
   // setup all the hooks
+  API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME) as unknown as typeof EffectInterface;
+  //@ts-ignore
+  API.effectInterface.initialize();
 
   //@ts-ignore
-  window.VariantEncumbrance.API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
-  //@ts-ignore
-  window.VariantEncumbrance.API.effectInterface.initialize();
-
-  if (game[CONSTANTS.MODULE_NAME]) {
-    game[CONSTANTS.MODULE_NAME] = {};
-  }
-  if (game[CONSTANTS.MODULE_NAME].API) {
-    game[CONSTANTS.MODULE_NAME].API = {};
-  }
-  //@ts-ignore
-  game[CONSTANTS.MODULE_NAME].API = window.VariantEncumbrance.API;
+  setApi(API);
 
   // module specific
 

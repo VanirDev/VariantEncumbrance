@@ -18,6 +18,8 @@ import { initHooks, readyHooks, setupHooks } from './module/modules';
 import EffectInterface from './module/effects/effect-interface';
 import { canvas, game } from './module/settings';
 import CONSTANTS from './module/constants';
+import { error } from './module/lib/lib';
+import API from './module/api';
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -44,12 +46,7 @@ Hooks.once('init', async () => {
 /* Setup module							*/
 /* ------------------------------------ */
 Hooks.once('setup', function () {
-  // Do anything after initialization but before ready
-  //setupModules();
-
   setupHooks();
-
-  registerSettings();
 });
 
 /* ------------------------------------ */
@@ -58,16 +55,14 @@ Hooks.once('setup', function () {
 Hooks.once('ready', () => {
   // Do anything once the module is ready
   if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    ui.notifications?.error(
-      `The '${CONSTANTS.MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`,
-    );
-    return;
+    let word = 'install and activate';
+    if (game.modules.get('lib-wrapper')) word = 'activate';
+    throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
   }
   if (!game.modules.get('socketlib')?.active && game.user?.isGM) {
-    ui.notifications?.error(
-      `The '${CONSTANTS.MODULE_NAME}' module requires to install and activate the 'socketlib' module.`,
-    );
-    return;
+    let word = 'install and activate';
+    if (game.modules.get('socketlib')) word = 'activate';
+    throw error(`Requires the 'socketlib' module. Please ${word} it.`);
   }
 
   readyHooks();
@@ -75,14 +70,46 @@ Hooks.once('ready', () => {
 
 // Add any additional hooks if necessary
 
-Hooks.once('socketlib.ready', () => {
-  game[CONSTANTS.MODULE_NAME] = game[CONSTANTS.MODULE_NAME] || {};
+export interface VariantEncumbranceModuleData {
+  api: typeof API;
+  socket: any;
+}
 
-  // game[CONSTANTS.MODULE_NAME].effects = new EffectDefinitions();
-  game[CONSTANTS.MODULE_NAME].effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
-  // game[CONSTANTS.MODULE_NAME].statusEffects = new StatusEffects();
-  game[CONSTANTS.MODULE_NAME].effectInterface.initialize();
-});
+/**
+ * Initialization helper, to set API.
+ * @param api to set to game module.
+ */
+export function setApi(api: typeof API): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as VariantEncumbranceModuleData;
+  data.api = api;
+}
+
+/**
+ * Returns the set API.
+ * @returns Api from games module.
+ */
+export function getApi(): typeof API {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as VariantEncumbranceModuleData;
+  return data.api;
+}
+
+/**
+ * Initialization helper, to set Socket.
+ * @param socket to set to game module.
+ */
+export function setSocket(socket: any): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as VariantEncumbranceModuleData;
+  data.socket = socket;
+}
+
+/*
+ * Returns the set socket.
+ * @returns Socket from games module.
+ */
+export function getSocket() {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as VariantEncumbranceModuleData;
+  return data.socket;
+}
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
@@ -90,7 +117,7 @@ Hooks.once('libChangelogsReady', function () {
     CONSTANTS.MODULE_NAME,
     CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME,
     `
-    - possible wrong calculation on vehicle sheet with the feature "Vehicle Cargo Capacity Unit", it should work, but i'm not tested all the use case, open a issue if you encounter any problem"
+    - possible wrong calculation on vehicle sheet with the feature "Vehicle Cargo Capacity Unit", it should work, but i'm not tested all the use cases, open a issue if you encounter any problem
     `,
     'minor',
   );
@@ -106,8 +133,7 @@ Hooks.once('libChangelogsReady', function () {
   libChangelogs.register(
     CONSTANTS.MODULE_NAME,
     `
-  - Bug fix for the metric system: fail to calculate with modules setting 'enable Variant Encumbrance Weight On Actor Flag'
-  - Bug fix for the metric system: Replace standard metric weight steps from 2.3/4.5/6.8 to 2.5/5/7.5
+  - Integration of bulk system
   `,
     'minor',
   );
