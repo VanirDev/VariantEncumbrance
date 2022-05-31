@@ -2,50 +2,6 @@ import API from './api';
 import CONSTANTS from './constants';
 import { i18n } from './lib/lib';
 
-export const game = getGame();
-export const canvas = getCanvas();
-
-// export const CONSTANTS.MODULE_NAME = 'variant-encumbrance-dnd5e';
-// export const VARIANT_ENCUMBRANCE_FLAG = 'variant-encumbrance-dnd5e';
-// export const VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME = 'inventory-plus';
-// export const VARIANT_ENCUMBRANCE_MIDI_QOL_MODULE_NAME = 'midi-qol';
-// export const VARIANT_ENCUMBRANCE_ITEM_COLLECTION_MODULE_NAME = 'itemcollection';
-// export const VARIANT_ENCUMBRANCE_DFREDS_CONVENIENT_EFFECTS_MODULE_NAME = 'dfreds-convenient-effects';
-// export const VARIANT_ENCUMBRANCE_DF_QUALITY_OF_LIFE_MODULE_NAME = 'df-qol';
-// export const VARIANT_ENCUMBRANCE_DAE_MODULE_NAME = 'dae';
-
-/**
- * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
- * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
- * That's why you get errors when you try to access properties on canvas other than ready.
- * In order to get around that, you need to type guard canvas.
- * Also be aware that this will become even more important in 0.8.x because no canvas mode is being introduced there.
- * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
- * @returns
- */
-function getCanvas(): Canvas {
-  if (!(canvas instanceof Canvas) || !canvas.ready) {
-    throw new Error('Canvas Is Not Initialized');
-  }
-  return canvas;
-}
-
-/**
- * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
- * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
- * That's why you get errors when you try to access properties on canvas other than ready.
- * In order to get around that, you need to type guard canvas.
- * Also be aware that this will become even more important in 0.8.x because no canvas mode is being introduced there.
- * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
- * @returns
- */
-function getGame(): Game {
-  if (!(game instanceof Game)) {
-    throw new Error('Game Is Not Initialized');
-  }
-  return game;
-}
-
 export const registerSettings = function () {
   game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
     name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
@@ -410,8 +366,19 @@ export const registerSettings = function () {
     scope: 'world',
     config: true,
     type: Number,
-    default: 6,
+    default: 0.5,
   });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'automaticApplySuggestedBulk', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
+
 
   // const settings = defaultSettings();
   // for (const [name, data] of Object.entries(settings)) {
@@ -823,6 +790,15 @@ function otherSettings(apply = false) {
       config: true,
       type: Number,
       default: 0.5,
+    },
+
+    automaticApplySuggestedBulk: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
     },
   };
 }

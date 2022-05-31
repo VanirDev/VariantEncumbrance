@@ -18,17 +18,13 @@ import {
   invPlusActive,
   daeActive,
 } from './modules';
-import {
-  ActorData,
-  ItemData,
-} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import EffectInterface from './effects/effect-interface';
-import { canvas, game } from './settings';
 import CONSTANTS from './constants';
 import { error, i18n, isGMConnected } from './lib/lib';
 import API from './api';
-import EffectHandler from './effects/effect-handler';
-import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type EffectHandler from './effects/effect-handler';
+import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
 /* Constants         					*/

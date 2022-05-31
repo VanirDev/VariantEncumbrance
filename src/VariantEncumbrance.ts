@@ -16,10 +16,9 @@ import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/modules';
 import EffectInterface from './module/effects/effect-interface';
-import { canvas, game } from './module/settings';
 import CONSTANTS from './module/constants';
 import { error } from './module/lib/lib';
-import API from './module/api';
+import type API from './module/api';
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -110,31 +109,3 @@ export function getSocket() {
   const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as VariantEncumbranceModuleData;
   return data.socket;
 }
-
-Hooks.once('libChangelogsReady', function () {
-  //@ts-ignore
-  libChangelogs.registerConflict(
-    CONSTANTS.MODULE_NAME,
-    CONSTANTS.DF_QUALITY_OF_LIFE_MODULE_NAME,
-    `
-    - possible wrong calculation on vehicle sheet with the feature "Vehicle Cargo Capacity Unit", it should work, but i'm not tested all the use cases, open a issue if you encounter any problem
-    `,
-    'minor',
-  );
-  //@ts-ignore
-  // libChangelogs.registerConflict(
-  //   CONSTANTS.MODULE_NAME,
-  //   VARIANT_ENCUMBRANCE_INVENTORY_PLUS_MODULE_NAME,
-  //   'no particular errors, but it is still not recommended to use this module with version of inventory +',
-  //   'minor',
-  // );
-
-  //@ts-ignore
-  libChangelogs.register(
-    CONSTANTS.MODULE_NAME,
-    `
-  - Integration of bulk system
-  `,
-    'minor',
-  );
-});

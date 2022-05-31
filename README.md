@@ -164,9 +164,12 @@ The calculation should be correct, the metric values ​​2.5, 5, 7.5 are the o
 
 ![img](./wiki/explain_metric_system.png)
 
-### Integration with System Bulk by [Giffyglyph](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
+### Integration with System Bulk based on the rules from [Giffyglyph](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
 
-Working in progress...
+<iframe
+  src="https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html"
+  style="width:100%; height:300px;"
+></iframe>
 
 ### Variant Encumbrance Flag
 
@@ -265,6 +268,7 @@ variant-encumbrance-dnd5e:
 |Use standard calculation weight of the dnd5e system| I DON'T RECOMMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss.|false||
 |Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECOMMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|false|This make sense only with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) installed and active|
 |Disable the socketLib feature integration|This is usually useful only for avoid a socket collision with other modules|false||
+|Automatic apply suggested bulk|WARNING: THIS IS DANGEROUS, IT WILL UPDATE THE BULK DATA ON EVERY ITEM BEEN RENDERED IF THE BULK VALUE IS 0. This is usually save time if you don't want to manually set every item (the advisable way)|false||
 
 
 # Build

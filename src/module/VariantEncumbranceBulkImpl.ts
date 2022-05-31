@@ -18,17 +18,13 @@ import {
   invPlusActive,
   daeActive,
 } from './modules';
-import {
-  ActorData,
-  ItemData,
-} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import EffectInterface from './effects/effect-interface';
-import { canvas, game } from './settings';
 import CONSTANTS from './constants';
 import { error, i18n, isGMConnected } from './lib/lib';
 import API from './api';
-import EffectHandler from './effects/effect-handler';
-import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type EffectHandler from './effects/effect-handler';
+import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -604,7 +600,7 @@ export const VariantEncumbranceBulkImpl = {
 
       const displayedUnits = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'unitsBulk');
       const lightMax = 0;
-      const mediumMax = inventorySlot * 0.5;
+      const mediumMax = inventorySlot * 0.5; // This is a fixed value to half of the inventory
       const heavyMax = inventorySlot;
 
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
@@ -814,44 +810,45 @@ export const VariantEncumbranceBulkImpl = {
   },
 
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
+    const heavyWeightDecreaseBulk = parseInt(<string>game.settings.get(CONSTANTS.MODULE_NAME,'heavyWeightDecreaseBulk')) || 0.5;
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.burrow * 0.5}`,
+      value: `${movement.burrow * heavyWeightDecreaseBulk}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.climb * 0.5}`,
+      value: `${movement.climb * heavyWeightDecreaseBulk}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.fly * 0.5}`,
+      value: `${movement.fly * heavyWeightDecreaseBulk}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.swim * 0.5}`,
+      value: `${movement.swim * heavyWeightDecreaseBulk}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.walk * 0.5}`,
+      value: `${movement.walk * heavyWeightDecreaseBulk}`,
     });
     // THIS IS THE DAE SOLUTION
     // } else {
     //   effect.changes.push({
     //     key: 'data.attributes.movement.all',
     //     mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-    //     value: `${value * 0.5}`,
+    //     value: `${value * heavyWeightDecreaseBulk}`,
     //     priority: 5,
     //   });
     // }

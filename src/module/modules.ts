@@ -8,8 +8,7 @@ import {
   BULK_CATEGORY,
   BulkData,
 } from './VariantEncumbranceModels';
-import { canvas, game } from './settings';
-import { checkBulkCategory, convertPoundsToKg, debug, i18n, warn } from './lib/lib';
+import { checkBulkCategory, convertPoundsToKg, debug, i18n, i18nFormat, warn } from './lib/lib';
 import CONSTANTS from './constants';
 import { registerSocket } from './socket';
 import API from './api';
@@ -715,7 +714,7 @@ const module = {
     });
 
     let encumbranceElements;
-    if (htmlElement[0].tagName === 'FORM' && htmlElement[0].id === '') {
+    if (htmlElement[0]?.tagName === 'FORM' && htmlElement[0]?.id === '') {
       encumbranceElements = htmlElementEncumbranceVariant[0]?.children;
     } else {
       encumbranceElements = htmlElementEncumbranceVariant[0]?.children;
@@ -912,7 +911,7 @@ const module = {
             .find('.item-detail.item-weight')
             .append(
               `
-            <div class="item-detail" 
+            <div class="item-detail"
               title="Bulk: ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}"
             >
               ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk')}
@@ -956,7 +955,7 @@ const module = {
       });
 
       let encumbranceElementsBulk;
-      if (htmlElementEncumbranceBulk[0].tagName === 'FORM' && htmlElementEncumbranceBulk[0].id === '') {
+      if (htmlElementEncumbranceBulk[0]?.tagName === 'FORM' && htmlElementEncumbranceBulk[0]?.id === '') {
         encumbranceElementsBulk = htmlElementEncumbranceBulk[0]?.children;
       } else {
         encumbranceElementsBulk = htmlElementEncumbranceBulk[0]?.children;
@@ -1051,13 +1050,13 @@ const module = {
           .find('.encumbrance-breakpoint-bulk.encumbrance-66.arrow-up')
           .html(`<div class="encumbrance-breakpoint-label-bulk VELabel">${encumbranceDataBulk.mediumMax}<div>`);
 
-        $(encumbranceElementsBulk)
+        (<HTMLElement>($(encumbranceElementsBulk)
           .parent()
-          .find('.encumbrance-breakpoint.encumbrance-33.arrow-up.encumbrance-breakpoint-bulk')[0].style.display =
+          .find('.encumbrance-breakpoint.encumbrance-33.arrow-up.encumbrance-breakpoint-bulk'))[0]).style.display =
           'none';
-        $(encumbranceElementsBulk)
+        (<HTMLElement>($(encumbranceElementsBulk)
           .parent()
-          .find('.encumbrance-breakpoint.encumbrance-33.arrow-down.encumbrance-breakpoint-bulk')[0].style.display =
+          .find('.encumbrance-breakpoint.encumbrance-33.arrow-down.encumbrance-breakpoint-bulk'))[0]).style.display =
           'none';
 
         $(encumbranceElementsBulk)
@@ -1080,10 +1079,17 @@ const module = {
     //   `<option data-image="icons/svg/mystery-man.svg" value="">${i18n(`${CONSTANTS.MODULE_NAME}.default`)}</option>`,
     // );
     const weight = data.data.weight ?? 0;
+    let suggestedBulkWeight = 0;
+    const suggestedBulk = checkBulkCategory(weight);
+    if(suggestedBulk){
+      suggestedBulkWeight = suggestedBulk.bulk;
+    }
     const bulk = data.data.bulk ?? 0;
     const bulkCategory = checkBulkCategory(weight);
     if (bulk > 0) {
       bulkCategory.bulk = bulk;
+    }else if(game.settings.get(CONSTANTS.MODULE_NAME, 'automaticApplySuggestedBulk')){
+      bulkCategory.bulk = suggestedBulkWeight;
     }
 
     html
@@ -1091,6 +1097,7 @@ const module = {
       // .closest('item-weight').after(
       .append(
         `
+        <p class="notes">${i18nFormat('variant-encumbrance-dnd5e.label.Bulk.suggestedValue', {bulkweight: suggestedBulkWeight})}</p>
         <div class="form-group">
           <label>${i18n('variant-encumbrance-dnd5e.label.Bulk')}</label>
           <input type="text" name="data.bulk" value="${bulk}" data-dtype="Number"/>

@@ -1,9 +1,8 @@
-import { BULK_CATEGORY } from './../VariantEncumbranceModels';
+import { BULK_CATEGORY, BulkData } from './../VariantEncumbranceModels';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api.js';
 import CONSTANTS from '../constants.js';
-import { canvas, game } from '../settings';
 
 // =============================
 // Module Generic function
@@ -89,7 +88,7 @@ export function cleanUpString(stringToCleanUp: string) {
   }
 }
 
-export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = false): boolean {
   if (stringToCheck1 && stringToCheck2) {
     const s1 = cleanUpString(stringToCheck1) ?? '';
     const s2 = cleanUpString(stringToCheck2) ?? '';
@@ -115,10 +114,10 @@ export function convertKgToPounds(valNum: number): number {
   return valNum * 2.20462262;
 }
 
-export function checkBulkCategory(weight: number) {
+export function checkBulkCategory(weight: number):BulkData {
   let bulkRef = weight;
   if (game.settings.get('dnd5e', 'metricWeightUnits')) {
-    bulkRef = convertKgToPounds(weight);
+    bulkRef = convertPoundsToKg(weight);
   }
   if (bulkRef <= 2) {
     return BULK_CATEGORY.TINY;

@@ -16,7 +16,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@league-of-foundry-developers/foundry-vtt-types": "^9.249.2",
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.269.0",
     "@types/jquery": "^3.5.13",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
