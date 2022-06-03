@@ -2,15 +2,12 @@ import FoundryHelpers from './foundry-helpers';
 import { registerSocket } from '../socket';
 import Effect from './effect';
 import EffectHandler from './effect-handler';
-import { game } from '../settings';
-import { isGMConnected } from '../lib/lib';
-import {
+import { isGMConnectedAndSocketLibEnable } from '../lib/lib';
+import type {
   ActiveEffectData,
   ActorData,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 
 /**
  * Interface for working with effects and executing them as a GM via sockets
@@ -126,23 +123,31 @@ export default class EffectInterface {
     //   if (!effect) return; // dialog closed without selecting one
     // }
 
-    return this._socket.executeAsGM('toggleEffect', effectName, {
-      overlay,
-      uuids,
-    });
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('toggleEffect', effectName, {
+        overlay,
+        uuids,
+      });
+    } else {
+      return this._effectHandler.toggleEffect(effectName, { overlay, uuids });
+    }
   }
 
   /**
    * Checks to see if any of the current active effects applied to the actor
    * with the given UUID match the effect name and are a convenient effect
-   *
+   * @deprecated remove from dfreds
    * @param {string} effectName - the name of the effect to check
    * @param {string} uuid - the uuid of the actor to see if the effect is
    * applied to
-   * @returns {Promise<boolean>} true if the effect is applied, false otherwise
+   * @returns {boolean} true if the effect is applied, false otherwise
    */
-  async hasEffectApplied(effectName: string, uuid: string) {
-    return this._effectHandler.hasEffectApplied(effectName, uuid);
+  hasEffectApplied(effectName: string, uuid: string): boolean {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('hasEffectApplied', effectName, uuid);
+    } else {
+      return this._effectHandler.hasEffectApplied(effectName, uuid);
+    }
   }
 
   /**
@@ -161,7 +166,7 @@ export default class EffectInterface {
     //   return;
     // }
 
-    const actor = await this._foundryHelpers.getActorByUuid(uuid);
+    const actor = this._foundryHelpers.getActorByUuid(uuid);
 
     if (!actor) {
       ui.notifications?.error(`Actor ${uuid} could not be found`);
@@ -172,10 +177,14 @@ export default class EffectInterface {
     //   effect = await this.getNestedEffectSelection(effect);
     // }
 
-    return this._socket.executeAsGM('removeEffect', {
-      effectName: effectName,
-      uuid,
-    });
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('removeEffect', {
+        effectName,
+        uuid,
+      });
+    } else {
+      return this._effectHandler.removeEffect({ effectName, uuid });
+    }
   }
 
   /**
@@ -183,11 +192,12 @@ export default class EffectInterface {
    *
    * @param {object} params - the params for adding an effect
    * @param {string} params.effectName - the name of the effect to add
+   * @param {string} params.effectData - the active effect data to add // mod 4535992
    * @param {string} params.uuid - the UUID of the actor to add the effect to
    * @param {string} params.origin - the origin of the effect
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async addEffect({ effectName, uuid, origin }) {
+  async addEffect({ effectName, effectData, uuid, origin, overlay, metadata = undefined }, withSocket = true) {
     // const effect = this.findEffectByName(effectName);
 
     // if (!effect) {
@@ -195,7 +205,7 @@ export default class EffectInterface {
     //   return;
     // }
 
-    const actor = await this._foundryHelpers.getActorByUuid(uuid);
+    const actor = this._foundryHelpers.getActorByUuid(uuid);
 
     if (!actor) {
       ui.notifications?.error(`Actor ${uuid} could not be found`);
@@ -206,11 +216,25 @@ export default class EffectInterface {
     //   effect = await this.getNestedEffectSelection(effect);
     // }
 
-    return this._socket.executeAsGM('addEffect', {
-      effectName: effectName,
-      uuid,
-      origin,
-    });
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('addEffect', {
+        effectName,
+        effectData,
+        uuid,
+        origin,
+        overlay,
+        metadata,
+      });
+    } else {
+      return this._effectHandler.addEffect({
+        effectName,
+        effectData,
+        uuid,
+        origin,
+        overlay,
+        metadata,
+      });
+    }
   }
 
   /**
@@ -223,10 +247,10 @@ export default class EffectInterface {
    * @param {boolean} params.overlay - if the effect is an overlay or not
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async addEffectWith({ effectData, uuid, origin, overlay }) {
+  async addEffectWith({ effectData, uuid, origin, overlay }, withSocket = true) {
     const effect = new Effect(effectData);
 
-    const actor = await this._foundryHelpers.getActorByUuid(uuid);
+    const actor = this._foundryHelpers.getActorByUuid(uuid);
 
     if (!actor) {
       ui.notifications?.error(`Actor ${uuid} could not be found`);
@@ -237,13 +261,23 @@ export default class EffectInterface {
     //   effect = await this._getNestedEffectSelection(effect);
     // }
 
-    return this._socket.executeAsGM('addEffect', {
-      effectName: null,
-      effectData,
-      uuid,
-      origin,
-      overlay,
-    });
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('addEffect', {
+        effectName: null, // mod 4535992
+        effectData,
+        uuid,
+        origin,
+        overlay,
+      });
+    } else {
+      return this._effectHandler.addEffect({
+        effectName: undefined,
+        effectData,
+        uuid,
+        origin,
+        overlay,
+      });
+    }
   }
 
   // /**
@@ -259,35 +293,29 @@ export default class EffectInterface {
   //   });
   // }
 
-  /**
-   * Adds data changes to the provided actor UUID as the GM via sockets
-   *
-   * @param {string} effectName - the name of the effect that is adding actor data changes
-   * @param {string} uuid - the UUID of the actor to add the data changes to
-   * @returns {Promise} a promise that resolves when the GM socket function completes
-   */
-  addActorDataChanges(effectName, uuid) {
-    return this._socket.executeAsGM('addActorDataChanges', effectName, uuid);
-  }
-
-  /**
-   * Removes data changes from the provided actor UUID as the GM via sockets
-   *
-   * @param {string} effectName - the name of the effect that is removing actor data changes
-   * @param {string} uuid - the UUID of the actor to remove the data changes from
-   * @returns {Promise} a promise that resolves when the GM socket function completes
-   */
-  removeActorDataChanges(effectName, uuid) {
-    return this._socket.executeAsGM('removeActorDataChanges', effectName, uuid);
-  }
+  // /**
+  //  * Adds data changes to the provided actor UUID as the GM via sockets
+  //  *
+  //  * @param {string} effectName - the name of the effect that is adding actor data changes
+  //  * @param {string} uuid - the UUID of the actor to add the data changes to
+  //  * @returns {Promise} a promise that resolves when the GM socket function completes
+  //  */
+  // addActorDataChanges(effectName, uuid) {
+  //   return this._socket.executeAsGM('addActorDataChanges', effectName, uuid);
+  // }
 
   // /**
-  //  * Prompts the user to select a nested effect from the choices available
+  //  * Removes data changes from the provided actor UUID as the GM via sockets
   //  *
-  //  * @param {Effect} effect - the parent effect
-  //  * @returns {Effect} the chosen nested effect
+  //  * @param {string} effectName - the name of the effect that is removing actor data changes
+  //  * @param {string} uuid - the UUID of the actor to remove the data changes from
+  //  * @returns {Promise} a promise that resolves when the GM socket function completes
   //  */
-  // async getNestedEffectSelection(effect) {
+  // removeActorDataChanges(effectName, uuid) {
+  //   return this._socket.executeAsGM('removeActorDataChanges', effectName, uuid);
+  // }
+
+  // async _getNestedEffectSelection(effect) {
   //   const content = await renderTemplate(
   //     'modules/dfreds-convenient-effects/templates/nested-effects-dialog.html',
   //     { parentEffect: effect }
@@ -311,6 +339,26 @@ export default class EffectInterface {
   //   );
   // }
 
+  // /**
+  //  * Adds the given effect name to the status effects. Note that Foundry
+  //  * needs to be refreshed to reflect the changes on the token HUD.
+  //  *
+  //  * @param {string} effectName - the effect name to add as a status effect
+  //  */
+  // async addStatusEffect(effectName) {
+  //   await this._settings.addStatusEffect(effectName);
+  // }
+
+  // /**
+  //  * Removes the given effect name from the status effects. Note that Foundry
+  //  * needs to be refreshed to reflect the changes on the token HUD.
+  //  *
+  //  * @param {string} effectName - the effect name to remove as a status effect
+  //  */
+  //  async removeStatusEffect(effectName) {
+  //   await this._settings.removeStatusEffect(effectName);
+  // }
+
   // ============================================================
   // Additional feature for retrocompatibility
   // ============================================================
@@ -328,8 +376,12 @@ export default class EffectInterface {
    * @param {string} includeDisabled - if true include the applied disabled effect
    * @returns {boolean} true if the effect is applied, false otherwise
    */
-  async hasEffectAppliedOnActor(effectName: string, uuid: string, includeDisabled: boolean): Promise<boolean> {
-    return this._effectHandler.hasEffectAppliedOnActor(effectName, uuid, includeDisabled);
+  hasEffectAppliedOnActor(effectName: string, uuid: string, includeDisabled: boolean): boolean {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('hasEffectAppliedOnActor', effectName, uuid, includeDisabled);
+    } else {
+      return this._effectHandler.hasEffectAppliedOnActor(effectName, uuid, includeDisabled);
+    }
   }
 
   /**
@@ -341,8 +393,12 @@ export default class EffectInterface {
    * @param {string} includeDisabled - if true include the applied disabled effect
    * @returns {boolean} true if the effect is applied, false otherwise
    */
-  async hasEffectAppliedFromIdOnActor(effectId: string, uuid: string, includeDisabled: boolean): Promise<boolean> {
-    return this._effectHandler.hasEffectAppliedFromIdOnActor(effectId, uuid, includeDisabled);
+  hasEffectAppliedFromIdOnActor(effectId: string, uuid: string, includeDisabled: boolean): boolean {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('hasEffectAppliedFromIdOnActor', effectId, uuid, includeDisabled);
+    } else {
+      return this._effectHandler.hasEffectAppliedFromIdOnActor(effectId, uuid, includeDisabled);
+    }
   }
 
   /**
@@ -353,7 +409,7 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectOnActor(effectName: string, uuid: string) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('removeEffectOnActor', effectName, uuid);
     } else {
       return this._effectHandler.removeEffectOnActor(effectName, uuid);
@@ -368,7 +424,7 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the actor to remove the effect from
    */
   async removeEffectFromIdOnActor(effectId: string, uuid: string) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('removeEffectFromIdOnActor', effectId, uuid);
     } else {
       return this._effectHandler.removeEffectFromIdOnActor(effectId, uuid);
@@ -382,7 +438,7 @@ export default class EffectInterface {
    * @param {string} effectName - the name of the effect to add
    * @param {string} uuid - the uuid of the actor to add the effect to
    */
-  async addEffectOnActor(effectName: string, uuid: string, effect: Effect): Promise<void> {
+  async addEffectOnActor(effectName: string, uuid: string, effect: Effect, withSocket = true): Promise<void> {
     if (!uuid) {
       ui.notifications?.error(`Actor ${uuid} could not be found`);
       return;
@@ -396,7 +452,7 @@ export default class EffectInterface {
     // if (effect.nestedEffects.length > 0) {
     //   effect = await this.getNestedEffectSelection(effect);
     // }
-    if (isGMConnected()) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('addEffectOnActor', effect.name, uuid, undefined, false, effect);
     } else {
       return this._effectHandler.addEffectOnActor(effect.name, uuid, undefined, false, effect);
@@ -425,7 +481,7 @@ export default class EffectInterface {
       return;
     }
 
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'toggleEffectFromIdOnActor',
         effectId,
@@ -446,8 +502,8 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the actor to add the effect to
    * @param {string} activeEffectData - the name of the effect to add
    */
-  async addActiveEffectOnActor(uuid, activeEffectData: ActiveEffectData) {
-    if (isGMConnected()) {
+  async addActiveEffectOnActor(uuid, activeEffectData: ActiveEffectData, withSocket = true) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('addActiveEffectOnActor', uuid, activeEffectData);
     } else {
       return this._effectHandler.addActiveEffectOnActor(uuid, activeEffectData);
@@ -478,7 +534,7 @@ export default class EffectInterface {
     //   return null;
     // }
     // return effect;
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('findEffectByNameOnActor', effectName, uuid);
     } else {
       return this._effectHandler.findEffectByNameOnActor(effectName, uuid);
@@ -498,8 +554,12 @@ export default class EffectInterface {
    * @param {string} includeDisabled - if true include the applied disabled effect
    * @returns {boolean} true if the effect is applied, false otherwise
    */
-  async hasEffectAppliedOnToken(effectName: string, uuid: string, includeDisabled: boolean): Promise<boolean> {
-    return this._effectHandler.hasEffectAppliedOnToken(effectName, uuid, includeDisabled);
+  hasEffectAppliedOnToken(effectName: string, uuid: string, includeDisabled: boolean): boolean {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('hasEffectAppliedOnToken', effectName, uuid, includeDisabled);
+    } else {
+      return this._effectHandler.hasEffectAppliedOnToken(effectName, uuid, includeDisabled);
+    }
   }
 
   /**
@@ -511,8 +571,12 @@ export default class EffectInterface {
    * @param {string} includeDisabled - if true include the applied disabled effect
    * @returns {boolean} true if the effect is applied, false otherwise
    */
-  async hasEffectAppliedFromIdOnToken(effectId: string, uuid: string, includeDisabled: boolean): Promise<boolean> {
-    return this._effectHandler.hasEffectAppliedFromIdOnToken(effectId, uuid, includeDisabled);
+  hasEffectAppliedFromIdOnToken(effectId: string, uuid: string, includeDisabled: boolean): boolean {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('hasEffectAppliedFromIdOnToken', effectId, uuid, includeDisabled);
+    } else {
+      return this._effectHandler.hasEffectAppliedFromIdOnToken(effectId, uuid, includeDisabled);
+    }
   }
 
   /**
@@ -523,7 +587,7 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the token to remove the effect from
    */
   async removeEffectOnToken(effectName: string, uuid: string) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('removeEffectOnToken', effectName, uuid);
     } else {
       return this._effectHandler.removeEffectOnToken(effectName, uuid);
@@ -538,10 +602,25 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the token to remove the effect from
    */
   async removeEffectFromIdOnToken(effectId: string, uuid: string) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('removeEffectFromIdOnToken', effectId, uuid);
     } else {
       return this._effectHandler.removeEffectFromIdOnToken(effectId, uuid);
+    }
+  }
+
+  /**
+   * Removes the effect with the provided name from an token matching the
+   * provided UUID
+   *
+   * @param {string} effectIds - the id of the effect to remove
+   * @param {string} uuid - the uuid of the token to remove the effect from
+   */
+  async removeEffectFromIdOnTokenMultiple(effectIds: string[], uuid: string) {
+    if (isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM('removeEffectFromIdOnTokenMultiple', effectIds, uuid);
+    } else {
+      return this._effectHandler.removeEffectFromIdOnTokenMultiple(effectIds, uuid);
     }
   }
 
@@ -552,7 +631,7 @@ export default class EffectInterface {
    * @param {string} effectName - the name of the effect to add
    * @param {string} uuid - the uuid of the token to add the effect to
    */
-  async addEffectOnToken(effectName: string, uuid: string, effect: Effect): Promise<void> {
+  async addEffectOnToken(effectName: string, uuid: string, effect: Effect, withSocket = true): Promise<void> {
     if (!uuid) {
       ui.notifications?.error(`Token ${uuid} could not be found`);
       return;
@@ -566,7 +645,7 @@ export default class EffectInterface {
     // if (effect.nestedEffects.length > 0) {
     //   effect = await this.getNestedEffectSelection(effect);
     // }
-    if (isGMConnected()) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('addEffectOnToken', effect.name, uuid, undefined, false, effect);
     } else {
       return this._effectHandler.addEffectOnToken(effect.name, uuid, undefined, false, effect);
@@ -585,7 +664,7 @@ export default class EffectInterface {
       return;
     }
 
-    const token = <Token>await this._foundryHelpers.getTokenByUuid(uuid);
+    const token = <Token>this._foundryHelpers.getTokenByUuid(uuid);
     // const tokenEffects = <PropertiesToSource<ActiveEffectDataProperties>[]>token?.data.actorData.effects ?? [];
     // const effects = <PropertiesToSource<ActiveEffectDataProperties>[]>tokenEffects.map(
     //   //(activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect.id == effectId,
@@ -610,7 +689,7 @@ export default class EffectInterface {
       return;
     }
 
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'toggleEffectFromIdOnToken',
         effectId,
@@ -631,8 +710,8 @@ export default class EffectInterface {
    * @param {string} uuid - the uuid of the token to add the effect to
    * @param {string} activeEffectData - the name of the effect to add
    */
-  async addActiveEffectOnToken(uuid, activeEffectData: ActiveEffectData) {
-    if (isGMConnected()) {
+  async addActiveEffectOnToken(uuid, activeEffectData: ActiveEffectData, withSocket = true) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('addActiveEffectOnToken', uuid, activeEffectData);
     } else {
       return this._effectHandler.addActiveEffectOnToken(uuid, activeEffectData);
@@ -663,7 +742,7 @@ export default class EffectInterface {
     //   return null;
     // }
     // return effect;
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('findEffectByNameOnToken', effectName, uuid);
     } else {
       return this._effectHandler.findEffectByNameOnToken(effectName, uuid);
@@ -671,7 +750,7 @@ export default class EffectInterface {
   }
 
   async updateEffectFromIdOnToken(effectId: string, uuid: string, origin, overlay, effectUpdated: Effect) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('updateEffectFromIdOnToken', effectId, uuid, origin, overlay, effectUpdated);
     } else {
       return this._effectHandler.updateEffectFromIdOnToken(effectId, uuid, origin, overlay, effectUpdated);
@@ -679,7 +758,7 @@ export default class EffectInterface {
   }
 
   async updateEffectFromNameOnToken(effectName: string, uuid: string, origin, overlay, effectUpdated: Effect) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('updateEffectFromNameOnToken', effectName, uuid, origin, overlay, effectUpdated);
     } else {
       return this._effectHandler.updateEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
@@ -693,7 +772,7 @@ export default class EffectInterface {
     overlay,
     effectUpdated: ActiveEffectData,
   ) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'updateActiveEffectFromIdOnToken',
         effectId,
@@ -714,7 +793,7 @@ export default class EffectInterface {
     overlay,
     effectUpdated: ActiveEffectData,
   ) {
-    if (isGMConnected()) {
+    if (isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'updateActiveEffectFromNameOnToken',
         effectName,

@@ -12,14 +12,15 @@ export const registerSettings = function () {
   });
 
   // Removed on 0.6.5
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'enabled', {
-  //   name: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.name'),
-  //   hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.hint'),
-  //   scope: 'world',
-  //   config: false,
-  //   type: Boolean,
-  //   default: true,
-  // });
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enabled', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'useVarianEncumbranceWithSpecificType', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.hint'),
@@ -331,15 +332,6 @@ export const registerSettings = function () {
     default: false,
   });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature', {
-    name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
-    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
-
   // BULK SYSTEM
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableBulkSystem', {
@@ -378,7 +370,32 @@ export const registerSettings = function () {
     default: false,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'hideStandardEncumbranceBar', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.hideStandardEncumbranceBar.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.hideStandardEncumbranceBar.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 
   // const settings = defaultSettings();
   // for (const [name, data] of Object.entries(settings)) {
@@ -443,6 +460,15 @@ async function applyDefaultSettings() {
 
 function otherSettings(apply = false) {
   return {
+    enabled: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enabled.hint'),
+      scope: 'world',
+      config: false,
+      type: Boolean,
+      default: true,
+    },
+
     useVarianEncumbranceWithSpecificType: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.useVarianEncumbranceWithSpecificType.hint'),
@@ -754,15 +780,6 @@ function otherSettings(apply = false) {
       default: false,
     },
 
-    doNotUseSocketLibFeature: {
-      name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
-      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    },
-
     // BULK SYSTEM
 
     enableBulkSystem: {
@@ -795,6 +812,33 @@ function otherSettings(apply = false) {
     automaticApplySuggestedBulk: {
       name: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.name'),
       hint: i18n(CONSTANTS.MODULE_NAME + '.setting.automaticApplySuggestedBulk.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
+    hideStandardEncumbranceBar: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.hideStandardEncumbranceBar.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.hideStandardEncumbranceBar.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
+    debug: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    doNotUseSocketLibFeature: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.doNotUseSocketLibFeature.hint'),
       scope: 'world',
       config: true,
       type: Boolean,

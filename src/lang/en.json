@@ -1,6 +1,6 @@
 {
   "variant-encumbrance-dnd5e.setting.enabled.name": "Enabled",
-  "variant-encumbrance-dnd5e.setting.enabled.hint": "Enable or disable the module's functions.",
+  "variant-encumbrance-dnd5e.setting.enabled.hint": "Enable/Disable the variant encumbrance feature. Usually you disable this if you just want the Bulk System solution.",
 
   "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificType.name": "Use Variant Encumbrance with specific type of actor",
   "variant-encumbrance-dnd5e.setting.useVarianEncumbranceWithSpecificType.hint": "Use for example the following type of actors (e.g. character, npc, ecc. separate by character ','), remember is case sensitive",
@@ -98,7 +98,7 @@
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socketLib feature integration",
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is usually useful only for avoid a socket collision with other modules",
 
-  "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "[EXPERIMENTAL] Enable Bulk system",
+  "variant-encumbrance-dnd5e.setting.enableBulkSystem.name": "Enable Bulk system",
   "variant-encumbrance-dnd5e.setting.enableBulkSystem.hint": "Enable integration with the Bulk System explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html",
   "variant-encumbrance-dnd5e.setting.unitsBulk.name": "Weight Units (Bulk System)",
   "variant-encumbrance-dnd5e.setting.unitsBulk.hint": "Units displayed in the encumbrance bar (just graphics) (Bulk System). Default is 'bulk'",
@@ -106,6 +106,9 @@
   "variant-encumbrance-dnd5e.setting.heavyWeightDecreaseBulk.hint": "The number of speed units multiply when heavily encumbered (Bulk System), default is '0.5'.",
   "variant-encumbrance-dnd5e.setting.automaticApplySuggestedBulk.name": "Automatic apply suggested bulk (Bulk System)",
   "variant-encumbrance-dnd5e.setting.automaticApplySuggestedBulk.hint": "WARNING: THIS IS DANGEROUS, IT WILL UPDATE THE BULK DATA ON EVERY ITEM BEEN RENDERED IF THE BULK VALUE IS 0. This is usually save time if you don't want to manually set every item (the advisable way)",
+
+  "variant-encumbrance-dnd5e.setting.hideStandardEncumbranceBar.name": "Remove standard encumbrance bar from the character sheet",
+  "variant-encumbrance-dnd5e.setting.hideStandardEncumbranceBar.hint": "If enabled it will hide the standard bar of encumbrance, is useful only for people using the bulk bar and do not want to see two graphic bars",
 
   "variant-encumbrance-dnd5e.setting.reset.name": "Reset settings to default",
   "variant-encumbrance-dnd5e.setting.reset.label": "Reset Settings To Default",
@@ -151,9 +154,9 @@
   "variant-encumbrance-dnd5e.label.convertTitle": "Convert Cargo Capacity",
   "variant-encumbrance-dnd5e.label.convertContent": "Would you like to convert the current cargo capacity from '{{OLD}}' to '{{NEW}}'?",
 
-  "variant-encumbrance-dnd5e.label.ItemContainerCapacityBulk": "Bulk",
-  "variant-encumbrance-dnd5e.label.Bulk": "Bulk",
-  "variant-encumbrance-dnd5e.label.Bulk.suggestedValue": "Suggested Bulk value:{bulkweight}",
+  "variant-encumbrance-dnd5e.label.bulk.ItemContainerCapacityBulk": "Bulk",
+  "variant-encumbrance-dnd5e.label.bulk.Bulk": "Bulk",
+  "variant-encumbrance-dnd5e.label.bulk.suggestedValue": "Suggested Bulk value: {suggestedBulkWeight}",
   "variant-encumbrance-dnd5e.label.bulk.category.tiny.description": "Smaller than the palm of your hand. You can hold many of these in one hand. A negligible or trivial weight.",
   "variant-encumbrance-dnd5e.label.bulk.category.small.description": "Up to a handspan / 9 inches. Can be held comfortably with one hand. Up to 2 lbs. The weight of a loaf of bread or a bag of sugar.",
   "variant-encumbrance-dnd5e.label.bulk.category.medium.description": "Up to an arms-length / 2 feet long. Can be held with one hand. Up to 5 lbs. About as heavy as a few big bags of sugar.",

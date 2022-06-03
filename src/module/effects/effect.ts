@@ -1,9 +1,7 @@
-import { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
-import { EffectDurationData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectDurationData';
-import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import { i18n } from '../lib/lib';
-import { game } from '../settings';
+import type { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
+import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
+import { duplicateExtended, i18n, isStringEquals } from '../lib/lib';
 
 /**
  * Data class for defining an effect
@@ -196,8 +194,65 @@ export default class Effect {
 
   // =============================================
 
+  isDuplicateEffectChange(aeKey: string, arrChanges: EffectChangeData[]) {
+    let isDuplicate = false;
+    for (const aec of arrChanges) {
+      if (isStringEquals(aec.key, aeKey)) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    return isDuplicate;
+  }
+
   _handleIntegrations() {
-    const arrChanges = this.changes || [];
+    const arrChanges: EffectChangeData[] = [];
+    for (const change of <EffectChangeData[]>this?.changes) {
+      if (!change.value) {
+        change.value = '';
+      }
+      arrChanges.push(change);
+    }
+
+    if (this.atlChanges.length > 0) {
+      for (const atlChange of this.atlChanges) {
+        if (arrChanges.filter((e) => e.key === atlChange.key).length <= 0) {
+          if (!this.isDuplicateEffectChange(atlChange.key, arrChanges)) {
+            if (!atlChange.value) {
+              atlChange.value = '';
+            }
+            arrChanges.push(atlChange);
+          }
+        }
+      }
+    }
+
+    if (this.tokenMagicChanges.length > 0) {
+      for (const tokenMagicChange of this.tokenMagicChanges) {
+        if (arrChanges.filter((e) => e.key === tokenMagicChange.key).length <= 0) {
+          if (!this.isDuplicateEffectChange(tokenMagicChange.key, arrChanges)) {
+            if (!tokenMagicChange.value) {
+              tokenMagicChange.value = '';
+            }
+            arrChanges.push(tokenMagicChange);
+          }
+        }
+      }
+    }
+
+    if (this.atcvChanges.length > 0) {
+      for (const atcvChange of this.atcvChanges) {
+        if (arrChanges.filter((e) => e.key === atcvChange.key).length <= 0) {
+          if (!this.isDuplicateEffectChange(atcvChange.key, arrChanges)) {
+            if (!atcvChange.value) {
+              atcvChange.value = '';
+            }
+            arrChanges.push(atcvChange);
+          }
+        }
+      }
+    }
+    /*
     if (this.atlChanges.length > 0) {
       arrChanges.push(...this.atlChanges);
     }
@@ -209,7 +264,7 @@ export default class Effect {
     if (this.atcvChanges.length > 0) {
       arrChanges.push(...this.atcvChanges);
     }
-
+    */
     return arrChanges;
   }
 
@@ -245,210 +300,4 @@ export class Constants {
     IN_ONE_DAY: 86400,
     IN_ONE_WEEK: 604800,
   };
-}
-
-export class EffectSupport {
-  static buildDefault(
-    effectData: any,
-    isPassive: boolean,
-    changes: any[] = [],
-    atlChanges: any[] = [],
-    tokenMagicChanges: any[] = [],
-    atcvChanges: any[] = [],
-  ): Effect {
-    return new Effect({
-      customId: effectData.id,
-      name: i18n(effectData.name),
-      description: ``,
-      icon: effectData.img,
-      tint: undefined,
-      seconds: 0,
-      rounds: 0,
-      turns: 0,
-      flags: foundry.utils.mergeObject(
-        {},
-        {
-          core: {
-            statusId: isPassive ? undefined : effectData.id,
-            overlay: false,
-          },
-          isConvenient: true,
-        },
-      ),
-      changes: changes,
-      atlChanges: atlChanges,
-      tokenMagicChanges: tokenMagicChanges,
-      atcvChanges: atcvChanges,
-      isDisabled: false,
-      isTemporary: !isPassive,
-      isSuppressed: false,
-    });
-  }
-
-  static _handleIntegrations(changes: any[]): EffectChangeData[] {
-    let arrChanges: EffectChangeData[] = [];
-    // if (this.atlChanges.length > 0) {
-    //   arrChanges.push(...this.atlChanges);
-    // }
-
-    // if (this.tokenMagicChanges.length > 0) {
-    //   arrChanges.push(...this.tokenMagicChanges);
-    // }
-
-    // if (this.atcvChanges.length > 0) {
-    //   arrChanges.push(...this.atcvChanges);
-    // }
-    arrChanges = EffectSupport.retrieveChangesOrderedByPriority(changes);
-    return arrChanges;
-  }
-
-  static _isEmptyObject(obj: any) {
-    // because Object.keys(new Date()).length === 0;
-    // we have to do some additional check
-    const result =
-      obj && // null and undefined check
-      Object.keys(obj).length === 0 &&
-      Object.getPrototypeOf(obj) === Object.prototype;
-    return result;
-  }
-
-  static _getDurationData(seconds: number, rounds: number, turns: number) {
-    if (game.combat) {
-      return {
-        startRound: game.combat.round,
-        rounds: EffectSupport._getCombatRounds(seconds, rounds),
-        turns: turns,
-      };
-    } else {
-      return {
-        startTime: game.time.worldTime,
-        seconds: EffectSupport._getSeconds(seconds, rounds),
-      };
-    }
-  }
-
-  static _getCombatRounds(seconds: number, rounds: number) {
-    if (rounds) {
-      return rounds;
-    }
-
-    if (seconds) {
-      return seconds / Constants.SECONDS.IN_ONE_ROUND;
-    }
-
-    return undefined;
-  }
-
-  static _getSeconds(seconds: number, rounds: number) {
-    if (seconds) {
-      return seconds;
-    }
-
-    if (rounds) {
-      return rounds * Constants.SECONDS.IN_ONE_ROUND;
-    }
-
-    return undefined;
-  }
-
-  static convertActiveEffectToEffect(effect: ActiveEffect): Effect {
-    const atlChanges = effect.data.changes.filter((changes) => changes.key.startsWith('ATL'));
-    const tokenMagicChanges = effect.data.changes.filter((changes) => changes.key === 'macro.tokenMagic');
-    const atcvChanges = effect.data.changes.filter((changes) => changes.key.startsWith('ATCV'));
-    const changes = effect.data.changes.filter(
-      (change) => !change.key.startsWith('ATL') && change.key !== 'macro.tokenMagic' && !change.key.startsWith('ATCV'),
-    );
-    const isDisabled = effect.data.disabled || false;
-    //@ts-ignore
-    const isSuppressed = effect.data.document.isSuppressed || false;
-    const isTemporary = effect.isTemporary || false;
-    const isPassive = !isTemporary;
-
-    return new Effect({
-      customId: <string>effect.id,
-      name: i18n(effect.data.label),
-      description: i18n(<string>effect.data.flags.customEffectDescription),
-      icon: <string>effect.data.icon,
-      tint: <string>effect.data.tint,
-      seconds: effect.data.duration.seconds,
-      rounds: effect.data.duration.rounds,
-      turns: effect.data.duration.turns,
-      flags: effect.data.flags,
-      changes,
-      atlChanges,
-      tokenMagicChanges,
-      atcvChanges,
-      isDisabled,
-      isTemporary,
-      isSuppressed,
-    });
-  }
-
-  static convertActiveEffectDataPropertiesToActiveEffect(
-    p: PropertiesToSource<ActiveEffectDataProperties>,
-    isPassive: boolean,
-  ): ActiveEffect {
-    //@ts-ignore
-    return ActiveEffect.create({
-      id: p._id,
-      name: i18n(p.label),
-      label: i18n(p.label),
-      icon: p.icon,
-      tint: p.tint,
-      duration: EffectSupport._getDurationData(
-        <number>p.duration.seconds,
-        <number>p.duration.rounds,
-        <number>p.duration.turns,
-      ),
-      flags: foundry.utils.mergeObject(p.flags, {
-        core: {
-          statusId: isPassive ? undefined : p._id,
-          //@ts-ignore
-          overlay: p.overlay ? p.overlay : false, // MOD 4535992
-        },
-        isConvenient: true,
-        //@ts-ignore
-        convenientDescription: p.description ? i18n(p.description) : '',
-        dae: this._isEmptyObject(p.flags.dae) ? { stackable: false, specialDuration: [], transfer: true } : p.flags.dae,
-      }),
-      origin: origin ? origin : p.origin ? p.origin : '', // MOD 4535992
-      transfer: p.transfer ?? false,
-      //changes: p.changes, // MOD 4535992
-      changes: EffectSupport._handleIntegrations(p.changes),
-    });
-  }
-
-  static retrieveChangesOrderedByPriority(changesTmp: EffectChangeData[]) {
-    // Organize non-disabled effects by their application priority
-    const changes = <EffectChangeData[]>changesTmp.reduce((changes) => {
-      return changes.map((c: EffectChangeData) => {
-        const c2 = <EffectChangeData>duplicate(c);
-        // c2.effect = e;
-        c2.priority = <number>c2.priority ?? c2.mode * 10;
-        return c2;
-      });
-    }, []);
-    changes.sort((a, b) => <number>a.priority - <number>b.priority);
-    return changes;
-  }
-
-  static retrieveChangesOrderedByPriorityFromAE(effectEntity: ActiveEffect) {
-    // Organize non-disabled effects by their application priority
-    const changes = <EffectChangeData[]>[effectEntity].reduce((changes, e: ActiveEffect) => {
-      if (e.data.disabled) {
-        return changes;
-      }
-      return changes.concat(
-        //@ts-ignore
-        (<EffectChangeData[]>e.data.changes).map((c: EffectChangeData) => {
-          const c2 = <EffectChangeData>duplicate(c);
-          // c2.effect = e;
-          c2.priority = <number>c2.priority ?? c2.mode * 10;
-          return c2;
-        }),
-      );
-    }, []);
-    changes.sort((a, b) => <number>a.priority - <number>b.priority);
-    return changes;
-  }
 }
