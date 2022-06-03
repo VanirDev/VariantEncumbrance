@@ -1,3 +1,7 @@
+### 0.9.1
+
+- Little html and css fix
+
 ### 0.9.0
 
 - BIG UPDATE: Clean up everything and integration with the long waited system bulk variant for dnd5e

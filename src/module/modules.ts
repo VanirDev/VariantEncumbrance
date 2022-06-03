@@ -213,13 +213,15 @@ export const readyHooks = async () => {
       const actorEntityTmp: any = <Actor>game.actors?.get(actorObject.actor._id); //duplicate(actorEntity) ;
       if (isEnabledActorType(actorEntityTmp)) {
         const htmlElementEncumbranceVariant = htmlElement.find('.encumbrance').addClass('encumbrance-variant');
-
+        //@ts-ignore
+        const sheetClass: string = actorSheet.object.data.flags.core.sheetClass;
         module.renderActorSheetBulkSystem(
           actorSheet,
           htmlElement,
           actorObject,
           actorEntityTmp,
           htmlElementEncumbranceVariant,
+          sheetClass,
         );
 
         module.renderActorSheetVariant(
@@ -228,6 +230,7 @@ export const readyHooks = async () => {
           actorObject,
           actorEntityTmp,
           htmlElementEncumbranceVariant,
+          sheetClass,
         );
 
         if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideStandardEncumbranceBar')) {
@@ -726,6 +729,7 @@ const module = {
     actorObject: any,
     actorEntityTmp: Actor,
     htmlElementEncumbranceVariant,
+    sheetClass: string,
   ): void {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
       // ===============================
@@ -896,6 +900,7 @@ const module = {
     actorObject: any,
     actorEntityTmp: Actor,
     encumbranceElement,
+    sheetClass: string,
   ): void {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
       // ======================================================
@@ -933,6 +938,23 @@ const module = {
           //@ts-ignore
           const bulk = item.data.data.bulk ?? 0;
           const totalBulk = (quantity * bulk).toNearest(0.1);
+          switch (sheetClass) {
+            case 'dnd5e.Tidy5eSheet': {
+              liItem
+                .parent()
+                .find('.item-detail.item-weight div')
+                .append(`/${totalBulk ?? 0}`);
+              break;
+            }
+            default: {
+              liItem
+                .parent()
+                .find('.item-detail.item-weight div')
+                .append(`<br/>/${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.bulk.ItemContainerCapacityBulk')}`);
+              break;
+            }
+          }
+          /*
           liItem
             .parent()
             .find('.item-detail.item-weight')
@@ -944,7 +966,8 @@ const module = {
               ${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.bulk.ItemContainerCapacityBulk')}
             </div>
             `,
-            );
+          );
+          */
           /*
           liItem.parent().closest('item-weight').after(
             `
