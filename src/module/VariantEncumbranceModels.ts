@@ -96,7 +96,7 @@ export const BULK_CATEGORY = {
     weight: 'Negligible',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.tiny.description',
     weightMin: 0,
-    weightMax: 2
+    weightMax: 2,
   },
   // Up to a handspan / 9 inches. Can be held comfortably with one hand. Up to 2 lbs. The weight of a loaf of bread or a bag of sugar.
   SMALL: <BulkData>{
@@ -106,7 +106,7 @@ export const BULK_CATEGORY = {
     weight: 'Light',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.small.description',
     weightMin: 2,
-    weightMax: 5
+    weightMax: 5,
   },
   // Up to an arms-length / 2 feet long. Can be held with one hand. Up to 5 lbs. About as heavy as a few big bags of sugar.
   MEDIUM: <BulkData>{
@@ -116,7 +116,7 @@ export const BULK_CATEGORY = {
     weight: 'Medium',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.medium.description',
     weightMin: 5,
-    weightMax: 10
+    weightMax: 10,
   },
   // Longer than an arm. Usually can be held with one hand, but us most comfortable with two. Up to 10 lbs. About as heavy as a cat or a sack of potatoes.
   LARGE: <BulkData>{
@@ -126,7 +126,7 @@ export const BULK_CATEGORY = {
     weight: 'Heavy',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.large.description',
     weightMin: 10,
-    weightMax: 35
+    weightMax: 35,
   },
   // Longer than the height of an average person. Requires two hands to hold. Up to 35 lbs. About a quarter of the weight of an average person.
   X_LARGE: <BulkData>{
@@ -136,7 +136,7 @@ export const BULK_CATEGORY = {
     weight: 'Extra-heavy',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.x-large.description',
     weightMin: 35,
-    weightMax: 70
+    weightMax: 70,
   },
   // Longer than the height of two people. Requires two hands to hold. Up to 70 lbs. About half as heavy as an average person.
   XX_LARGE: <BulkData>{
@@ -146,7 +146,7 @@ export const BULK_CATEGORY = {
     weight: 'Leaden',
     description: 'variant-encumbrance-dnd5e.label.bulk.category.xx-large.description',
     weightMin: 70,
-    weightMax: 10000
+    weightMax: 10000,
   },
 };
 

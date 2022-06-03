@@ -71,7 +71,9 @@ export function registerSocket() {
     API.toggleEffectFromIdOnActorArr(...args),
   );
   variantEncumbranceSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
-  variantEncumbranceSocket.register('hasEffectAppliedFromIdOnActor', (...args) => API.hasEffectAppliedFromIdOnActorArr(...args));
+  variantEncumbranceSocket.register('hasEffectAppliedFromIdOnActor', (...args) =>
+    API.hasEffectAppliedFromIdOnActorArr(...args),
+  );
 
   variantEncumbranceSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
   variantEncumbranceSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));

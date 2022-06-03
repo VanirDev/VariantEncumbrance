@@ -88,7 +88,11 @@ const API = {
       throw error('removeEffectArr | inAttributes must be of type array');
     }
     const [effectId, uuid, includeDisabled] = inAttributes;
-    const result = await (<EffectInterface>this.effectInterface)._effectHandler.hasEffectAppliedFromIdOnActor(effectId,uuid,includeDisabled);
+    const result = await (<EffectInterface>this.effectInterface)._effectHandler.hasEffectAppliedFromIdOnActor(
+      effectId,
+      uuid,
+      includeDisabled,
+    );
     return result;
   },
 

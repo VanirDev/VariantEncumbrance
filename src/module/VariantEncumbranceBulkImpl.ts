@@ -810,7 +810,8 @@ export const VariantEncumbranceBulkImpl = {
   },
 
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
-    const heavyWeightDecreaseBulk = parseInt(<string>game.settings.get(CONSTANTS.MODULE_NAME,'heavyWeightDecreaseBulk')) || 0.5;
+    const heavyWeightDecreaseBulk =
+      parseInt(<string>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk')) || 0.5;
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {

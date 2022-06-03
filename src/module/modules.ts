@@ -230,9 +230,9 @@ export const readyHooks = async () => {
           htmlElementEncumbranceVariant,
         );
 
-        if(game.settings.get(CONSTANTS.MODULE_NAME,'hideStandardEncumbranceBar')){
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideStandardEncumbranceBar')) {
           const element = htmlElement.find('.encumbrance-variant');
-          if(element && element.length > 0){
+          if (element && element.length > 0) {
             (<HTMLElement>element[0]).style.display = 'none';
           }
         }
@@ -284,7 +284,7 @@ export const readyHooks = async () => {
         } else {
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
             await VariantEncumbranceImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
-          } 
+          }
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
             await VariantEncumbranceBulkImpl.updateEncumbrance(actorEntity, undefined, undefined, EncumbranceMode.ADD);
           }
@@ -436,7 +436,6 @@ export const readyHooks = async () => {
                 ev.currentTarget.innerHTML = `<i class="${myicon}"></i>${mylabel}`;
               },
             });
-
           }
         }
         // ================
@@ -634,7 +633,7 @@ export async function updateEmbeddedDocuments(wrapped, embeddedName, data, optio
   if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
       await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.UPDATE);
-    } 
+    }
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
       await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.UPDATE);
     }
@@ -648,7 +647,7 @@ export async function createDocuments(wrapped, data, context = { parent: {}, pac
   if (isEnabledActorType(actorEntity) && actorEntity.sheet?.rendered) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
       await VariantEncumbranceImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
-    } 
+    }
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
       await VariantEncumbranceBulkImpl.updateEncumbrance(actorEntity, data, undefined, EncumbranceMode.ADD);
     }
@@ -1078,14 +1077,16 @@ const module = {
           .find('.encumbrance-breakpoint-bulk.encumbrance-66.arrow-up')
           .html(`<div class="encumbrance-breakpoint-label-bulk VELabel">${encumbranceDataBulk.mediumMax}<div>`);
 
-        (<HTMLElement>($(encumbranceElementsBulk)
-          .parent()
-          .find('.encumbrance-breakpoint.encumbrance-33.arrow-up.encumbrance-breakpoint-bulk'))[0]).style.display =
-          'none';
-        (<HTMLElement>($(encumbranceElementsBulk)
-          .parent()
-          .find('.encumbrance-breakpoint.encumbrance-33.arrow-down.encumbrance-breakpoint-bulk'))[0]).style.display =
-          'none';
+        (<HTMLElement>(
+          $(encumbranceElementsBulk)
+            .parent()
+            .find('.encumbrance-breakpoint.encumbrance-33.arrow-up.encumbrance-breakpoint-bulk')[0]
+        )).style.display = 'none';
+        (<HTMLElement>(
+          $(encumbranceElementsBulk)
+            .parent()
+            .find('.encumbrance-breakpoint.encumbrance-33.arrow-down.encumbrance-breakpoint-bulk')[0]
+        )).style.display = 'none';
 
         $(encumbranceElementsBulk)
           .find('.encumbrance-breakpoint-bulk.encumbrance-66.arrow-up')
@@ -1109,15 +1110,17 @@ const module = {
     const weight = data.data.weight ?? 0;
     let suggestedBulkWeight = 0;
     const suggestedBulk = checkBulkCategory(weight);
-    if(suggestedBulk){
+    if (suggestedBulk) {
       suggestedBulkWeight = suggestedBulk.bulk;
     }
     let bulk = data.data.bulk ?? 0;
-    if(bulk <= 0 && game.settings.get(CONSTANTS.MODULE_NAME, 'automaticApplySuggestedBulk')){
+    if (bulk <= 0 && game.settings.get(CONSTANTS.MODULE_NAME, 'automaticApplySuggestedBulk')) {
       bulk = suggestedBulkWeight;
     }
 
-    const suggesteBulkValueS = i18nFormat('variant-encumbrance-dnd5e.label.bulk.suggestedValue', {suggestedBulkWeight: suggestedBulkWeight});
+    const suggesteBulkValueS = i18nFormat('variant-encumbrance-dnd5e.label.bulk.suggestedValue', {
+      suggestedBulkWeight: suggestedBulkWeight,
+    });
 
     html
       .find('.item-properties') // <div class="item-properties">

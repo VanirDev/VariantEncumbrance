@@ -30,9 +30,9 @@ export default class FoundryHelpers {
    * @param {string} uuid - the actor UUID
    * @returns {Actor5e} the actor that was found via the UUID
    */
-  getActorByUuid(uuid):Actor {
+  getActorByUuid(uuid): Actor {
     const actorToken = this.fromUuid(uuid);
-    if(!actorToken){
+    if (!actorToken) {
       return <Actor>game.actors?.get(uuid);
     }
     const actor = actorToken?.actor ? actorToken?.actor : actorToken;
