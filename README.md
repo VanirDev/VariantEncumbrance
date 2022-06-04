@@ -166,10 +166,11 @@ The calculation should be correct, the metric values ​​2.5, 5, 7.5 are the o
 
 ### Integration with System Bulk based on the rules from [Giffyglyph](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
 
-<iframe
-  src="https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html"
-  style="width:100%; height:300px;"
-></iframe>
+| Symbol Button Header Sheet  | Description  |
+|:----:|:----:|
+|![bold-solid](./wiki/icons/bold-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "bold" symbol on the header sheet (this is the default) |
+|![balance-scale-left-solid](./wiki/icons/balance-scale-left-solid.svg)| If you don't  want to have the Varian Encumbrance Active Effects feature on your actor make sure to have the "balance" symbol on the header sheet. ATTENTION the weight calculation feature is still active|
+|![feather-alt-solid](./wiki/icons/feather-alt-solid.svg)| If you don't  want to have the Variant Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "feather" symbol on the header sheet. *The weight is not calculated anymore and remain frozen (unless the setting 'Use standard calculation weight of the dnd5e system' is set to true in that case the weight calculation rollback to the standard weight calculation of the system dnd5e)* |
 
 ### Variant Encumbrance Flag
 
