@@ -648,7 +648,9 @@ export const VariantEncumbranceBulkImpl = {
           effect = VariantEncumbranceBulkImpl._bulkHeavilyEncumberedNoMidi();
         }
         const speedDecreased =
-          speedDecrease > 0 ? speedDecrease : game.settings.get('dnd5e', 'metricWeightUnits') ? 6 : 20;
+          speedDecrease > 0
+            ? speedDecrease
+            : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk');
         VariantEncumbranceBulkImpl._addEncumbranceEffects(effect, actor, speedDecreased);
         return effect;
       }
@@ -662,7 +664,7 @@ export const VariantEncumbranceBulkImpl = {
         } else {
           effect = VariantEncumbranceBulkImpl._bulkOverburdenedEncumberedNoMidi();
         }
-        VariantEncumbranceBulkImpl._addEncumbranceEffectsOverburdened(effect, actor);
+        VariantEncumbranceBulkImpl._addEncumbranceEffectsOverburdened(effect);
         return effect;
       }
       default: {
@@ -810,39 +812,37 @@ export const VariantEncumbranceBulkImpl = {
   },
 
   _addEncumbranceEffects: function (effect: Effect, actor: Actor, value: number) {
-    const heavyWeightDecreaseBulk =
-      parseInt(<string>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk')) || 0.5;
     //@ts-ignore
     const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.burrow',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.burrow * heavyWeightDecreaseBulk}`,
+      value: `${movement.burrow * value}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.climb',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.climb * heavyWeightDecreaseBulk}`,
+      value: `${movement.climb * value}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.fly',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.fly * heavyWeightDecreaseBulk}`,
+      value: `${movement.fly * value}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.swim',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.swim * heavyWeightDecreaseBulk}`,
+      value: `${movement.swim * value}`,
     });
 
     effect.changes.push(<EffectChangeData>{
       key: 'data.attributes.movement.walk',
       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `${movement.walk * heavyWeightDecreaseBulk}`,
+      value: `${movement.walk * value}`,
     });
     // THIS IS THE DAE SOLUTION
     // } else {
@@ -855,7 +855,7 @@ export const VariantEncumbranceBulkImpl = {
     // }
   },
 
-  _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
+  _addEncumbranceEffectsOverburdened: function (effect: Effect) {
     // const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{
@@ -984,17 +984,13 @@ export const VariantEncumbranceBulkImpl = {
    * @param {string} uuid - the uuid of the actor to add the effect to
    */
   async addEffect(effectName: string, actor: Actor, origin: string, encumbranceTier: number) {
-    let speedDecrease: number | null = 0;
+    let speedDecrease: number | null = 1;
     if (encumbranceTier == ENCUMBRANCE_TIERS.NONE) {
-      speedDecrease = 0;
+      speedDecrease = 1;
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.LIGHT) {
-      speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecreaseMetric')
-        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'lightWeightDecrease');
+      speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.HEAVY) {
-      speedDecrease = game.settings.get('dnd5e', 'metricWeightUnits')
-        ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseMetric')
-        : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecrease');
+      speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk');
     } else if (encumbranceTier == ENCUMBRANCE_TIERS.MAX) {
       speedDecrease = null;
     }

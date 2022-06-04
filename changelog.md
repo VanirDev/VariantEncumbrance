@@ -1,3 +1,7 @@
+### 0.9.2
+
+- Some bug fix for bulk system
+
 ### 0.9.1
 
 - Little html and css fix

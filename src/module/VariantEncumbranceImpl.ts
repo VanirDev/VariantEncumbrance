@@ -822,7 +822,7 @@ export const VariantEncumbranceImpl = {
         } else {
           effect = VariantEncumbranceImpl._overburdenedEncumberedNoMidi();
         }
-        VariantEncumbranceImpl._addEncumbranceEffectsOverburdened(effect, actor);
+        VariantEncumbranceImpl._addEncumbranceEffectsOverburdened(effect);
         return effect;
       }
       default: {
@@ -1023,7 +1023,7 @@ export const VariantEncumbranceImpl = {
     // }
   },
 
-  _addEncumbranceEffectsOverburdened: function (effect: Effect, actor: Actor) {
+  _addEncumbranceEffectsOverburdened: function (effect: Effect) {
     // const movement = actor.data.data.attributes.movement;
     // if (!daeActive) {
     effect.changes.push(<EffectChangeData>{

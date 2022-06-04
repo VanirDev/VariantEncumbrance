@@ -85,11 +85,24 @@ const API = {
 
   async hasEffectAppliedFromIdOnActorArr(...inAttributes: any[]) {
     if (!Array.isArray(inAttributes)) {
-      throw error('removeEffectArr | inAttributes must be of type array');
+      throw error('hasEffectAppliedFromIdOnActorArr | inAttributes must be of type array');
     }
     const [effectId, uuid, includeDisabled] = inAttributes;
     const result = await (<EffectInterface>this.effectInterface)._effectHandler.hasEffectAppliedFromIdOnActor(
       effectId,
+      uuid,
+      includeDisabled,
+    );
+    return result;
+  },
+
+  async hasEffectAppliedOnActorArr(...inAttributes: any[]) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('hasEffectAppliedOnActorArr | inAttributes must be of type array');
+    }
+    const [effectName, uuid, includeDisabled] = inAttributes;
+    const result = await (<EffectInterface>this.effectInterface)._effectHandler.hasEffectAppliedOnActor(
+      effectName,
       uuid,
       includeDisabled,
     );

@@ -7,6 +7,7 @@ import {
   BULK_CATEGORIES,
   BULK_CATEGORY,
   BulkData,
+  SUPPORTED_SHEET,
 } from './VariantEncumbranceModels';
 import { checkBulkCategory, convertPoundsToKg, debug, i18n, i18nFormat, warn } from './lib/lib';
 import CONSTANTS from './constants';
@@ -214,7 +215,18 @@ export const readyHooks = async () => {
       if (isEnabledActorType(actorEntityTmp)) {
         const htmlElementEncumbranceVariant = htmlElement.find('.encumbrance').addClass('encumbrance-variant');
         //@ts-ignore
-        const sheetClass: string = actorSheet.object.data.flags.core.sheetClass;
+        let sheetClass: string = actorSheet.object.data.flags?.core?.sheetClass ?? '';
+        if (!sheetClass) {
+          for (const obj of SUPPORTED_SHEET) {
+            if (game.modules.get(obj.moduleId)?.active && actorSheet.template.includes(obj.templateId)) {
+              sheetClass = obj.name;
+            }
+            if (sheetClass) {
+              break;
+            }
+          }
+        }
+
         module.renderActorSheetBulkSystem(
           actorSheet,
           htmlElement,
@@ -779,7 +791,7 @@ const module = {
       }
 
       const displayedUnits = encumbranceData.unit;
-
+      // TODO MADE BETTER CODE
       if (
         !encumbranceElements &&
         ((game.modules.get('compact-beyond-5e-sheet')?.active &&
@@ -950,7 +962,9 @@ const module = {
               liItem
                 .parent()
                 .find('.item-detail.item-weight div')
-                .append(`<br/>/${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.bulk.ItemContainerCapacityBulk')}`);
+                .append(
+                  `<br/>/${totalBulk ?? 0} ${i18n('variant-encumbrance-dnd5e.label.bulk.ItemContainerCapacityBulk')}`,
+                );
               break;
             }
           }

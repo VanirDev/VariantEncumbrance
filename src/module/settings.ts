@@ -382,7 +382,7 @@ export const registerSettings = function () {
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
     name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
-    scope: 'client',
+    scope: 'world',
     config: true,
     default: false,
     type: Boolean,
@@ -830,7 +830,7 @@ function otherSettings(apply = false) {
     debug: {
       name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
       hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
-      scope: 'client',
+      scope: 'world',
       config: true,
       default: false,
       type: Boolean,

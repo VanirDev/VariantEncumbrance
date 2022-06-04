@@ -166,3 +166,48 @@ export class BulkData {
   weight: string;
   description: string;
 }
+
+export const SUPPORTED_SHEET = [
+  {
+    id: 'CHARACTER_DEFAULT',
+    name: '',
+    template: 'systems/dnd5e/templates/actors/character-sheet.html',
+    templateId: 'dnd5e/templates/actors/character-sheet',
+    moduleId: '',
+  },
+  {
+    id: 'CHARACTER_5E_SHEET',
+    name: '',
+    template: 'systems/dnd5e/templates/actors/character-sheet.html',
+    templateId: 'dnd5e/templates/actors/character-sheet',
+    moduleId: '',
+  },
+  {
+    id: 'DNDBEYOND_CHARACTER_SHEET',
+    name: 'dnd5e.DNDBeyondCharacterSheet5e',
+    template: 'modules/dndbeyond-character-sheet/template/dndbeyond-character-sheet.html',
+    templateId: 'dndbeyond-character-sheet',
+    moduleId: 'dndbeyond-character-sheet',
+  },
+  {
+    id: 'COMPACT_BEYOND_5E_SHEET',
+    name: 'dnd5e.CompactBeyond5eSheet',
+    template: 'modules/compact-beyond-5e-sheet/templates/character-sheet.hbs',
+    templateId: 'compact-beyond-5e-sheet',
+    moduleId: 'compact-beyond-5e-sheet',
+  },
+  {
+    id: 'TIDY_SHEET',
+    name: 'dnd5e.Tidy5eSheet',
+    template: 'modules/tidy5e-sheet/templates/actors/tidy5e-sheet.html',
+    templateId: 'tidy5e-sheet',
+    moduleId: 'tidy5e-sheet',
+  },
+  {
+    id: 'OBSIDIAN',
+    name: 'dnd5e.ObsidianCharacter',
+    template: 'modules/obsidian/html/obsidian.html',
+    templateId: 'obsidian',
+    moduleId: 'obsidian',
+  },
+];
