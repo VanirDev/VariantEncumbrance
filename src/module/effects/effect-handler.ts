@@ -1,4 +1,4 @@
-import { error, i18n, isStringEquals, log, warn } from '../lib/lib';
+import { debug, error, i18n, isStringEquals, log, warn } from '../lib/lib';
 import FoundryHelpers from './foundry-helpers';
 import Effect from './effect';
 import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
@@ -8,6 +8,7 @@ import type {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import { EffectSupport } from './effect-support';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type { EffectActions } from './effect-models';
 
 export default class EffectHandler {
   _customEffects: Effect[];
@@ -39,6 +40,10 @@ export default class EffectHandler {
    * @param {string[]} params.uuids - UUIDS of the actors to toggle the effect on
    */
   async toggleEffect(effectName, { overlay, uuids, metadata = undefined }) {
+    debug(
+      `START Effect Handler 'toggleEffect' : [overlay=${overlay},uuids=${String(uuids)},metadata=${String(metadata)}]`,
+    );
+    const effectNames: string[] = [];
     for (const uuid of uuids) {
       if (this.hasEffectApplied(effectName, uuid)) {
         await this.removeEffect({ effectName, uuid });
@@ -48,6 +53,11 @@ export default class EffectHandler {
         await this.addEffect({ effectName, effectData: null, uuid, origin, overlay, metadata });
       }
     }
+    debug(
+      `END Effect Handler 'toggleEffect' : [overlay=${overlay},effectNames=${String(effectNames)},metadata=${String(
+        metadata,
+      )}]`,
+    );
   }
 
   /**
@@ -76,6 +86,7 @@ export default class EffectHandler {
    * @returns {boolean} true if the effect is applied, false otherwise
    */
   hasEffectApplied(effectName: string, uuid: string): boolean {
+    debug(`START Effect Handler 'hasEffectApplied' : [effectName=${effectName},uuid=${String(uuid)}]`);
     const actor = this._foundryHelpers.getActorByUuid(uuid);
     const isApplied = actor?.data?.effects?.some(
       // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
@@ -87,6 +98,7 @@ export default class EffectHandler {
         }
       },
     );
+    debug(`END Effect Handler 'hasEffectApplied' : [effectName=${effectName},actorName=${String(actor.name)}]`);
     return isApplied;
   }
 
@@ -991,6 +1003,9 @@ export default class EffectHandler {
     forceEnabled?: boolean,
     forceDisabled?: boolean,
   ) {
+    debug(
+      `START Effect Handler 'toggleEffectFromIdOnToken' : [effetcId=${effectId},uuid=${uuid},alwaysDelete=${alwaysDelete},forceEnabled=${forceEnabled},forceDisabled=${forceDisabled}]`,
+    );
     const token = <Token>this._foundryHelpers.getTokenByUuid(uuid);
     const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.data.effects;
     const effect = <ActiveEffect>actorEffects.find(
@@ -1021,7 +1036,9 @@ export default class EffectHandler {
         disabled: !effect.data.disabled,
       });
     }
-
+    debug(
+      `END Effect Handler 'toggleEffectFromIdOnToken' : [effectName=${effect.name},tokenName=${token.name},alwaysDelete=${alwaysDelete},forceEnabled=${forceEnabled},forceDisabled=${forceDisabled}]`,
+    );
     return !!updated;
   }
 
@@ -1202,5 +1219,230 @@ export default class EffectHandler {
     }
     const [effectName, uuid, origin, overlay, effectUpdated] = inAttributes;
     return this.updateEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
+  }
+
+  // ========================================================
+  /**
+   * Manage Active Effect instances through the Actor Sheet via effect control buttons.
+   * @param {MouseEvent} event      The left-click event on the effect control
+   * @param {Actor|Item} owner      The owning document which manages this effect
+   * @returns {Promise|null}        Promise that resolves when the changes are complete.
+   */
+  async onManageActiveEffectFromEffectId(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    effectId: string,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+  ) {
+    const actorEffects = owner?.data.effects;
+    const activeEffect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
+    return this.onManageActiveEffectFromActiveEffect(
+      effectActions,
+      owner,
+      activeEffect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
+  }
+
+  async onManageActiveEffectFromEffectIdArr(...inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('onManageActiveEffectFromEffectIdArr | inAttributes must be of type array');
+    }
+    const [effectActions, owner, effectId, alwaysDelete, forceEnabled, forceDisabled, isTemporary, isDisabled] =
+      inAttributes;
+    return this.onManageActiveEffectFromEffectId(
+      effectActions,
+      owner,
+      effectId,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
+  }
+
+  /**
+   * Manage Active Effect instances through the Actor Sheet via effect control buttons.
+   * @param {MouseEvent} event      The left-click event on the effect control
+   * @param {Actor|Item} owner      The owning document which manages this effect
+   * @returns {Promise|null}        Promise that resolves when the changes are complete.
+   */
+  async onManageActiveEffectFromEffect(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    effect: Effect,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+  ) {
+    const activeEffect = effect.name ? owner.effects.getName(i18n(effect.name)) : null;
+    return this.onManageActiveEffectFromActiveEffect(
+      effectActions,
+      owner,
+      activeEffect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
+  }
+
+  async onManageActiveEffectFromEffectArr(...inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('onManageActiveEffectFromEffectArr | inAttributes must be of type array');
+    }
+    const [effectActions, owner, effect, alwaysDelete, forceEnabled, forceDisabled, isTemporary, isDisabled] =
+      inAttributes;
+    return this.onManageActiveEffectFromEffect(
+      effectActions,
+      owner,
+      effect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
+  }
+
+  /**
+   * Manage Active Effect instances through the Actor Sheet via effect control buttons.
+   * @param {MouseEvent} event      The left-click event on the effect control
+   * @param {Actor|Item} owner      The owning document which manages this effect
+   * @returns {Promise|null}        Promise that resolves when the changes are complete.
+   */
+  async onManageActiveEffectFromActiveEffect(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    activeEffect: ActiveEffect | null | undefined,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+  ) {
+    switch (effectActions) {
+      case 'update': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to update`);
+          return;
+        }
+        if (owner instanceof Actor) {
+          const actor = owner;
+          if (!(<ActiveEffect>activeEffect).data.origin) {
+            const origin = `Actor.${actor?.id}`;
+            setProperty(<ActiveEffectData>activeEffect?.data, 'origin', origin);
+          }
+          return await actor?.updateEmbeddedDocuments('ActiveEffect', [<any>activeEffect?.data]);
+        } else if (owner instanceof Item) {
+          const item = owner;
+          return await item.update({
+            effects: [activeEffect?.data],
+          });
+        }
+        return;
+      }
+      case 'create': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to create`);
+          return;
+        }
+        if (owner instanceof Actor) {
+          const actor = owner;
+          if (!(<ActiveEffect>activeEffect).data.origin) {
+            const origin = `Actor.${actor?.id}`;
+            setProperty(<ActiveEffectData>activeEffect?.data, 'origin', origin);
+          }
+          return await actor?.createEmbeddedDocuments('ActiveEffect', [<any>activeEffect?.data]);
+        } else if (owner instanceof Item) {
+          const item = owner;
+          return await item.update({
+            effects: [activeEffect?.data],
+          });
+        }
+        return;
+      }
+      // case 'create': {
+      //   return owner.createEmbeddedDocuments('ActiveEffect', [
+      //     {
+      //       label: game.i18n.localize('DND5E.EffectNew'),
+      //       icon: 'icons/svg/aura.svg',
+      //       origin: owner.uuid,
+      //       'duration.rounds': isTemporary ? 1 : undefined,
+      //       disabled: isDisabled,
+      //     },
+      //   ]);
+      // }
+      case 'edit': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to edit`);
+          return;
+        }
+        return activeEffect?.sheet?.render(true);
+      }
+      case 'delete': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to delete`);
+          return;
+        }
+        return activeEffect?.delete();
+      }
+      case 'toggle': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to toogle`);
+        }
+        if (activeEffect?.getFlag('core', 'statusId') || alwaysDelete) {
+          const deleted = await activeEffect?.delete();
+          return !!deleted;
+        }
+        let updated;
+        if (forceEnabled && activeEffect?.data.disabled) {
+          updated = await activeEffect?.update({
+            disabled: false,
+          });
+        } else if (forceDisabled && !activeEffect?.data.disabled) {
+          updated = await activeEffect?.update({
+            disabled: true,
+          });
+        } else {
+          // otherwise toggle its disabled status
+          updated = await activeEffect?.update({
+            disabled: !activeEffect?.data.disabled,
+          });
+        }
+        return updated;
+        // return activeEffect?.update({disabled: !activeEffect.data.disabled});
+      }
+    }
+  }
+
+  async onManageActiveEffectFromActiveEffectArr(...inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('onManageActiveEffectFromActiveEffectArr | inAttributes must be of type array');
+    }
+    const [effectActions, owner, activeEffect, alwaysDelete, forceEnabled, forceDisabled, isTemporary, isDisabled] =
+      inAttributes;
+    return this.onManageActiveEffectFromActiveEffect(
+      effectActions,
+      owner,
+      activeEffect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
   }
 }

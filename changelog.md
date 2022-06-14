@@ -1,3 +1,7 @@
+### 0.9.3
+
+- Add some API method for retrieve the weight with all the filters applied
+
 ### 0.9.2
 
 - Some bug fix for bulk system

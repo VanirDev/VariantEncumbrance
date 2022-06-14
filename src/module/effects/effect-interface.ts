@@ -8,6 +8,7 @@ import type {
   ActorData,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type { EffectActions } from './effect-models';
 
 /**
  * Interface for working with effects and executing them as a GM via sockets
@@ -725,7 +726,7 @@ export default class EffectInterface {
    * @param {string} uuid - UUID of the token to toggle the effect on
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async findEffectByNameOnToken(effectName: string, uuid): Promise<ActiveEffect | null> {
+  async findEffectByNameOnToken(effectName: string, uuid, withSocket = true): Promise<ActiveEffect | null> {
     // if (uuids.length == 0) {
     //   uuids = this._foundryHelpers.getTokenUuidsFromCanvas();
     // }
@@ -742,23 +743,37 @@ export default class EffectInterface {
     //   return null;
     // }
     // return effect;
-    if (isGMConnectedAndSocketLibEnable()) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('findEffectByNameOnToken', effectName, uuid);
     } else {
       return this._effectHandler.findEffectByNameOnToken(effectName, uuid);
     }
   }
 
-  async updateEffectFromIdOnToken(effectId: string, uuid: string, origin, overlay, effectUpdated: Effect) {
-    if (isGMConnectedAndSocketLibEnable()) {
+  async updateEffectFromIdOnToken(
+    effectId: string,
+    uuid: string,
+    origin,
+    overlay,
+    effectUpdated: Effect,
+    withSocket = true,
+  ) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('updateEffectFromIdOnToken', effectId, uuid, origin, overlay, effectUpdated);
     } else {
       return this._effectHandler.updateEffectFromIdOnToken(effectId, uuid, origin, overlay, effectUpdated);
     }
   }
 
-  async updateEffectFromNameOnToken(effectName: string, uuid: string, origin, overlay, effectUpdated: Effect) {
-    if (isGMConnectedAndSocketLibEnable()) {
+  async updateEffectFromNameOnToken(
+    effectName: string,
+    uuid: string,
+    origin,
+    overlay,
+    effectUpdated: Effect,
+    withSocket = true,
+  ) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM('updateEffectFromNameOnToken', effectName, uuid, origin, overlay, effectUpdated);
     } else {
       return this._effectHandler.updateEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
@@ -771,8 +786,9 @@ export default class EffectInterface {
     origin,
     overlay,
     effectUpdated: ActiveEffectData,
+    withSocket = true,
   ) {
-    if (isGMConnectedAndSocketLibEnable()) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'updateActiveEffectFromIdOnToken',
         effectId,
@@ -792,8 +808,9 @@ export default class EffectInterface {
     origin,
     overlay,
     effectUpdated: ActiveEffectData,
+    withSocket = true,
   ) {
-    if (isGMConnectedAndSocketLibEnable()) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
       return this._socket.executeAsGM(
         'updateActiveEffectFromNameOnToken',
         effectName,
@@ -804,6 +821,131 @@ export default class EffectInterface {
       );
     } else {
       return this._effectHandler.updateActiveEffectFromNameOnToken(effectName, uuid, origin, overlay, effectUpdated);
+    }
+  }
+
+  // ==================================================================
+
+  async onManageActiveEffectFromEffectId(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    effectId: string,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+    withSocket = true,
+  ) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM(
+        'onManageActiveEffectFromEffectId',
+        effectActions,
+        owner,
+        effectId,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
+    } else {
+      return this._effectHandler.onManageActiveEffectFromEffectId(
+        effectActions,
+        owner,
+        effectId,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
+    }
+  }
+
+  /**
+   * Manage Active Effect instances through the Actor Sheet via effect control buttons.
+   * @param {MouseEvent} event      The left-click event on the effect control
+   * @param {Actor|Item} owner      The owning document which manages this effect
+   * @returns {Promise|null}        Promise that resolves when the changes are complete.
+   */
+  async onManageActiveEffectFromEffect(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    effect: Effect,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+    withSocket = true,
+  ) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM(
+        'onManageActiveEffectFromEffect',
+        effectActions,
+        owner,
+        effect,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
+    } else {
+      return this._effectHandler.onManageActiveEffectFromEffect(
+        effectActions,
+        owner,
+        effect,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
+    }
+  }
+
+  /**
+   * Manage Active Effect instances through the Actor Sheet via effect control buttons.
+   * @param {MouseEvent} event      The left-click event on the effect control
+   * @param {Actor|Item} owner      The owning document which manages this effect
+   * @returns {Promise|null}        Promise that resolves when the changes are complete.
+   */
+  async onManageActiveEffectFromActiveEffect(
+    effectActions: EffectActions,
+    owner: Actor | Item,
+    activeEffect: ActiveEffect | null | undefined,
+    alwaysDelete?: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
+    isTemporary?: boolean,
+    isDisabled?: boolean,
+    withSocket = true,
+  ) {
+    if (withSocket && isGMConnectedAndSocketLibEnable()) {
+      return this._socket.executeAsGM(
+        'onManageActiveEffectFromActiveEffect',
+        effectActions,
+        owner,
+        activeEffect,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
+    } else {
+      return this._effectHandler.onManageActiveEffectFromActiveEffect(
+        effectActions,
+        owner,
+        activeEffect,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
+        isTemporary,
+        isDisabled,
+      );
     }
   }
 }

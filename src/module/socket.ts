@@ -98,6 +98,17 @@ export function registerSocket() {
     API.updateActiveEffectFromNameOnTokenArr(...args),
   );
 
+  // =========================================================
+  variantEncumbranceSocket.register('calculateWeightOnActorFromId', (...args) =>
+    API.calculateWeightOnActorFromIdArr(...args),
+  );
+  variantEncumbranceSocket.register('calculateWeightOnTokenFromId', (...args) =>
+    API.calculateWeightOnTokenFromIdArr(...args),
+  );
+  variantEncumbranceSocket.register('calculateWeightOnActor', (...args) =>
+    API.calculateWeightOnActorArr(...args),
+  );
+
   setSocket(variantEncumbranceSocket);
   return variantEncumbranceSocket;
 }

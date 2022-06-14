@@ -276,6 +276,65 @@ variant-encumbrance-dnd5e:
 |Remove standard encumbrance bar from the character sheet| If enabled it will hide the standard bar of encumbrance, is useful only for people using the bulk bar and do not want to see two graphic bars|false|
 |Debug|Enable debug messages useful for check issues|false||
 
+# API
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorFromId(actorIdOrName:string) ⇒ <code>EncumbranceData</code>
+
+Calculate the weight on the actor with all the filters applied.
+
+**Returns**: <code>EncumbranceData</code> - A EncumbranceData object
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actorIdOrName | <code>string</code> | The actor reference by id or name | <code>undefined</code> |
+
+**Example**:
+`game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorFromId('Pippo')`
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnTokenFromId(tokenIdOrName:string) ⇒ <code>EncumbranceData</code>
+
+Calculate the weight on the actor with all the filters applied.
+
+**Returns**: <code>EncumbranceData</code> - A EncumbranceData object
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| tokenIdOrName | <code>string</code> | The token reference by id or name | <code>undefined</code> |
+
+**Example**:
+`game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnTokenFromId('Pippo')`
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActor(actor:Actor):EncumbranceData ⇒ <code>EncumbranceData</code>
+
+Calculate the weight on the actor with all the filters applied.
+
+**Returns**: <code>EncumbranceData</code> - A EncumbranceData object
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actor | <code>Actor</code> | The actor object | <code>undefined</code> |
+
+**Example**:
+`game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActor('Pippo')`
+
+## Models
+
+### EncumbranceData 
+
+Her the _EncumbranceData_ structure:
+
+```
+{
+  totalWeight: number,
+  totalWeightToDisplay: number,
+  lightMax: number,
+  mediumMax: number,
+  heavyMax: number,
+  encumbranceTier: number,
+  speedDecrease: number,
+  unit: string,
+}
+```
 
 # Build
 

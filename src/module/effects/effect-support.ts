@@ -1,7 +1,7 @@
 import type { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import { duplicateExtended, i18n, isStringEquals } from '../lib/lib';
+import { duplicateExtended, i18n, isStringEquals, is_real_number } from '../lib/lib';
 import Effect, { Constants } from './effect';
 
 export class EffectSupport {
@@ -104,16 +104,16 @@ export class EffectSupport {
       }
     }
     /*
-    if (this.atlChanges.length > 0) {
-      arrChanges.push(...this.atlChanges);
+    if (effect.atlChanges.length > 0) {
+      arrChanges.push(...effect.atlChanges);
     }
 
-    if (this.tokenMagicChanges.length > 0) {
-      arrChanges.push(...this.tokenMagicChanges);
+    if (effect.tokenMagicChanges.length > 0) {
+      arrChanges.push(...effect.tokenMagicChanges);
     }
 
-    if (this.atcvChanges.length > 0) {
-      arrChanges.push(...this.atcvChanges);
+    if (effect.atcvChanges.length > 0) {
+      arrChanges.push(...effect.atcvChanges);
     }
     */
     return arrChanges;
@@ -122,10 +122,12 @@ export class EffectSupport {
   static _isEmptyObject(obj: any) {
     // because Object.keys(new Date()).length === 0;
     // we have to do some additional check
+    if (obj == null || obj == undefined) {
+      return true;
+    }
     const result =
       obj && // null and undefined check
-      Object.keys(obj).length === 0 &&
-      Object.getPrototypeOf(obj) === Object.prototype;
+      (Object.keys(obj).length === 0 || Object.getPrototypeOf(obj) === Object.prototype);
     return result;
   }
 
@@ -236,6 +238,19 @@ export class EffectSupport {
     p: PropertiesToSource<ActiveEffectDataProperties>,
     isPassive: boolean,
   ): ActiveEffect {
+    let isTemporary = false;
+    //@ts-ignore
+    const currentDae = EffectSupport._isEmptyObject(p.dae) ? p.flags.dae : p.dae;
+    if (is_real_number(p.duration.seconds)) {
+      isTemporary = true;
+    }
+    if (is_real_number(p.duration.rounds)) {
+      isTemporary = true;
+    }
+    if (is_real_number(p.duration.turns)) {
+      isTemporary = true;
+    }
+    isPassive = !isTemporary;
     //@ts-ignore
     return ActiveEffect.create({
       id: p._id,
@@ -258,7 +273,9 @@ export class EffectSupport {
         isConvenient: true,
         //@ts-ignore
         convenientDescription: p.description ? i18n(p.description) : '',
-        dae: this._isEmptyObject(p.flags.dae) ? { stackable: false, specialDuration: [], transfer: true } : p.flags.dae,
+        dae: EffectSupport._isEmptyObject(currentDae)
+          ? { stackable: false, specialDuration: [], transfer: true }
+          : currentDae,
       }),
       origin: origin ? origin : p.origin ? p.origin : '', // MOD 4535992
       transfer: p.transfer ?? false,
@@ -276,9 +293,19 @@ export class EffectSupport {
    * @returns {object} The active effect data object for this effect
    */
   public static convertToActiveEffectData(effect: Effect): Record<string, unknown> {
+    if (is_real_number(effect.seconds)) {
+      effect.isTemporary = true;
+    }
+    if (is_real_number(effect.rounds)) {
+      effect.isTemporary = true;
+    }
+    if (is_real_number(effect.turns)) {
+      effect.isTemporary = true;
+    }
     const isPassive = !effect.isTemporary;
     const myid = effect._id ? effect._id : effect.flags?.core?.statusId ? effect.flags.core.statusId : undefined;
     const myoverlay = effect.overlay ? effect.overlay : effect.flags?.core?.overlay ? effect.flags.core.overlay : false;
+    const currentDae = EffectSupport._isEmptyObject(effect.dae) ? effect.flags.dae : effect.dae;
     return {
       id: myid,
       name: i18n(effect.name),
@@ -294,20 +321,20 @@ export class EffectSupport {
         },
         isConvenient: true,
         convenientDescription: i18n(effect.description),
-        dae: EffectSupport._isEmptyObject(effect.dae)
+        dae: EffectSupport._isEmptyObject(currentDae)
           ? isPassive
             ? { stackable: false, specialDuration: [], transfer: true }
             : {}
-          : effect.dae,
+          : currentDae,
       }),
       origin: effect.origin ? effect.origin : 'None', // MOD 4535992
       transfer: isPassive ? false : effect.transfer,
-      //changes: this.changes, // MOD 4535992
+      //changes: effect.changes, // MOD 4535992
       changes: EffectSupport._handleIntegrations(effect),
       // 4535992 these are not under data
-      // isDisabled: this.isDisabled ?? false,
-      // isTemporary: this.isTemporary ?? false,
-      // isSuppressed: this.isSuppressed ?? false,
+      // isDisabled: effect.isDisabled ?? false,
+      // isTemporary: effect.isTemporary ?? false,
+      // isSuppressed: effect.isSuppressed ?? false,
     };
   }
 
