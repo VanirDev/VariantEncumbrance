@@ -32,6 +32,7 @@ export class EncumbranceData {
   encumbranceTier: number;
   speedDecrease: number;
   unit: string;
+  encumbrance:EncumbranceDnd5e;
 }
 
 export class EncumbranceBulkData extends EncumbranceData {

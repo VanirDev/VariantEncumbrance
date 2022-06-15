@@ -1,22 +1,19 @@
 // Import JavaScript modules
 import {
   EncumbranceActorType,
-  // EncumbranceActorType,
   EncumbranceBulkData,
   EncumbranceDnd5e,
   EncumbranceFlags,
   EncumbranceMode,
   ENCUMBRANCE_TIERS,
-  VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
 import {
-  dfQualityLifeActive,
-  dfredsConvenientEffectsActive,
   ENCUMBRANCE_STATE,
   invMidiQol,
   invPlusActive,
   daeActive,
+  dfQualityLifeActive,
 } from './modules';
 import EffectInterface from './effects/effect-interface';
 import CONSTANTS from './constants';
@@ -598,13 +595,79 @@ export const VariantEncumbranceBulkImpl = {
         inventorySlot = minimumBulk;
       }
 
+      let modForSize = 1; //actorEntity.data.data.abilities.str.value;
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'sizeMultipliers')) {
+        //@ts-ignore
+        const size = actorEntity.data.data.traits.size;
+        if (size === 'tiny') {
+          modForSize *= 0.5;
+        } else if (size === 'sm') {
+          modForSize *= 1;
+        } else if (size === 'med') {
+          modForSize *= 1;
+        } else if (size === 'lg') {
+          modForSize *= 2;
+        } else if (size === 'huge') {
+          modForSize *= 4;
+        } else if (size === 'grg') {
+          modForSize *= 8;
+        } else {
+          modForSize *= 1;
+        }
+        // Powerful build support
+        //@ts-ignore
+        if (actorEntity.data?.flags?.dnd5e?.powerfulBuild) {
+          //jshint ignore:line
+          // mod *= 2;
+          modForSize = Math.min(modForSize * 2, 8);
+        }
+      }
+      let strengthMultiplier = 1;
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'useStrengthMultiplier')) {
+        strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? game.settings.get(CONSTANTS.MODULE_NAME, 'fakeMetricSystem')
+            ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier')
+            : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplierMetric')
+          : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'strengthMultiplier');
+      }
       const displayedUnits = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'unitsBulk');
       const lightMax = 0;
       const mediumMax = inventorySlot * 0.5; // This is a fixed value to half of the inventory
       const heavyMax = inventorySlot;
 
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
+
+      let max = 0;
+      let pct = 0;
       const totalWeightOriginal = totalWeight;
+
+      if (actorEntity.type == EncumbranceActorType.CHARACTER) {
+        // ==================
+        // CHARACTER
+        // ==================
+        // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
+        //@ts-ignore
+        max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        pct = Math.clamped((totalWeight * 100) / max, 0, 100);
+      } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
+        // ===============================
+        // VEHICLE
+        // ===============================
+        //@ts-ignore
+        const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
+        // Compute overall encumbrance
+        // const max = actorData.data.attributes.capacity.cargo;
+        max = capacityCargo * strengthMultiplier * modForSize;
+        pct = Math.clamped((totalWeightOriginal * 100) / max, 0, 100);
+      } else {
+        // ===========================
+        // NO CHARACTER, NO VEHICLE (BY DEFAULT THE CHARACTER)
+        // ===========================
+        // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
+        //@ts-ignore
+        max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        pct = Math.clamped((totalWeight * 100) / max, 0, 100);
+      }
 
       if (totalWeight > mediumMax) {
         encumbranceTier = ENCUMBRANCE_TIERS.HEAVY;
@@ -612,6 +675,14 @@ export const VariantEncumbranceBulkImpl = {
       if (totalWeight > heavyMax) {
         encumbranceTier = ENCUMBRANCE_TIERS.MAX;
       }
+
+      //@ts-ignore
+      const dataEncumbrance = {
+        value: totalWeightOriginal.toNearest(0.1),
+        max: max.toNearest(0.1),
+        pct: pct,
+        encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
+      };
 
       return {
         totalWeight: totalWeightOriginal.toNearest(0.1),
@@ -624,6 +695,7 @@ export const VariantEncumbranceBulkImpl = {
         unit: displayedUnits,
         inventorySlot: inventorySlot,
         minimumBulk: minimumBulk,
+        encumbrance: dataEncumbrance
       };
     } else {
       throw new Error('Something is wrong');

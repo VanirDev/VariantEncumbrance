@@ -7,18 +7,14 @@ import {
   EncumbranceFlags,
   EncumbranceMode,
   ENCUMBRANCE_TIERS,
-  VariantEncumbranceItemData,
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
 import {
   dfQualityLifeActive,
-  dfredsConvenientEffectsActive,
   ENCUMBRANCE_STATE,
   invMidiQol,
   invPlusActive,
-  daeActive,
 } from './modules';
-import EffectInterface from './effects/effect-interface';
 import CONSTANTS from './constants';
 import { error, i18n, isGMConnected } from './lib/lib';
 import API from './api';
@@ -760,13 +756,18 @@ export const VariantEncumbranceImpl = {
 
       // Inventory encumbrance
       // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
-      //@ts-ignore
-      (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
+      const dataEncumbrance:EncumbranceDnd5e = {
         value: totalWeightOriginal.toNearest(0.1),
         max: max.toNearest(0.1),
-        pct,
+        pct: pct,
         encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
       };
+
+      // ==========================================================================================
+      // THIS IS IMPORTANT WE FORCE THE CORE ENCUMBRANCE TO BE SYNCHRONIZED WITH THE CALCULATION
+      // ===============================================================================
+      //@ts-ignore
+      (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = dataEncumbrance;
 
       return {
         totalWeight: totalWeightOriginal.toNearest(0.1),
@@ -778,6 +779,7 @@ export const VariantEncumbranceImpl = {
         encumbranceTier: encumbranceTier,
         speedDecrease: speedDecrease,
         unit: displayedUnits,
+        encumbrance: dataEncumbrance
       };
     } else {
       throw new Error('Something is wrong');
@@ -1462,6 +1464,7 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     encumbranceTier: encumbranceTier,
     speedDecrease: 0,
     unit: displayedUnits,
+    encumbrance: dataEncumbrance
   };
 }
 

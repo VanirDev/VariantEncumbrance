@@ -128,7 +128,7 @@ Enabled by default, the module will modify your maximum carry weight according t
 
 In the module settings, custom multipliers are available for unequipped, equipped, and proficiently equipped items. This was mainly added for my house rules, where equipped proficient items get a small weight reduction due to experience handling them, but this lends some flexibility to the system for anyone to use.
 
-### Buttons header sheet for enable/disable the features (Weight Calculation and Active Effects) actor by actor
+### Buttons header sheet for enable/disable the features of Variant Encumbrance (Weight Calculation and Active Effects) actor by actor
 
 Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best solution for the single individual
 
@@ -166,6 +166,54 @@ The calculation should be correct, the metric values ​​2.5, 5, 7.5 are the o
 
 ### Integration with System Bulk based on the rules from [Giffyglyph](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
 
+An active inventory manages items using inventory slots (storage capacity) and object bulk (carrying effort).
+### Inventory slots
+
+Inventory slots describe storage capacity—how much can a thing carry without being overwhelmed? One slot holds one small object—a potion bottle, a dagger, a loaf of bread, etc.
+
+Anything that can hold, carry, or contain objects can make use of inventory slots—for example:
+
+    - Creatures use slots to describe how much they can carry before they're encumbered.
+    - Containers use slots to describe how much they can store before they're full.
+    - Buildings use slots to describe how much free space they have in their rooms.
+    - Vehicles use slots to describe how much they can transport before they can't move.
+
+### Your Inventory
+
+Your inventory capacity depends on your creature size and strength modifier—the bigger and stronger you are, the more inventory slots you have.
+
+As your size increases, so too does your bulk—a larger creature takes more effort to carry. Your bulk equals the larger of either a) your minimum bulk or b) the total bulk of everything in your inventory.
+
+**Creature Inventory**
+
+| Creature Size | Inventory Slots | Minimum Bulk |
+|:-------------:|:---------------:|:------------:|
+| Tiny | 6 + STR | 5 |
+| Small | 14 + STR | 10 |
+| Medium | 18 + STR | 20 |
+| Large | 22 + [ STR x 2 ] | 40 |
+| Huge | 30 + [ STR x 4 ] | 80 |
+| Gargantuan | 46 + [ STR x 8 ] | 160 |
+
+Here we see three characters calculate their inventory:
+
+    - Valiant, a human cleric, is a medium-sized creature (18 slots) with +2 STR (+2 slots). He has a total of 20 inventory slots, and occupies a minimum of 20 slots when carried.
+    - Crackle, a kobold wizard, is a small creature (14 slots) with −1 STR (−1 slot). She has 13 inventory slots and occupies a minimum of 10 slots.
+    - Brakken, a goliath barbarian, is a medium-sized creature with _Powerful Build_ (22 slots) and +3 STR (+6 slots). She has 28 inventory slots and occupies a minimum of 20 slots when carried.
+
+#### More details about the calculation can be found [here](https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html)
+
+### Bulk
+
+Objects use bulk to describe how many inventory slots they fill—the bulkier the object, the more slots occupied.
+
+Bulk represents the effort needed by a medium-sized creature to carry an object based on its size, weight, and shape—the more awkward or uncomfortable it is to hold an object, the higher its bulk.
+
+
+### Buttons header sheet for enable/disable the features of Bulk (Weight Bulk Calculation and Active Effects Bulk) actor by actor
+
+Add new buttons on the header sheet of the actors for choose when to avoid to add the Active Effect or weight calculation. To much bad feed back on the automatization of the AE, i hope  with this to help the community to find the best solution for the single individual
+
 | Symbol Button Header Sheet  | Description  |
 |:----:|:----:|
 |![bold-solid](./wiki/icons/bold-solid.svg) | If you want to have the Varian Encumbrance Active Effects and Weight calculation features on your actor make sure to have the "bold" symbol on the header sheet (this is the default) |
@@ -192,7 +240,13 @@ variant-encumbrance-dnd5e:
     heavyMax: 150,
     encumbranceTier: 0,
     speedDecrease: 0,
-    unit: 'lbs'
+    unit: 'lbs',
+    encumbrance: {
+        value: 150,
+        max: 100,
+        pct: 200,
+        encumbered: true,
+    }
   },
   bulk: {
     totalWeight: 0,
@@ -202,7 +256,15 @@ variant-encumbrance-dnd5e:
     heavyMax: 150,
     encumbranceTier: 0,
     speedDecrease: 0,
-    unit: 'bulk'
+    unit: 'bulk',
+    encumbrance: {
+        value: 150,
+        max: 100,
+        pct: 200,
+        encumbered: true,
+    },
+    inventorySlot: 60,
+    minimumBulk: 2;
   },
   enabledae: true,
   enabledwe: true,
@@ -228,6 +290,9 @@ variant-encumbrance-dnd5e:
     - 3 = Over Encumbered (Overburdened)
 - **speedDecrease:** the value in units of the decreased movement (this change if the metric system is active or not).
 - **unit:** the label applied to the unit weight, just a visual effect (default is lbs. on metric system is kg.).
+- **encumbrance:** the representation of the standard dnd5e system encumbrance data useful for integration between modules.
+- **inventorySlot:** describe storage capacity—how much can a thing carry without being overwhelmed? One slot holds one small object—a potion bottle, a dagger, a loaf of bread, etc.
+- **minimumBulk:** the calculated minimum bulk fir the current actor
 - **enabledae:** if true it's mean on the actor is applied the management of the active effects of the weight from the module. _NOTE: if you set true this is better to set to false 'enabledwe'_
 - **enabledwe:** if true it's mean on the actor is applied the calculation of the weight from the module.
 - **enabledaebulk:** if true it's mean on the actor is applied the system bulk the management of the active effects of the weight from the module. _NOTE: if you set true this is better to set to false 'enabledwe'_
@@ -315,13 +380,13 @@ Calculate the weight on the actor with all the filters applied.
 | actor | <code>Actor</code> | The actor object | <code>undefined</code> |
 
 **Example**:
-`game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActor('Pippo')`
+`game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActor(actor)`
 
 ## Models
 
-### EncumbranceData 
+### EncumbranceData
 
-Her the _EncumbranceData_ structure:
+Here the _EncumbranceData_ structure:
 
 ```
 {
@@ -333,6 +398,40 @@ Her the _EncumbranceData_ structure:
   encumbranceTier: number,
   speedDecrease: number,
   unit: string,
+  encumbrance:EncumbranceDnd5e;
+}
+```
+
+### EncumbranceDnd5e
+
+Here the _EncumbranceDataDnd5e_ structure:
+
+```
+{
+  value: number;
+  max: number;
+  pct: number;
+  encumbered?: boolean; //Vehicle not have this
+}
+```
+
+### EncumbranceBulkData
+
+Here the _EncumbranceBulkData_ structure extends _EncumbranceData_:
+
+```
+{
+  totalWeight: number,
+  totalWeightToDisplay: number,
+  lightMax: number,
+  mediumMax: number,
+  heavyMax: number,
+  encumbranceTier: number,
+  speedDecrease: number,
+  unit: string,
+  encumbrance:EncumbranceDnd5e;
+  inventorySlot: number;
+  minimumBulk: number;
 }
 ```
 

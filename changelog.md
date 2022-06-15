@@ -1,3 +1,6 @@
+### 0.9.4
+
+- Better model data for recover encumbranc einformation in other modules (for the integration with inventory plus)
 ### 0.9.3
 
 - Add some API method for retrieve the weight with all the filters applied
