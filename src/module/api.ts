@@ -2,7 +2,7 @@ import { VariantEncumbranceImpl } from './VariantEncumbranceImpl';
 import CONSTANTS from './constants';
 import EffectInterface from './effects/effect-interface';
 import type Effect from './effects/effect';
-import { error, isStringEquals, warn } from './lib/lib';
+import { checkBulkCategory, error, isStringEquals, warn } from './lib/lib';
 import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import type { EncumbranceData } from './VariantEncumbranceModels';
 
@@ -18,7 +18,7 @@ const API = {
       throw error('removeEffectArr | inAttributes must be of type array');
     }
     const [params] = inAttributes;
-    const result = await (<EffectInterface>this.effectInterface)._effectHandler.removeEffect(params);
+    const result = await (<EffectInterface>this.effectInterface)._effectHandler.removeEffectArr(params);
     return result;
   },
 
@@ -36,7 +36,7 @@ const API = {
       throw error('addEffectArr | inAttributes must be of type array');
     }
     const [params] = inAttributes;
-    const result = await (<EffectInterface>this.effectInterface)._effectHandler.addEffect(params);
+    const result = await (<EffectInterface>this.effectInterface)._effectHandler.addEffectArr(params);
     return result;
   },
 
@@ -431,7 +431,7 @@ const API = {
 
   // =======================================================================================
 
-  async calculateWeightOnActorFromIdArr(...inAttributes:any[]):Promise<EncumbranceData|undefined>{
+  async calculateWeightOnActorFromIdArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
     if (!Array.isArray(inAttributes)) {
       throw error('calculateWeightOnActorFromIdArr | inAttributes must be of type array');
     }
@@ -439,18 +439,18 @@ const API = {
     return this.calculateWeightOnActorFromId(actorIdOrName);
   },
 
-  calculateWeightOnActorFromId(actorIdOrName:string):EncumbranceData|undefined{
+  calculateWeightOnActorFromId(actorIdOrName: string): EncumbranceData | undefined {
     const actor = game.actors?.contents.find((a) => {
-      return isStringEquals(a.id,actorIdOrName) || isStringEquals(<string>a.name,actorIdOrName)
+      return isStringEquals(a.id, actorIdOrName) || isStringEquals(<string>a.name, actorIdOrName);
     });
-    if(!actor){
+    if (!actor) {
       warn(`No actor found for reference '${actorIdOrName}'`);
       return;
     }
     return this.calculateWeightOnActor(actor);
   },
 
-  async calculateWeightOnTokenFromIdArr(...inAttributes:any[]):Promise<EncumbranceData|undefined>{
+  async calculateWeightOnTokenFromIdArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
     if (!Array.isArray(inAttributes)) {
       throw error('calculateWeightOnTokenFromIdArr | inAttributes must be of type array');
     }
@@ -458,23 +458,23 @@ const API = {
     return this.calculateWeightOnTokenFromId(tokenIdOrName);
   },
 
-  calculateWeightOnTokenFromId(tokenIdOrName:string):EncumbranceData|undefined{
+  calculateWeightOnTokenFromId(tokenIdOrName: string): EncumbranceData | undefined {
     const token = canvas.tokens?.placeables.find((a) => {
-      return isStringEquals(a.id,tokenIdOrName) || isStringEquals(a.name,tokenIdOrName)
+      return isStringEquals(a.id, tokenIdOrName) || isStringEquals(a.name, tokenIdOrName);
     });
-    if(!token){
+    if (!token) {
       warn(`No token found for reference '${tokenIdOrName}'`);
       return;
     }
     const actor = token.actor;
-    if(!actor){
+    if (!actor) {
       warn(`No actor found for reference '${tokenIdOrName}'`);
       return;
     }
     return this.calculateWeightOnActor(actor);
   },
 
-  async calculateWeightOnActorArr(...inAttributes:any[]):Promise<EncumbranceData|undefined>{
+  async calculateWeightOnActorArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
     if (!Array.isArray(inAttributes)) {
       throw error('calculateWeightOnActorArr | inAttributes must be of type array');
     }
@@ -482,22 +482,25 @@ const API = {
     return this.calculateWeightOnActor(actor);
   },
 
-  calculateWeightOnActor(actor:Actor):EncumbranceData|undefined{
-    if(!actor){
+  calculateWeightOnActor(actor: Actor): EncumbranceData | undefined {
+    if (!actor) {
       warn(`No actor is been passed`);
       return;
     }
     const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-    const inventoryItems:Item[] = [];
+    const inventoryItems: Item[] = [];
     actor.data.items.contents.forEach((im: Item) => {
       if (im && physicalItems.includes(im.type)) {
         inventoryItems.push(im);
       }
     });
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor,inventoryItems);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems);
     return encumbranceData;
-  }
+  },
 
+  convertLbToBulk(weight: number): number {
+    return checkBulkCategory(weight).bulk;
+  },
 };
 
 export default API;

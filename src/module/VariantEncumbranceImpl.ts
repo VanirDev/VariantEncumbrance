@@ -9,12 +9,7 @@ import {
   ENCUMBRANCE_TIERS,
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
-import {
-  dfQualityLifeActive,
-  ENCUMBRANCE_STATE,
-  invMidiQol,
-  invPlusActive,
-} from './modules';
+import { dfQualityLifeActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './modules';
 import CONSTANTS from './constants';
 import { error, i18n, isGMConnected } from './lib/lib';
 import API from './api';
@@ -452,6 +447,7 @@ export const VariantEncumbranceImpl = {
             // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
             let actorHasCustomCategories = false;
             for (const categoryId in inventoryPlusCategories) {
+              const section = inventoryPlusCategories[categoryId];
               if (
                 // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
                 //@ts-ignore
@@ -466,20 +462,22 @@ export const VariantEncumbranceImpl = {
                   //@ts-ignore
                   item.data?.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
               ) {
-                const section = inventoryPlusCategories[categoryId];
                 // Ignore weight
                 if (section?.ignoreWeight == true) {
                   itemWeight = 0;
                   ignoreEquipmentCheck = true;
                 }
-                // Inherent weight
-                if (Number(section?.ownWeight) > 0) {
-                  if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                    invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-                  }
-                }
                 // EXIT FOR
                 actorHasCustomCategories = true;
+              }
+
+              // Inherent weight
+              if (Number(section?.ownWeight) > 0) {
+                if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                  invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+                }
+              }
+              if (actorHasCustomCategories) {
                 break;
               }
             }
@@ -756,7 +754,7 @@ export const VariantEncumbranceImpl = {
 
       // Inventory encumbrance
       // actorEntity.data.data.attributes.encumbrance = { value: totalWeight.toNearest(0.1), max, pct, encumbered: pct > (200/3) };
-      const dataEncumbrance:EncumbranceDnd5e = {
+      const dataEncumbrance: EncumbranceDnd5e = {
         value: totalWeightOriginal.toNearest(0.1),
         max: max.toNearest(0.1),
         pct: pct,
@@ -779,7 +777,7 @@ export const VariantEncumbranceImpl = {
         encumbranceTier: encumbranceTier,
         speedDecrease: speedDecrease,
         unit: displayedUnits,
-        encumbrance: dataEncumbrance
+        encumbrance: dataEncumbrance,
       };
     } else {
       throw new Error('Something is wrong');
@@ -1464,7 +1462,7 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     encumbranceTier: encumbranceTier,
     speedDecrease: 0,
     unit: displayedUnits,
-    encumbrance: dataEncumbrance
+    encumbrance: dataEncumbrance,
   };
 }
 

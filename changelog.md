@@ -1,3 +1,8 @@
+### 0.9.5
+
+- Add on apiithe method 'convertLbToBulk'
+- Bugg fix with inventory plus integration
+
 ### 0.9.4
 
 - Better model data for recover encumbranc einformation in other modules (for the integration with inventory plus)

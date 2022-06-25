@@ -8,13 +8,7 @@ import {
   ENCUMBRANCE_TIERS,
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
-import {
-  ENCUMBRANCE_STATE,
-  invMidiQol,
-  invPlusActive,
-  daeActive,
-  dfQualityLifeActive,
-} from './modules';
+import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, daeActive, dfQualityLifeActive } from './modules';
 import EffectInterface from './effects/effect-interface';
 import CONSTANTS from './constants';
 import { error, i18n, isGMConnected } from './lib/lib';
@@ -354,6 +348,7 @@ export const VariantEncumbranceBulkImpl = {
             // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
             let actorHasCustomCategories = false;
             for (const categoryId in inventoryPlusCategories) {
+              const section = inventoryPlusCategories[categoryId];
               if (
                 // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
                 //@ts-ignore
@@ -368,20 +363,22 @@ export const VariantEncumbranceBulkImpl = {
                   //@ts-ignore
                   item.data?.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
               ) {
-                const section = inventoryPlusCategories[categoryId];
                 // Ignore weight
                 if (section?.ignoreWeight == true) {
                   itemWeight = 0;
                   ignoreEquipmentCheck = true;
                 }
-                // Inherent weight
-                if (Number(section?.ownWeight) > 0) {
-                  if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                    invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-                  }
-                }
                 // EXIT FOR
                 actorHasCustomCategories = true;
+              }
+
+              // Inherent weight
+              if (API.convertLbToBulk(section?.ownWeight) > 0) {
+                if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                  invPlusCategoriesWeightToAdd.set(categoryId, API.convertLbToBulk(section.ownWeight));
+                }
+              }
+              if (actorHasCustomCategories) {
                 break;
               }
             }
@@ -395,9 +392,9 @@ export const VariantEncumbranceBulkImpl = {
                     ignoreEquipmentCheck = true;
                   }
                   // Inherent weight
-                  if (Number(section?.ownWeight) > 0) {
+                  if (API.convertLbToBulk(section?.ownWeight) > 0) {
                     if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                      invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+                      invPlusCategoriesWeightToAdd.set(categoryId, API.convertLbToBulk(section.ownWeight));
                     }
                   }
                   // EXIT FOR
@@ -695,7 +692,7 @@ export const VariantEncumbranceBulkImpl = {
         unit: displayedUnits,
         inventorySlot: inventorySlot,
         minimumBulk: minimumBulk,
-        encumbrance: dataEncumbrance
+        encumbrance: dataEncumbrance,
       };
     } else {
       throw new Error('Something is wrong');

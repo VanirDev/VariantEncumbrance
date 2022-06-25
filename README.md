@@ -382,6 +382,20 @@ Calculate the weight on the actor with all the filters applied.
 **Example**:
 `game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActor(actor)`
 
+
+### game.modules.get('variant-encumbrance-dnd5e').api.convertLbToBulk(weight: number):number ⇒ <code>number</code>
+
+Convert weight to bulk
+
+**Returns**: <code>EncumbranceData</code> - A EncumbranceData object
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| weight | <code>number</code> | The weight | <code>undefined</code> |
+
+**Example**:
+`game.modules.get('variant-encumbrance-dnd5e').api.convertLbToBulk(weight)`
+
 ## Models
 
 ### EncumbranceData
