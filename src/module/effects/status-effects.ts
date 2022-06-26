@@ -10,7 +10,7 @@ export default class StatusEffectsLib {
   /**
    * Initialize the token status effects based on the user configured settings.
    */
-  init(statusEffectNames:string[]) {
+  init(statusEffectNames: string[]) {
     this.initializeStatusEffects(statusEffectNames);
     //@ts-ignore
     //libWrapper.register(CONSTANTS.MODULE_NAME, 'TokenHUD.prototype._onToggleEffect', this.patchToggleEffect, "MIXED");
@@ -34,27 +34,23 @@ export default class StatusEffectsLib {
   /**
    * Initialize the token status effects based on the user configured settings.
    */
-  initializeStatusEffects(statusEffectNames:string[]) {
+  initializeStatusEffects(statusEffectNames: string[]) {
     const modifyStatusEffects = 'add'; // TODO for now is always 'add'
     //@ts-ignore
     if (modifyStatusEffects === 'replace') {
       CONFIG.statusEffects = this._fetchStatusEffects(statusEffectNames);
     } else if (modifyStatusEffects === 'add') {
-      CONFIG.statusEffects = CONFIG.statusEffects.concat(
-        this._fetchStatusEffects(statusEffectNames)
-      );
+      CONFIG.statusEffects = CONFIG.statusEffects.concat(this._fetchStatusEffects(statusEffectNames));
     }
   }
 
-  _fetchStatusEffects(statusEffectNames:string[]) {
+  _fetchStatusEffects(statusEffectNames: string[]) {
     return statusEffectNames
       .map((name) => {
         // Integration with DFred
         // TODO check this
         //@ts-ignore
-        const effect = game.dfreds._customEffectsHandler
-          .getCustomEffects()
-          .find((effect) => effect.name == name);
+        const effect = game.dfreds._customEffectsHandler.getCustomEffects().find((effect) => effect.name == name);
 
         if (effect) {
           return effect;
@@ -76,7 +72,7 @@ export default class StatusEffectsLib {
    * @param {any[]} args - any arguments provided with the original onToggleEffect function
    */
   onToggleEffect(wrapper, ...args) {
-    const token = <Token><unknown>this;
+    const token = <Token>(<unknown>this);
     const [event] = args;
     const statusEffectId = event.currentTarget.dataset.statusId;
     // Integration with DFred
@@ -89,7 +85,7 @@ export default class StatusEffectsLib {
       const tokenId = token.actor?.uuid;
       const uuids = <string[]>[tokenId];
 
-      (<EffectInterface><unknown>API.effectInterface).toggleEffect(effectName,overlay,uuids);
+      (<EffectInterface>(<unknown>API.effectInterface)).toggleEffect(effectName, overlay, uuids);
     } else {
       wrapper(...args);
     }
@@ -106,7 +102,7 @@ export default class StatusEffectsLib {
    * @returns {Object} object mapping for all the status effects
    */
   getStatusEffectChoices(wrapper, ...args) {
-    const token = <Token><unknown>this;
+    const token = <Token>(<unknown>this);
 
     // NOTE: taken entirely from foundry.js, modified to remove the icon being the key
     // Get statuses which are active for the token actor
@@ -126,7 +122,7 @@ export default class StatusEffectsLib {
 
     // Prepare the list of effects from the configured defaults and any additional effects present on the Token
     const tokenEffects = <any[]>foundry.utils.deepClone(token.data.effects) || [];
-    if (token.data.overlayEffect){
+    if (token.data.overlayEffect) {
       tokenEffects.push(token.data.overlayEffect);
     }
     return CONFIG.statusEffects.concat(tokenEffects).reduce((obj, e) => {
@@ -147,10 +143,7 @@ export default class StatusEffectsLib {
         src,
         isActive,
         isOverlay,
-        cssClass: [
-          isActive ? 'active' : null,
-          isOverlay ? 'overlay' : null,
-        ].filterJoin(' '),
+        cssClass: [isActive ? 'active' : null, isOverlay ? 'overlay' : null].filterJoin(' '),
       };
       return obj;
     }, {});

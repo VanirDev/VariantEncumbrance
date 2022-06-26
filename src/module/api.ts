@@ -4,7 +4,8 @@ import EffectInterface from './effects/effect-interface';
 import type Effect from './effects/effect';
 import { checkBulkCategory, error, isStringEquals, warn } from './lib/lib';
 import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import type { EncumbranceData } from './VariantEncumbranceModels';
+import type { EncumbranceBulkData, EncumbranceData } from './VariantEncumbranceModels';
+import { VariantEncumbranceBulkImpl } from './VariantEncumbranceBulkImpl';
 
 const API = {
   effectInterface: EffectInterface,
@@ -498,23 +499,21 @@ const API = {
     return encumbranceData;
   },
 
-  calculateWeightOnActorWithItems(actor: Actor, items:Item[]): EncumbranceData | undefined {
+  calculateWeightOnActorWithItems(actor: Actor, items: Item[]): EncumbranceData | undefined {
     if (!actor) {
       warn(`No actor is been passed`);
       return;
     }
-    /*
-    const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-    const inventoryItems: Item[] = [];
-    actor.data.items.contents.forEach((im: Item) => {
-      if (im && physicalItems.includes(im.type)) {
-        inventoryItems.push(im);
-      }
-    });
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems);
-    return encumbranceData;
-    */
     const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items);
+    return encumbranceData;
+  },
+
+  calculateBulkOnActorWithItems(actor: Actor, items: Item[]): EncumbranceBulkData | undefined {
+    if (!actor) {
+      warn(`No actor is been passed`);
+      return;
+    }
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items);
     return encumbranceData;
   },
 

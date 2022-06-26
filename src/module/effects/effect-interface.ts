@@ -21,7 +21,7 @@ export default class EffectInterface {
   _socket: any;
   moduleName: string;
 
-  constructor(moduleName:string) {
+  constructor(moduleName: string) {
     this.moduleName = moduleName;
     this._effectHandler = new EffectHandler(moduleName);
     this._foundryHelpers = new FoundryHelpers();
@@ -44,22 +44,18 @@ export default class EffectInterface {
    * @param {string[]} withSocket - use socket library for execute as GM
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async toggleEffect(effectName:string, overlay = false, uuids = <string[]>[], withSocket = true) {
+  async toggleEffect(effectName: string, overlay = false, uuids = <string[]>[], withSocket = true) {
     if (uuids.length == 0) {
       uuids = this._foundryHelpers.getActorUuidsFromCanvas();
     }
 
     if (uuids.length == 0) {
-      errorM(this.moduleName,`Please select or target a token to toggle ${effectName}`, true);
+      errorM(this.moduleName, `Please select or target a token to toggle ${effectName}`, true);
       return;
     }
 
     if (withSocket && isGMConnectedAndSocketLibEnable()) {
-      return this._socket.executeAsGM('toggleEffect',
-      effectName,
-        overlay,
-        uuids,
-      );
+      return this._socket.executeAsGM('toggleEffect', effectName, overlay, uuids);
     } else {
       return this._effectHandler.toggleEffect(effectName, overlay, uuids);
     }
@@ -90,12 +86,11 @@ export default class EffectInterface {
    * @param {string} params.uuid - the UUID of the actor to remove the effect from
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async removeEffect(effectName:string, uuid:string, withSocket = true) {
-
+  async removeEffect(effectName: string, uuid: string, withSocket = true) {
     const actor = this._foundryHelpers.getActorByUuid(uuid);
 
     if (!actor) {
-      errorM(this.moduleName,`Actor ${uuid} could not be found`, true);
+      errorM(this.moduleName, `Actor ${uuid} could not be found`, true);
       return;
     }
 
@@ -121,32 +116,17 @@ export default class EffectInterface {
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
   async addEffect(effectName, effectData, uuid, origin, overlay, metadata = undefined, withSocket = true) {
-
     const actor = this._foundryHelpers.getActorByUuid(uuid);
 
     if (!actor) {
-      errorM(this.moduleName,`Actor ${uuid} could not be found`);
+      errorM(this.moduleName, `Actor ${uuid} could not be found`);
       return;
     }
 
     if (withSocket && isGMConnectedAndSocketLibEnable()) {
-      return this._socket.executeAsGM('addEffect',
-        effectName,
-        effectData,
-        uuid,
-        origin,
-        overlay,
-        metadata,
-      );
+      return this._socket.executeAsGM('addEffect', effectName, effectData, uuid, origin, overlay, metadata);
     } else {
-      return this._effectHandler.addEffect(
-        effectName,
-        effectData,
-        uuid,
-        origin,
-        overlay,
-        metadata,
-      );
+      return this._effectHandler.addEffect(effectName, effectData, uuid, origin, overlay, metadata);
     }
   }
 
@@ -159,7 +139,7 @@ export default class EffectInterface {
    * @param {boolean} overlay - if the effect is an overlay or not
    * @returns {Promise} a promise that resolves when the GM socket function completes
    */
-  async addEffectWith(effectData, uuid, origin, overlay, metadata= undefined, withSocket = true) {
+  async addEffectWith(effectData, uuid, origin, overlay, metadata = undefined, withSocket = true) {
     const effect = new Effect(effectData);
 
     const actor = this._foundryHelpers.getActorByUuid(uuid);
@@ -171,24 +151,10 @@ export default class EffectInterface {
 
     if (withSocket && isGMConnectedAndSocketLibEnable()) {
       const effectName = null; // mod 4535992
-      return this._socket.executeAsGM('addEffect',
-        effectName,
-        effectData,
-        uuid,
-        origin,
-        overlay,
-        metadata
-      );
+      return this._socket.executeAsGM('addEffect', effectName, effectData, uuid, origin, overlay, metadata);
     } else {
       const effectName = undefined;
-      return this._effectHandler.addEffect(
-        effectName,
-        effectData,
-        uuid,
-        origin,
-        overlay,
-        metadata
-      );
+      return this._effectHandler.addEffect(effectName, effectData, uuid, origin, overlay, metadata);
     }
   }
 
@@ -278,7 +244,7 @@ export default class EffectInterface {
     }
 
     if (!effect) {
-      errorM(this.moduleName,`Effect ${effectName} could not be found`, true);
+      errorM(this.moduleName, `Effect ${effectName} could not be found`, true);
       return;
     }
 
@@ -298,7 +264,7 @@ export default class EffectInterface {
     alwaysDelete: boolean,
     forceEnabled?: boolean,
     forceDisabled?: boolean,
-    withSocket = true
+    withSocket = true,
   ) {
     if (effectId.length == 0) {
       errorM(this.moduleName, `Please select or target a active effect to toggle ${effectId}`, true);
@@ -476,7 +442,7 @@ export default class EffectInterface {
     alwaysDelete: boolean,
     forceEnabled?: boolean,
     forceDisabled?: boolean,
-    withSocket = true
+    withSocket = true,
   ) {
     if (effectId.length == 0) {
       errorM(this.moduleName, `Please select or target a active effect to toggle ${effectId}`, true);
@@ -652,16 +618,16 @@ export default class EffectInterface {
     //     isDisabled,
     //   );
     // } else {
-      return this._effectHandler.onManageActiveEffectFromEffectId(
-        effectActions,
-        owner,
-        effectId,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
+    return this._effectHandler.onManageActiveEffectFromEffectId(
+      effectActions,
+      owner,
+      effectId,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
     // }
   }
 
@@ -695,16 +661,16 @@ export default class EffectInterface {
     //     isDisabled,
     //   );
     // } else {
-      return this._effectHandler.onManageActiveEffectFromEffect(
-        effectActions,
-        owner,
-        effect,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
+    return this._effectHandler.onManageActiveEffectFromEffect(
+      effectActions,
+      owner,
+      effect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
     // }
   }
 
@@ -738,16 +704,16 @@ export default class EffectInterface {
     //     isDisabled,
     //   );
     // } else {
-      return this._effectHandler.onManageActiveEffectFromActiveEffect(
-        effectActions,
-        owner,
-        activeEffect,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
+    return this._effectHandler.onManageActiveEffectFromActiveEffect(
+      effectActions,
+      owner,
+      activeEffect,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+      isTemporary,
+      isDisabled,
+    );
     // }
   }
 }

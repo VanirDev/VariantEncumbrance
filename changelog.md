@@ -1,4 +1,10 @@
+### 0.9.7
+
+- Add API Method calculateBulkOnActorWithItems
+
 ### 0.9.6
+
+- Add API Method calculateWeightOnActorWithItems
 
 ### 0.9.5
 
