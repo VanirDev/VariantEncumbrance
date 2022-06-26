@@ -88,6 +88,16 @@ export enum ENCUMBRANCE_TIERS {
 }
 
 export const BULK_CATEGORY = {
+  // None
+  NONE: <BulkData>{
+    category: 'None',
+    bulk: 0,
+    size: 'None',
+    weight: 'None',
+    description: '',
+    weightMin: 0,
+    weightMax: 0,
+  },
   // Smaller than the palm of your hand. You can hold many of these in one hand. A negligible or trivial weight.
   TINY: <BulkData>{
     category: 'Tiny',

@@ -360,9 +360,11 @@ export function convertKgToPounds(valNum: number): number {
 export function checkBulkCategory(weight: number): BulkData {
   let bulkRef = weight;
   if (game.settings.get('dnd5e', 'metricWeightUnits')) {
-    bulkRef = convertPoundsToKg(weight);
+    bulkRef = weight <= 0 ? 0 : convertPoundsToKg(weight);
   }
-  if (bulkRef <= 2) {
+  if (bulkRef <= 0) {
+    return BULK_CATEGORY.NONE;
+  } else if (bulkRef <= 2) {
     return BULK_CATEGORY.TINY;
   } else if (bulkRef > 2 && bulkRef <= 5) {
     return BULK_CATEGORY.SMALL;

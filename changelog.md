@@ -1,3 +1,7 @@
+### 0.9.8
+
+- Add the none on the bulk data
+
 ### 0.9.7
 
 - Add API Method calculateBulkOnActorWithItems
