@@ -498,6 +498,26 @@ const API = {
     return encumbranceData;
   },
 
+  calculateWeightOnActorWithItems(actor: Actor, items:Item[]): EncumbranceData | undefined {
+    if (!actor) {
+      warn(`No actor is been passed`);
+      return;
+    }
+    /*
+    const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    const inventoryItems: Item[] = [];
+    actor.data.items.contents.forEach((im: Item) => {
+      if (im && physicalItems.includes(im.type)) {
+        inventoryItems.push(im);
+      }
+    });
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems);
+    return encumbranceData;
+    */
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items);
+    return encumbranceData;
+  },
+
   convertLbToBulk(weight: number): number {
     return checkBulkCategory(weight).bulk;
   },
