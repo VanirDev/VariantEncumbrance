@@ -511,7 +511,7 @@ export const VariantEncumbranceImpl = {
         // Feature: Do Not increase weight by quantity for no ammunition item
         if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition')) {
           //@ts-ignore
-          if (item.data.data.consumableType !== 'ammo') {
+          if (item.data?.data?.consumableType !== 'ammo') {
             itemQuantity = 1;
           }
         }

@@ -1,4 +1,4 @@
-### 0.9.9
+### 0.9.9-10
 
 - Better integration with inventory-plus
 - Add new homebrew rule feature: Do Not increase weight by quantity for no ammunition item
