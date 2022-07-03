@@ -14,13 +14,10 @@
 
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 
-```
-The rules for Lifting and Carrying are intentionally simple. Here is a variant if you are looking for more detailed rules for determining how a character is hindered by the weight of Equipment. When you use this variant, ignore the Strength column of the Armor table.
+- The rules for Lifting and Carrying are intentionally simple. Here is a variant if you are looking for more detailed rules for determining how a character is hindered by the weight of Equipment. When you use this variant, ignore the Strength column of the Armor table.
+- If you carry weight in excess of 5 times your Strength score, you are encumbered, which means your speed drops by 10 feet.
+- If you carry weight in excess of 10 times your Strength score, up to your maximum carrying Capacity, you are instead heavily encumbered, which means your speed drops by 20 feet and you have disadvantage on Ability Checks, Attack rolls, and Saving Throws that use Strength, Dexterity, or Constitution.
 
-If you carry weight in excess of 5 times your Strength score, you are encumbered, which means your speed drops by 10 feet.
-
-If you carry weight in excess of 10 times your Strength score, up to your maximum carrying Capacity, you are instead heavily encumbered, which means your speed drops by 20 feet and you have disadvantage on Ability Checks, Attack rolls, and Saving Throws that use Strength, Dexterity, or Constitution.
-```
 
 The effects of this module are currently purely visual, although restricting movement and applying the negative effects of encumbrance are applied with the new active effect mechanism.
 
@@ -173,10 +170,10 @@ Inventory slots describe storage capacity—how much can a thing carry without b
 
 Anything that can hold, carry, or contain objects can make use of inventory slots—for example:
 
-    - Creatures use slots to describe how much they can carry before they're encumbered.
-    - Containers use slots to describe how much they can store before they're full.
-    - Buildings use slots to describe how much free space they have in their rooms.
-    - Vehicles use slots to describe how much they can transport before they can't move.
+- Creatures use slots to describe how much they can carry before they're encumbered.
+- Containers use slots to describe how much they can store before they're full.
+- Buildings use slots to describe how much free space they have in their rooms.
+- Vehicles use slots to describe how much they can transport before they can't move.
 
 ### Your Inventory
 
