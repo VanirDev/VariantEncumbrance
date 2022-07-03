@@ -146,6 +146,10 @@
 
   "variant-encumbrance-dnd5e.setting.vehicleUnit.name": "Enable Unit of weight for Vehicles",
   "variant-encumbrance-dnd5e.setting.vehicleUnit.hint": "Enables ability to change the base unit for weight used by vehicles",
+
+  "variant-encumbrance-dnd5e.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name": "Feature: Do Not increase weight by quantity for no ammunition item",
+  "variant-encumbrance-dnd5e.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint": "This is a homebrew rule, for non-ammunition items don't increase weight by quantity (so 5 potions = 1 item weight for example)",
+
   "variant-encumbrance-dnd5e.config.name": "Weight Unit",
   "variant-encumbrance-dnd5e.config.hint": "Unit of measurement to be used for weight calculation.",
   "variant-encumbrance-dnd5e.label.units_LongTon": "Long Ton (2240 lb.)",

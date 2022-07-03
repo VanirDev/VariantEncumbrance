@@ -1,3 +1,8 @@
+### 0.9.9
+
+- Better integration with inventory-plus
+- Add new homebrew rule feature: Do Not increase weight by quantity for no ammunition item
+
 ### 0.9.8
 
 - Add the none on the bulk data

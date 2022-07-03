@@ -495,16 +495,87 @@ const API = {
         inventoryItems.push(im);
       }
     });
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems, false);
     return encumbranceData;
   },
+
+  // ====================================================
+
+  async calculateBulkOnActorFromIdArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
+    if (!Array.isArray(inAttributes)) {
+      throw error('calculateBulkOnActorFromIdArr | inAttributes must be of type array');
+    }
+    const [actorIdOrName] = inAttributes;
+    return this.calculateBulkOnActorFromId(actorIdOrName);
+  },
+
+  calculateBulkOnActorFromId(actorIdOrName: string): EncumbranceData | undefined {
+    const actor = game.actors?.contents.find((a) => {
+      return isStringEquals(a.id, actorIdOrName) || isStringEquals(<string>a.name, actorIdOrName);
+    });
+    if (!actor) {
+      warn(`No actor found for reference '${actorIdOrName}'`);
+      return;
+    }
+    return this.calculateBulkOnActor(actor);
+  },
+
+  async calculateBulkOnTokenFromIdArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
+    if (!Array.isArray(inAttributes)) {
+      throw error('calculateBulkOnTokenFromIdArr | inAttributes must be of type array');
+    }
+    const [tokenIdOrName] = inAttributes;
+    return this.calculateBulkOnTokenFromId(tokenIdOrName);
+  },
+
+  calculateBulkOnTokenFromId(tokenIdOrName: string): EncumbranceData | undefined {
+    const token = canvas.tokens?.placeables.find((a) => {
+      return isStringEquals(a.id, tokenIdOrName) || isStringEquals(a.name, tokenIdOrName);
+    });
+    if (!token) {
+      warn(`No token found for reference '${tokenIdOrName}'`);
+      return;
+    }
+    const actor = token.actor;
+    if (!actor) {
+      warn(`No actor found for reference '${tokenIdOrName}'`);
+      return;
+    }
+    return this.calculateBulkOnActor(actor);
+  },
+
+  async calculateBulkOnActorArr(...inAttributes: any[]): Promise<EncumbranceData | undefined> {
+    if (!Array.isArray(inAttributes)) {
+      throw error('calculateBulkOnActorArr | inAttributes must be of type array');
+    }
+    const [actor] = inAttributes;
+    return this.calculateBulkOnActor(actor);
+  },
+
+  calculateBulkOnActor(actor: Actor): EncumbranceData | undefined {
+    if (!actor) {
+      warn(`No actor is been passed`);
+      return;
+    }
+    const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    const inventoryItems: Item[] = [];
+    actor.data.items.contents.forEach((im: Item) => {
+      if (im && physicalItems.includes(im.type)) {
+        inventoryItems.push(im);
+      }
+    });
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, inventoryItems, false);
+    return encumbranceData;
+  },
+
+  // ====================================================
 
   calculateWeightOnActorWithItems(actor: Actor, items: Item[]): EncumbranceData | undefined {
     if (!actor) {
       warn(`No actor is been passed`);
       return;
     }
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items, true);
     return encumbranceData;
   },
 
@@ -513,7 +584,7 @@ const API = {
       warn(`No actor is been passed`);
       return;
     }
-    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items);
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items, true);
     return encumbranceData;
   },
 

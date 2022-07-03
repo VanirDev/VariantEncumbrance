@@ -379,6 +379,15 @@ export const registerSettings = function () {
     default: false,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
     name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
@@ -827,10 +836,10 @@ function otherSettings(apply = false) {
       default: false,
     },
 
-    debug: {
-      name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
-      hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
-      scope: 'world',
+    doNotIncreaseWeightByQuantityForNoAmmunition: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
+      scope: 'client',
       config: true,
       default: false,
       type: Boolean,
@@ -843,6 +852,15 @@ function otherSettings(apply = false) {
       config: true,
       type: Boolean,
       default: false,
+    },
+
+    debug: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+      scope: 'world',
+      config: true,
+      default: false,
+      type: Boolean,
     },
   };
 }

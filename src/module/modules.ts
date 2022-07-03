@@ -291,10 +291,10 @@ export const readyHooks = async () => {
       if (doTheUpdate) {
         if (noActiveEffect) {
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
-            VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
+            VariantEncumbranceImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents, false);
           }
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
-            VariantEncumbranceBulkImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents);
+            VariantEncumbranceBulkImpl.calculateEncumbrance(actorEntity, actorEntity.data.items.contents, false);
           }
         } else {
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
@@ -787,6 +787,7 @@ const module = {
           actorEntityTmp,
           //@ts-ignore
           actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
+          false,
         );
       }
 
@@ -1046,6 +1047,7 @@ const module = {
           actorEntityTmp,
           //@ts-ignore
           actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
+          false,
         );
       }
 
