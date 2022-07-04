@@ -1106,7 +1106,7 @@ export const VariantEncumbranceBulkImpl = {
 function calcWeight(
   item: Item,
   useEquippedUnequippedItemCollectionFeature: boolean,
-  ignoreCurrency,
+  ignoreCurrency: boolean,
   { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined },
 ) {
   if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item, ignoreCurrency);

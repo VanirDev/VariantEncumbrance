@@ -432,7 +432,7 @@ export const VariantEncumbranceImpl = {
             const useEquippedUnequippedItemCollectionFeature = <boolean>(
               game.settings.get(CONSTANTS.MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature')
             );
-            itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature);
+            itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature, ignoreCurrency);
             //@ts-ignore
             if (useEquippedUnequippedItemCollectionFeature) {
               ignoreEquipmentCheck = true;
@@ -1226,9 +1226,10 @@ export const isEnabledActorType = function (actorEntity: Actor): boolean {
 function calcWeight(
   item: Item,
   useEquippedUnequippedItemCollectionFeature: boolean,
+  ignoreCurrency: boolean,
   { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined },
 ) {
-  if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item);
+  if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item, ignoreCurrency);
   // if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
   // MOD 4535992 Removed variant encumbrance take care of this
   // const useEquippedUnequippedItemCollectionFeature = game.settings.get(
@@ -1250,11 +1251,14 @@ function calcWeight(
   const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
   if (weightless) return getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0;
   return (
-    calcItemWeight(item, { ignoreItems, ignoreTypes }) + (getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0)
+    calcItemWeight(item, ignoreCurrency, { ignoreItems, ignoreTypes }) + (getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0)
   );
 }
 
-function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
+function calcItemWeight(
+  item: Item,
+  ignoreCurrency: boolean,
+  { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
   //@ts-ignore
   if (item.type !== 'backpack' || item.items === undefined) return _calcItemWeight(item);
   //@ts-ignore

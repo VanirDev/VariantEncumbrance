@@ -1,3 +1,7 @@
+### 0.9.9-11
+
+- Bug fix [Variant Encumbrance prevents me from adding items to inventory](https://github.com/VanirDev/VariantEncumbrance/issues/65)
+
 ### 0.9.9-10
 
 - Better integration with inventory-plus
