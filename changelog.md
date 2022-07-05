@@ -1,7 +1,8 @@
-### 0.9.12
+### 0.9.12-13
 
 - Add more debug log for help me with issues
 - Bug fix: Solved the strange case of Mr. 'Maxwell Trevallian'
+- Update labels
 
 ### 0.9.9-11
 
