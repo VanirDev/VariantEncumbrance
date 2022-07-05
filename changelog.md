@@ -1,3 +1,8 @@
+### 0.9.12
+
+- Add more debug log for help me with issues
+- Bug fix: Solved the strange case of Mr. 'Maxwell Trevallian'
+
 ### 0.9.9-11
 
 - Bug fix [Variant Encumbrance prevents me from adding items to inventory](https://github.com/VanirDev/VariantEncumbrance/issues/65)

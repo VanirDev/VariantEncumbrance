@@ -11,7 +11,7 @@ import {
 import Effect from './effects/effect';
 import { dfQualityLifeActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './modules';
 import CONSTANTS from './constants';
-import { error, i18n, isGMConnected } from './lib/lib';
+import { debug, error, i18n, isGMConnected, is_real_number } from './lib/lib';
 import API from './api';
 import type EffectHandler from './effects/effect-handler';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
@@ -400,7 +400,7 @@ export const VariantEncumbranceImpl = {
 
         let itemQuantity =
           //@ts-ignore
-          (item.data.quantity && item.data.quantity != item.data.data?.quantity
+          (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
             ? //@ts-ignore
               item.data.quantity
             : //@ts-ignore
@@ -408,11 +408,13 @@ export const VariantEncumbranceImpl = {
 
         let itemWeight =
           //@ts-ignore
-          (item.data.weight && item.data.weight != item.data.data?.weight
+          (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
             ? //@ts-ignore
               item.data.weight
             : //@ts-ignore
               item.data.data?.weight) || 0;
+
+        debug(`Actor '${actorEntity.name}, Item '${item.name}' : Quantity = ${itemQuantity}, Weight = ${itemWeight}`);
 
         let ignoreEquipmentCheck = false;
 
@@ -518,6 +520,10 @@ export const VariantEncumbranceImpl = {
 
         let appliedWeight = itemQuantity * itemWeight;
         if (ignoreEquipmentCheck) {
+          debug(
+            `Actor '${actorEntity.name}, Item '${item.name}' :
+               ${itemQuantity} * ${itemWeight} = ${appliedWeight} on total ${weight} => ${weight + appliedWeight}`,
+          );
           return weight + appliedWeight;
         }
         const isEquipped: boolean =
@@ -543,12 +549,17 @@ export const VariantEncumbranceImpl = {
         } else {
           appliedWeight *= <number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
         }
+        debug(
+          `Actor '${actorEntity.name}, Item '${item.name}', Equipped '${isEquipped}' :
+             ${itemQuantity} * ${itemWeight} = ${appliedWeight} on total ${weight} => ${weight + appliedWeight}`,
+        );
         return weight + appliedWeight;
       }, 0);
 
       // Start inventory+ module is active 2
       if (invPlusActive) {
         for (const [key, value] of invPlusCategoriesWeightToAdd) {
+          debug(`Actor '${actorEntity.name}', Category '${key}' : ${value} => ${totalWeight + value}`);
           totalWeight = totalWeight + value;
         }
       }
@@ -569,12 +580,17 @@ export const VariantEncumbranceImpl = {
             ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight')
             : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
           : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight');
-
         totalWeight += numCoins / currencyPerWeight;
+        debug(
+          `Actor '${actorEntity.name}' : ${numCoins} / ${currencyPerWeight} = ${
+            numCoins / currencyPerWeight
+          } => ${totalWeight}`,
+        );
       }
 
       // Compute Encumbrance percentage
       totalWeight = totalWeight.toNearest(0.1);
+      debug(`Actor '${actorEntity.name}' => ${totalWeight}`);
 
       let speedDecrease = 0;
 
@@ -1251,14 +1267,16 @@ function calcWeight(
   const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
   if (weightless) return getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0;
   return (
-    calcItemWeight(item, ignoreCurrency, { ignoreItems, ignoreTypes }) + (getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0)
+    calcItemWeight(item, ignoreCurrency, { ignoreItems, ignoreTypes }) +
+    (getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0)
   );
 }
 
 function calcItemWeight(
   item: Item,
   ignoreCurrency: boolean,
-  { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
+  { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined },
+) {
   //@ts-ignore
   if (item.type !== 'backpack' || item.items === undefined) return _calcItemWeight(item);
   //@ts-ignore
@@ -1297,14 +1315,14 @@ function _calcItemWeight(item: Item) {
   // const weight = item.data.data.weight || 0;
   const quantity =
     //@ts-ignore
-    (item.data.quantity && item.data.quantity != item.data.data?.quantity
+    (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
       ? //@ts-ignore
         item.data.quantity
       : //@ts-ignore
         item.data.data?.quantity) || 0;
   const weight =
     //@ts-ignore
-    (item.data.weight && item.data.weight != item.data.data?.weight
+    (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
       ? //@ts-ignore
         item.data.weight
       : //@ts-ignore
@@ -1496,8 +1514,24 @@ function _standardVehicleWeightCalculation(actorEntity: Actor): EncumbranceDnd5e
     //@ts-ignore
     const isCargo = item.flags.dnd5e?.vehicleCargo === true;
     if (isCargo) {
+      // MOD 4535992
+      // totalWeight += (item.data.weight || 0) * item.data.quantity;
+      const quantity =
+        //@ts-ignore
+        (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+          ? //@ts-ignore
+            item.data.quantity
+          : //@ts-ignore
+            item.data.data?.quantity) || 0;
+      const weight =
+        //@ts-ignore
+        (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
+          ? //@ts-ignore
+            item.data.weight
+          : //@ts-ignore
+            item.data.data?.weight) || 0;
       //@ts-ignore
-      totalWeight += (item.data.weight || 0) * item.data.quantity;
+      totalWeight += weight * quantity;
       // cargo.cargo.items.push(item);
       // MOD 4535992
       //@ts-ignore
@@ -1508,21 +1542,40 @@ function _standardVehicleWeightCalculation(actorEntity: Actor): EncumbranceDnd5e
 
     // Handle non-cargo item types
     switch (item.type) {
-      case 'weapon':
+      case 'weapon': {
         // features.weapons.items.push(item);
         break;
-      case 'equipment':
+      }
+      case 'equipment': {
         // features.equipment.items.push(item);
         break;
-      case 'feat':
+      }
+      case 'feat': {
         // if ( !item.data.activation.type || (item.data.activation.type === "none") ) features.passive.items.push(item);
         // else if (item.data.activation.type === "reaction") features.reactions.items.push(item);
         // else features.actions.items.push(item);
         break;
-      default:
-        //@ts-ignore
-        totalWeight += (item.data.weight || 0) * item.data.quantity;
-      // cargo.cargo.items.push(item);
+      }
+      default: {
+        // MOD 4535992
+        //totalWeight += (item.data.weight || 0) * item.data.quantity;
+        const quantity =
+          //@ts-ignore
+          (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+            ? //@ts-ignore
+              item.data.quantity
+            : //@ts-ignore
+              item.data.data?.quantity) || 0;
+        const weight =
+          //@ts-ignore
+          (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
+            ? //@ts-ignore
+              item.data.weight
+            : //@ts-ignore
+              item.data.data?.weight) || 0;
+        totalWeight += weight * quantity;
+        // cargo.cargo.items.push(item);
+      }
     }
   }
 
