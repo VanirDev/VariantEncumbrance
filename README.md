@@ -82,13 +82,13 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ### Other Modules Compatability
 
-* [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.4.0
+* [Inventory +](https://github.com/p4535992/inventory-plus) version 0.4.0
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 * [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) version 1.8.13
 * [DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature](https://github.com/flamewave000/dragonflagon-fvtt/blob/master/df-qol/README.md#vehicle-cargo-capacity-unit) version 1.6.0
 
-**I highly recommend avoiding module [Inventory +](https://github.com/syl3r86/inventory-plus) in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
+**I highly recommend avoiding module [Inventory +](https://github.com/p4535992/inventory-plus) in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
 
 <!--
 <details>
@@ -435,6 +435,10 @@ Convert weight to bulk
 ### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorWithItems(actor: Actor, items:Item[]): EncumbranceData | undefined
 
 ### game.modules.get('variant-encumbrance-dnd5e').api.calculateBulkOnActorWithItems(actor: Actor, items:Item[]): EncumbranceBulkData | undefined
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorWithItemsNoInventoryPlus(actor: Actor, items:Item[]): EncumbranceData | undefined
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateBulkOnActorWithItemsNoInventoryPlus(actor: Actor, items:Item[]): EncumbranceBulkData | undefined
 
 ## Models
 

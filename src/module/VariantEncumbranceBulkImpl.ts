@@ -107,7 +107,12 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
 
-    const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(actorEntity, inventoryItems, false);
+    const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(
+      actorEntity,
+      inventoryItems,
+      false,
+      invPlusActive,
+    );
 
     // SEEM NOT NECESSARY Add pre check for encumbrance tier
     if (<boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
@@ -280,7 +285,7 @@ export const VariantEncumbranceBulkImpl = {
     // veItemData: VariantEncumbranceItemData | null,
     inventoryItems: Item[],
     ignoreCurrency: boolean,
-    // mode?: EncumbranceMode,
+    invPlusActiveTmp: boolean,
   ): EncumbranceBulkData {
     const enableVarianEncumbranceWeightBulkOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE_BULK)
@@ -344,7 +349,7 @@ export const VariantEncumbranceBulkImpl = {
         }
         // End Item container check
         // Start inventory+ module is active
-        if (invPlusActive) {
+        if (invPlusActiveTmp) {
           // Retrieve flag 'categorys' from inventory plus module
           const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.INVENTORY_PLUS_MODULE_NAME, 'categorys');
           if (inventoryPlusCategories) {
@@ -458,7 +463,7 @@ export const VariantEncumbranceBulkImpl = {
       }, 0);
 
       // Start inventory+ module is active 2
-      if (invPlusActive) {
+      if (invPlusActiveTmp) {
         for (const [key, value] of invPlusCategoriesWeightToAdd) {
           debug(`Actor '${actorEntity.name}', Category '${key}' : ${value} => ${totalWeight + value}`);
           totalWeight = totalWeight + value;

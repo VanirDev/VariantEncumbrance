@@ -118,7 +118,12 @@ export const VariantEncumbranceImpl = {
       }
     }
 
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actorEntity, inventoryItems, false);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
+      actorEntity,
+      inventoryItems,
+      false,
+      invPlusActive,
+    );
 
     // const tier = hasProperty(actorEntity.data, `flags.${CONSTANTS.FLAG}.${EncumbranceFlags.TIER}`)
     //   ? actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.TIER)
@@ -358,7 +363,7 @@ export const VariantEncumbranceImpl = {
     // veItemData: VariantEncumbranceItemData | null,
     inventoryItems: Item[],
     ignoreCurrency: boolean,
-    // mode?: EncumbranceMode,
+    invPlusActiveTmp: boolean,
   ): EncumbranceData {
     const enableVarianEncumbranceWeightOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE)
@@ -443,7 +448,7 @@ export const VariantEncumbranceImpl = {
         }
         // End Item container check
         // Start inventory+ module is active
-        if (invPlusActive) {
+        if (invPlusActiveTmp) {
           // Retrieve flag 'categorys' from inventory plus module
           const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.INVENTORY_PLUS_MODULE_NAME, 'categorys');
           if (inventoryPlusCategories) {
@@ -557,7 +562,7 @@ export const VariantEncumbranceImpl = {
       }, 0);
 
       // Start inventory+ module is active 2
-      if (invPlusActive) {
+      if (invPlusActiveTmp) {
         for (const [key, value] of invPlusCategoriesWeightToAdd) {
           debug(`Actor '${actorEntity.name}', Category '${key}' : ${value} => ${totalWeight + value}`);
           totalWeight = totalWeight + value;

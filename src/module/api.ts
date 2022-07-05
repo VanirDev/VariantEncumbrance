@@ -6,6 +6,7 @@ import { checkBulkCategory, error, isStringEquals, warn } from './lib/lib';
 import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import type { EncumbranceBulkData, EncumbranceData } from './VariantEncumbranceModels';
 import { VariantEncumbranceBulkImpl } from './VariantEncumbranceBulkImpl';
+import { invPlusActive } from './modules';
 
 const API = {
   effectInterface: EffectInterface,
@@ -495,7 +496,7 @@ const API = {
         inventoryItems.push(im);
       }
     });
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems, false);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems, false, invPlusActive);
     return encumbranceData;
   },
 
@@ -564,7 +565,12 @@ const API = {
         inventoryItems.push(im);
       }
     });
-    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, inventoryItems, false);
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(
+      actor,
+      inventoryItems,
+      false,
+      invPlusActive,
+    );
     return encumbranceData;
   },
 
@@ -575,7 +581,7 @@ const API = {
       warn(`No actor is been passed`);
       return;
     }
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items, true);
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items, true, invPlusActive);
     return encumbranceData;
   },
 
@@ -584,12 +590,30 @@ const API = {
       warn(`No actor is been passed`);
       return;
     }
-    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items, true);
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items, true, invPlusActive);
     return encumbranceData;
   },
 
   convertLbToBulk(weight: number): number {
     return checkBulkCategory(weight).bulk;
+  },
+
+  calculateWeightOnActorWithItemsNoInventoryPlus(actor: Actor, items: Item[]): EncumbranceData | undefined {
+    if (!actor) {
+      warn(`No actor is been passed`);
+      return;
+    }
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, items, true, false);
+    return encumbranceData;
+  },
+
+  calculateBulkOnActorWithItemsNoInventoryPlus(actor: Actor, items: Item[]): EncumbranceBulkData | undefined {
+    if (!actor) {
+      warn(`No actor is been passed`);
+      return;
+    }
+    const encumbranceData = VariantEncumbranceBulkImpl.calculateEncumbrance(actor, items, true, false);
+    return encumbranceData;
   },
 };
 
