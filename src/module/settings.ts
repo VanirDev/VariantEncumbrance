@@ -382,7 +382,7 @@ export const registerSettings = function () {
   game.settings.register(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition', {
     name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
-    scope: 'client',
+    scope: 'world',
     config: true,
     default: false,
     type: Boolean,
@@ -839,7 +839,7 @@ function otherSettings(apply = false) {
     doNotIncreaseWeightByQuantityForNoAmmunition: {
       name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
       hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
-      scope: 'client',
+      scope: 'world',
       config: true,
       default: false,
       type: Boolean,
