@@ -172,6 +172,15 @@ export const registerSettings = function () {
     default: 1,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableCurrencyWeight.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableCurrencyWeight.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'currencyWeight', {
     name: i18n(CONSTANTS.MODULE_NAME + '.setting.currencyWeight.name'),
     hint: i18n(CONSTANTS.MODULE_NAME + '.setting.currencyWeight.hint'),
@@ -627,6 +636,15 @@ function otherSettings(apply = false) {
       config: true,
       type: Number,
       default: 1,
+    },
+
+    enableCurrencyWeight: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableCurrencyWeight.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableCurrencyWeight.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
     },
 
     currencyWeight: {

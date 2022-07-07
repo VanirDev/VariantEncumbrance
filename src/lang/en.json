@@ -29,6 +29,9 @@
   "variant-encumbrance-dnd5e.setting.profEquippedMultiplier.name": "Proficient Equipped Item Weight Multiplier",
   "variant-encumbrance-dnd5e.setting.profEquippedMultiplier.hint": "Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.",
 
+  "variant-encumbrance-dnd5e.setting.enableCurrencyWeight.name": "Enable currency Per Weight Unit",
+  "variant-encumbrance-dnd5e.setting.enableCurrencyWeight.hint": "If enavled it will add the weight of the currency to the total.",
+
   "variant-encumbrance-dnd5e.setting.currencyWeight.name": "Currency Per Weight Unit",
   "variant-encumbrance-dnd5e.setting.currencyWeight.hint": "Define the number of coins required to equal 1 unit of weight.",
 

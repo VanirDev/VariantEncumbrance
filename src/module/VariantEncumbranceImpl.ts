@@ -573,7 +573,7 @@ export const VariantEncumbranceImpl = {
 
       // [Optional] add Currency Weight (for non-transformed actors)
       //@ts-ignore
-      if (!ignoreCurrency && game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
+      if (!ignoreCurrency && game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') && game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
         //@ts-ignore
         const currency = actorEntity.data.data.currency;
         const numCoins = <number>(
@@ -1294,7 +1294,7 @@ function calcItemWeight(
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore
-  if (!ignoreCurrency && game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+  if (!ignoreCurrency && game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') && game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
     //@ts-ignore
     const currency = item.data.data.currency ?? {};
     const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);

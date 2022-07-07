@@ -1,3 +1,7 @@
+### 0.9.15
+
+- Add moduel setting 'enableCurrencyWeight'
+
 ### 0.9.14
 
 - Update API
