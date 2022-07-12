@@ -11,7 +11,7 @@ import Effect from './effects/effect';
 import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, daeActive, dfQualityLifeActive } from './modules';
 import EffectInterface from './effects/effect-interface';
 import CONSTANTS from './constants';
-import { error, i18n, isGMConnected } from './lib/lib';
+import { debug, error, i18n, isGMConnected, is_real_number } from './lib/lib';
 import API from './api';
 import type EffectHandler from './effects/effect-handler';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
@@ -107,7 +107,12 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
 
-    const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(actorEntity, inventoryItems, false);
+    const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(
+      actorEntity,
+      inventoryItems,
+      false,
+      invPlusActive,
+    );
 
     // SEEM NOT NECESSARY Add pre check for encumbrance tier
     if (<boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'enablePreCheckEncumbranceTier')) {
@@ -280,7 +285,7 @@ export const VariantEncumbranceBulkImpl = {
     // veItemData: VariantEncumbranceItemData | null,
     inventoryItems: Item[],
     ignoreCurrency: boolean,
-    // mode?: EncumbranceMode,
+    invPlusActiveTmp: boolean,
   ): EncumbranceBulkData {
     const enableVarianEncumbranceWeightBulkOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_WE_BULK)
@@ -301,7 +306,7 @@ export const VariantEncumbranceBulkImpl = {
 
         let itemQuantity =
           //@ts-ignore
-          (item.data.quantity && item.data.quantity != item.data.data?.quantity
+          (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
             ? //@ts-ignore
               item.data.quantity
             : //@ts-ignore
@@ -309,11 +314,13 @@ export const VariantEncumbranceBulkImpl = {
 
         let itemWeight =
           //@ts-ignore
-          (item.data.bulk && item.data.bulk != item.data.data?.bulk
+          (is_real_number(item.data.bulk) && item.data.bulk != item.data.data?.bulk
             ? //@ts-ignore
               item.data.bulk
             : //@ts-ignore
               item.data.data?.bulk) || 0;
+
+        debug(`Actor '${actorEntity.name}, Item '${item.name}' : Quantity = ${itemQuantity}, Weight = ${itemWeight}`);
 
         let ignoreEquipmentCheck = false;
 
@@ -342,7 +349,7 @@ export const VariantEncumbranceBulkImpl = {
         }
         // End Item container check
         // Start inventory+ module is active
-        if (invPlusActive) {
+        if (invPlusActiveTmp) {
           // Retrieve flag 'categorys' from inventory plus module
           const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.INVENTORY_PLUS_MODULE_NAME, 'categorys');
           if (inventoryPlusCategories) {
@@ -419,6 +426,10 @@ export const VariantEncumbranceBulkImpl = {
 
         let appliedWeight = itemQuantity * itemWeight;
         if (ignoreEquipmentCheck) {
+          debug(
+            `Actor '${actorEntity.name}, Item '${item.name}' :
+               ${itemQuantity} * ${itemWeight} = ${appliedWeight} on total ${weight} => ${weight + appliedWeight}`,
+          );
           return weight + appliedWeight;
         }
         const isEquipped: boolean =
@@ -444,12 +455,17 @@ export const VariantEncumbranceBulkImpl = {
         } else {
           appliedWeight *= <number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
         }
+        debug(
+          `Actor '${actorEntity.name}, Item '${item.name}', Equipped '${isEquipped}' : 
+            ${itemQuantity} * ${itemWeight} = ${appliedWeight} on total ${weight} => ${weight + appliedWeight}`,
+        );
         return weight + appliedWeight;
       }, 0);
 
       // Start inventory+ module is active 2
-      if (invPlusActive) {
+      if (invPlusActiveTmp) {
         for (const [key, value] of invPlusCategoriesWeightToAdd) {
+          debug(`Actor '${actorEntity.name}', Category '${key}' : ${value} => ${totalWeight + value}`);
           totalWeight = totalWeight + value;
         }
       }
@@ -459,7 +475,7 @@ export const VariantEncumbranceBulkImpl = {
       // ON BULK SYSTEM THERE ISN'T [Optional] add Currency Weight (for non-transformed actors)
       /*
       //@ts-ignore
-      if (!ignoreCurrency && game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
+      if (!ignoreCurrency && game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') && game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
         //@ts-ignore
         const currency = actorEntity.data.data.currency;
         const numCoins = <number>(
@@ -471,12 +487,15 @@ export const VariantEncumbranceBulkImpl = {
             ? <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight')
             : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeightMetric')
           : <number>game.settings.get(CONSTANTS.MODULE_NAME, 'currencyWeight');
-
         totalWeight += numCoins / currencyPerWeight;
+        debug(
+          `Actor '${actorEntity.name}' : ${numCoins} / ${currencyPerWeight} = ${numCoins / currencyPerWeight} => ${totalWeight}`,
+        );
       }
       */
       // Compute Encumbrance percentage
       totalWeight = totalWeight.toNearest(0.1);
+      debug(`Actor '${actorEntity.name}' => ${totalWeight}`);
 
       let minimumBulk = 0;
       let inventorySlot = 0;
@@ -1154,7 +1173,7 @@ function calcItemWeight(
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
   //@ts-ignore
-  if (!ignoreCurrency && game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+  if (!ignoreCurrency && game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') && game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
     //@ts-ignore
     const currency = item.data.data.currency ?? {};
     const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
@@ -1180,14 +1199,14 @@ function _calcItemWeight(item: Item) {
   // const weight = item.data.data.bulk || 0;
   const quantity =
     //@ts-ignore
-    (item.data.quantity && item.data.quantity != item.data.data?.quantity
+    (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
       ? //@ts-ignore
         item.data.quantity
       : //@ts-ignore
         item.data.data?.quantity) || 0;
   const weight =
     //@ts-ignore
-    (item.data.bulk && item.data.bulk != item.data.data?.bulk
+    (is_real_number(item.data.bulk) && item.data.bulk != item.data.data?.bulk
       ? //@ts-ignore
         item.data.bulk
       : //@ts-ignore

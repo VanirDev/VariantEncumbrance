@@ -82,13 +82,13 @@ This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/maste
 
 ### Other Modules Compatability
 
-* [Inventory +](https://github.com/syl3r86/inventory-plus) version 0.4.0
+* [Inventory +](https://github.com/p4535992/inventory-plus) version 0.4.0
 * [Dynamic Active Effects](https://gitlab.com/tposney/dae)
 * [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects/) version 1.8.5
 * [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) version 1.8.13
 * [DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature](https://github.com/flamewave000/dragonflagon-fvtt/blob/master/df-qol/README.md#vehicle-cargo-capacity-unit) version 1.6.0
 
-**I highly recommend avoiding module [Inventory +](https://github.com/syl3r86/inventory-plus) in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
+**I highly recommend avoiding module [Inventory +](https://github.com/p4535992/inventory-plus) in favor of the module [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection)**
 
 <!--
 <details>
@@ -329,7 +329,7 @@ variant-encumbrance-dnd5e:
 |Enable/Disable the feature for applying the variant encumbrance active effects for specific actor| If true add on the header sheet of the actor a button visible only to GM for enable/disable the active effects feature, by default the feature is disabled (the flag is false) for performance issues|true||
 |Remove label from buttons on the header character sheet| Remove label from buttons on the header character sheet, Useful for little screen and mobile, by default is true|true||
 |Use standard calculation weight of the dnd5e system| I DON'T RECOMMENDED it, but some people seem to lose their mind for 2s instead of 1s on the calculation weight ???, you will lose all the benefit from the others feature like Equipped, Unequipped, Proficient Equipped, Inventory +, Item container, ecc., but hey !! you got the 1 sec you miss.|false||
-|Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECOMMENDED it, the weight calculation not 'make sense' anymore you must remember to many things, but you can now choose. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|false|This make sense only with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) installed and active|
+|Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack| I DON'T RECOMMENDED it, the only difference (only for item container) is \"Item container\" module set 0 if unequipped, the \"variant encumbrance\" get the value from the module setting by default 1 if unequipped, and now i remember the calculation not make sense for some people because there are two behaviour for the equipped and unequipped items if they are item container or standard item. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)|false|This make sense only with [Item Collection/Item Containers](https://foundryvtt.com/packages/itemcollection) installed and active|
 |[DEPRECATED] Disable the socketLib feature integration|This is usually useful only for avoid a socket collision with other modules|false||
 |Enable Bulk system|Enable integration with the Bulk System explained here: https://www.giffyglyph.com/darkerdungeons/grimoire/4.0.0/en/active_inventory.html|false||
 |Weight Units (Bulk System)|Units displayed in the encumbrance bar (just graphics) (Bulk System). Default is 'bulk'|bulk||
@@ -435,6 +435,10 @@ Convert weight to bulk
 ### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorWithItems(actor: Actor, items:Item[]): EncumbranceData | undefined
 
 ### game.modules.get('variant-encumbrance-dnd5e').api.calculateBulkOnActorWithItems(actor: Actor, items:Item[]): EncumbranceBulkData | undefined
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateWeightOnActorWithItemsNoInventoryPlus(actor: Actor, items:Item[]): EncumbranceData | undefined
+
+### game.modules.get('variant-encumbrance-dnd5e').api.calculateBulkOnActorWithItemsNoInventoryPlus(actor: Actor, items:Item[]): EncumbranceBulkData | undefined
 
 ## Models
 
