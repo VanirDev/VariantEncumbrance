@@ -283,7 +283,7 @@ export default class Effect {
   _isEmptyObject(obj: any) {
     // because Object.keys(new Date()).length === 0;
     // we have to do some additional check
-    if (obj == null || obj == undefined) {
+    if (obj === null || obj === undefined) {
       return true;
     }
     const result =

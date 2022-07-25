@@ -54,7 +54,7 @@ export const VariantEncumbranceBulkImpl = {
       if (!itemCurrent && (updatedItem.id || updatedItem._id)) {
         itemCurrent = updatedItem;
       }
-      if (itemCurrent?.type == 'feat' || itemCurrent?.type == 'spell') {
+      if (itemCurrent?.type === 'feat' || itemCurrent?.type === 'spell') {
         return;
       }
 
@@ -85,7 +85,7 @@ export const VariantEncumbranceBulkImpl = {
     actorEntity.data.items.contents.forEach((im: Item) => {
       if (im && physicalItems.includes(im.type)) {
         if (im.id === currentItemId) {
-          if (mode == EncumbranceMode.DELETE) {
+          if (mode === EncumbranceMode.DELETE) {
             // setProperty(im, 'data.data.bulk', 0);
           } else {
             inventoryItems.push(im);
@@ -98,7 +98,7 @@ export const VariantEncumbranceBulkImpl = {
     if (!isAlreadyInActor) {
       const im = <Item>game.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
       if (im && physicalItems.includes(im.type)) {
-        if (mode == EncumbranceMode.DELETE) {
+        if (mode === EncumbranceMode.DELETE) {
           // setProperty(im, 'data.data.bulk', 0);
         } else {
           inventoryItems.push(im);
@@ -129,7 +129,7 @@ export const VariantEncumbranceBulkImpl = {
         const encumbranceDataCurrent = <EncumbranceBulkData>(
           actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK)
         );
-        if (encumbranceDataCurrent.encumbranceTier == encumbranceDataBulk.encumbranceTier) {
+        if (encumbranceDataCurrent.encumbranceTier === encumbranceDataBulk.encumbranceTier) {
           //We ignore all the AE check
           await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
           return encumbranceDataBulk;
@@ -172,10 +172,10 @@ export const VariantEncumbranceBulkImpl = {
         // encumbranceData.encumbranceTier &&
         effectEntity.data.flags &&
         hasProperty(effectEntity.data, `flags.${CONSTANTS.FLAG}`) &&
-        effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
+        effectNameToSet !== ENCUMBRANCE_STATE.UNENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.ENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.OVERBURDENED
       ) {
         await VariantEncumbranceBulkImpl.removeEffectFromId(effectEntity, actorEntity);
         continue;
@@ -190,10 +190,10 @@ export const VariantEncumbranceBulkImpl = {
       // Ignore all non encumbrance effect renamed from the player (again)
       if (
         !hasProperty(effectEntity.data, `flags.${CONSTANTS.FLAG}`) &&
-        effectNameToSet != ENCUMBRANCE_STATE.UNENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
-        effectNameToSet != ENCUMBRANCE_STATE.OVERBURDENED
+        effectNameToSet !==ENCUMBRANCE_STATE.UNENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.ENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.OVERBURDENED
       ) {
         continue;
       }
@@ -247,11 +247,11 @@ export const VariantEncumbranceBulkImpl = {
       effectName = ENCUMBRANCE_STATE.UNENCUMBERED;
     }
 
-    if (effectName && effectName != '') {
+    if (effectName && effectName !== '') {
       if (effectName === effectEntityPresent?.data.label) {
         // Skip if name is the same and the active effect is already present.
       } else {
-        if (effectName == ENCUMBRANCE_STATE.UNENCUMBERED) {
+        if (effectName === ENCUMBRANCE_STATE.UNENCUMBERED) {
           if (effectEntityPresent?.id) {
             const effectIsApplied1 = await VariantEncumbranceBulkImpl.hasEffectAppliedFromId(
               effectEntityPresent,
@@ -317,7 +317,7 @@ export const VariantEncumbranceBulkImpl = {
 
         let itemQuantity =
           //@ts-ignore
-          (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+          (is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
             ? //@ts-ignore
               item.data.quantity
             : //@ts-ignore
@@ -325,7 +325,7 @@ export const VariantEncumbranceBulkImpl = {
 
         let itemWeight =
           //@ts-ignore
-          (is_real_number(item.data.bulk) && item.data.bulk != item.data.data?.bulk
+          (is_real_number(item.data.bulk) && item.data.bulk !== item.data.data?.bulk
             ? //@ts-ignore
               item.data.bulk
             : //@ts-ignore
@@ -339,8 +339,8 @@ export const VariantEncumbranceBulkImpl = {
 
         // Start Item container check
         if (
-          getProperty(item, 'data.flags.itemcollection.bagWeight') != null &&
-          getProperty(item, 'data.flags.itemcollection.bagWeight') != undefined
+          getProperty(item, 'data.flags.itemcollection.bagWeight') !== null &&
+          getProperty(item, 'data.flags.itemcollection.bagWeight') !== undefined
         ) {
           const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
           if (weightless) {
@@ -383,7 +383,7 @@ export const VariantEncumbranceBulkImpl = {
                   item.data?.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
               ) {
                 // Ignore weight
-                if (section?.ignoreWeight == true) {
+                if (section?.ignoreWeight === true) {
                   itemWeight = 0;
                   ignoreEquipmentCheck = true;
                 }
@@ -406,7 +406,7 @@ export const VariantEncumbranceBulkImpl = {
                 if (item.type === categoryId) {
                   const section = inventoryPlusCategories[categoryId];
                   // Ignore weight
-                  if (section?.ignoreWeight == true) {
+                  if (section?.ignoreWeight === true) {
                     itemWeight = 0;
                     ignoreEquipmentCheck = true;
                   }
@@ -445,7 +445,7 @@ export const VariantEncumbranceBulkImpl = {
         }
         const isEquipped: boolean =
           //@ts-ignore
-          (item.data.equipped && item.data.equipped != item.data.data?.equipped
+          (item.data.equipped && item.data.equipped !== item.data.data?.equipped
             ? //@ts-ignore
               item.data.equipped
             : //@ts-ignore
@@ -453,7 +453,7 @@ export const VariantEncumbranceBulkImpl = {
         if (isEquipped) {
           const isProficient: boolean =
             //@ts-ignore
-            (item.data.proficient && item.data.proficient != item.data.data?.proficient
+            (item.data.proficient && item.data.proficient !== item.data.data?.proficient
               ? //@ts-ignore
                 item.data.proficient
               : //@ts-ignore
@@ -532,7 +532,7 @@ export const VariantEncumbranceBulkImpl = {
         }
       }
 
-      if (actorEntity.type == EncumbranceActorType.CHARACTER) {
+      if (actorEntity.type === EncumbranceActorType.CHARACTER) {
         if (size === 'tiny') {
           minimumBulk = 5;
           //@ts-ignore
@@ -562,7 +562,7 @@ export const VariantEncumbranceBulkImpl = {
           //@ts-ignore
           inventorySlot = 18 + actorEntity.data.data.abilities.str.mod;
         }
-      } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
+      } else if (actorEntity.type === EncumbranceActorType.VEHICLE) {
         //@ts-ignore
         // const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
         if (size === 'tiny') {
@@ -677,7 +677,7 @@ export const VariantEncumbranceBulkImpl = {
       let pct = 0;
       const totalWeightOriginal = totalWeight;
 
-      if (actorEntity.type == EncumbranceActorType.CHARACTER) {
+      if (actorEntity.type === EncumbranceActorType.CHARACTER) {
         // ==================
         // CHARACTER
         // ==================
@@ -685,7 +685,7 @@ export const VariantEncumbranceBulkImpl = {
         //@ts-ignore
         max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-      } else if (actorEntity.type == EncumbranceActorType.VEHICLE) {
+      } else if (actorEntity.type === EncumbranceActorType.VEHICLE) {
         // ===============================
         // VEHICLE
         // ===============================
@@ -717,7 +717,7 @@ export const VariantEncumbranceBulkImpl = {
         value: totalWeightOriginal.toNearest(0.1),
         max: max.toNearest(0.1),
         pct: pct,
-        encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
+        encumbered: encumbranceTier !== ENCUMBRANCE_TIERS.NONE,
       };
 
       const encumbranceData = {
@@ -1103,13 +1103,13 @@ export const VariantEncumbranceBulkImpl = {
    */
   async addEffect(effectName: string, actor: Actor, origin: string, encumbranceTier: number) {
     let speedDecrease: number | null = 1;
-    if (encumbranceTier == ENCUMBRANCE_TIERS.NONE) {
+    if (encumbranceTier === ENCUMBRANCE_TIERS.NONE) {
       speedDecrease = 1;
-    } else if (encumbranceTier == ENCUMBRANCE_TIERS.LIGHT) {
+    } else if (encumbranceTier === ENCUMBRANCE_TIERS.LIGHT) {
       speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk');
-    } else if (encumbranceTier == ENCUMBRANCE_TIERS.HEAVY) {
+    } else if (encumbranceTier === ENCUMBRANCE_TIERS.HEAVY) {
       speedDecrease = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'heavyWeightDecreaseBulk');
-    } else if (encumbranceTier == ENCUMBRANCE_TIERS.MAX) {
+    } else if (encumbranceTier === ENCUMBRANCE_TIERS.MAX) {
       speedDecrease = null;
     }
     // let effect = VariantEncumbranceBulkImpl.findEffectByName(effectName, actor.id);
@@ -1152,7 +1152,7 @@ function calcWeight(
   // );
   const isEquipped: boolean =
     //@ts-ignore
-    (item.data.equipped && item.data.equipped != item.data.data?.equipped
+    (item.data.equipped && item.data.equipped !== item.data.data?.equipped
       ? //@ts-ignore
         item.data.equipped
       : //@ts-ignore
@@ -1219,14 +1219,14 @@ function _calcItemWeight(item: Item) {
   // const weight = item.data.data.bulk || 0;
   const quantity =
     //@ts-ignore
-    (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+    (is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
       ? //@ts-ignore
         item.data.quantity
       : //@ts-ignore
         item.data.data?.quantity) || 0;
   const weight =
     //@ts-ignore
-    (is_real_number(item.data.bulk) && item.data.bulk != item.data.data?.bulk
+    (is_real_number(item.data.bulk) && item.data.bulk !== item.data.data?.bulk
       ? //@ts-ignore
         item.data.bulk
       : //@ts-ignore

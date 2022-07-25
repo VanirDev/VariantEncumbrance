@@ -409,25 +409,25 @@ export const readyHooks = async () => {
               class: 'enable-disable-variant-encumbrance',
               label: removeLabelButtonsSheetHeader ? '' : mylabel,
               onclick: async (ev) => {
-                if (index == 0) {
+                if (index === 0) {
                   enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
                   enableVarianEncumbranceWeightOnSpecificActorFlag = true;
                   mylabel = i18n('variant-encumbrance-dnd5e.label.enableWEOnSpecificActor');
                   myicon = 'fas fa-balance-scale-right';
                   index = 1;
-                } else if (index == 1) {
+                } else if (index === 1) {
                   enableVarianEncumbranceEffectsOnSpecificActorFlag = false;
                   enableVarianEncumbranceWeightOnSpecificActorFlag = false;
                   mylabel = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEOnSpecificActor');
                   myicon = 'fas fa-feather';
                   index = 2;
-                } else if (index == 2) {
+                } else if (index === 2) {
                   enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
                   enableVarianEncumbranceWeightOnSpecificActorFlag = true;
                   mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
                   myicon = 'fas fa-weight-hanging';
                   index = 0;
-                } else if (index == 3) {
+                } else if (index === 3) {
                   enableVarianEncumbranceEffectsOnSpecificActorFlag = true;
                   enableVarianEncumbranceWeightOnSpecificActorFlag = true;
                   mylabel = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEOnSpecificActor');
@@ -539,25 +539,25 @@ export const readyHooks = async () => {
             class: 'enable-disable-variant-encumbrance-bulk',
             label: removeLabelButtonsSheetHeader ? '' : mylabelBulk,
             onclick: async (ev) => {
-              if (indexBulk == 0) {
+              if (indexBulk === 0) {
                 enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = false;
                 enableVarianEncumbranceWeightBulkOnSpecificActorFlag = true;
                 mylabelBulk = i18n('variant-encumbrance-dnd5e.label.enableWEBulkOnSpecificActor');
                 myiconBulk = 'fas fa-balance-scale-left';
                 indexBulk = 1;
-              } else if (indexBulk == 1) {
+              } else if (indexBulk === 1) {
                 enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = false;
                 enableVarianEncumbranceWeightBulkOnSpecificActorFlag = false;
                 mylabelBulk = i18n('variant-encumbrance-dnd5e.label.disableVEAndWEBulkOnSpecificActor');
                 myiconBulk = 'fas fa-feather-alt';
                 indexBulk = 2;
-              } else if (indexBulk == 2) {
+              } else if (indexBulk === 2) {
                 enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = true;
                 enableVarianEncumbranceWeightBulkOnSpecificActorFlag = true;
                 mylabelBulk = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEBulkOnSpecificActor');
                 myiconBulk = 'fas fa-bold';
                 indexBulk = 0;
-              } else if (indexBulk == 3) {
+              } else if (indexBulk === 3) {
                 enableVarianEncumbranceEffectsBulkOnSpecificActorFlag = true;
                 enableVarianEncumbranceWeightBulkOnSpecificActorFlag = true;
                 mylabelBulk = i18n('variant-encumbrance-dnd5e.label.enableVEAndWEBulkOnSpecificActor');
