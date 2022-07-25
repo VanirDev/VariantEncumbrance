@@ -58,45 +58,45 @@ export function registerSocket() {
 
   // variantEncumbranceSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
   // variantEncumbranceSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
-  variantEncumbranceSocket.register('toggleEffect', (...args) => API.toggleEffectArr(...args));
-  variantEncumbranceSocket.register('addEffect', (...args) => API.addEffectArr(...args));
-  variantEncumbranceSocket.register('removeEffect', (...args) => API.removeEffectArr(...args));
+  // variantEncumbranceSocket.register('toggleEffect', (...args) => API.toggleEffectArr(...args));
+  // variantEncumbranceSocket.register('addEffect', (...args) => API.addEffectArr(...args));
+  // variantEncumbranceSocket.register('removeEffect', (...args) => API.removeEffectArr(...args));
 
-  variantEncumbranceSocket.register('addEffectOnActor', (...args) => API.addEffectOnActorArr(...args));
-  variantEncumbranceSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
-  variantEncumbranceSocket.register('removeEffectFromIdOnActor', (...args) =>
-    API.removeEffectFromIdOnActorArr(...args),
-  );
-  variantEncumbranceSocket.register('toggleEffectFromIdOnActor', (...args) =>
-    API.toggleEffectFromIdOnActorArr(...args),
-  );
-  variantEncumbranceSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
-  variantEncumbranceSocket.register('hasEffectAppliedFromIdOnActor', (...args) =>
-    API.hasEffectAppliedFromIdOnActorArr(...args),
-  );
-  variantEncumbranceSocket.register('hasEffectAppliedOnActor', (...args) => API.hasEffectAppliedOnActorArr(...args));
+  // variantEncumbranceSocket.register('addEffectOnActor', (...args) => API.addEffectOnActorArr(...args));
+  // variantEncumbranceSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
+  // variantEncumbranceSocket.register('removeEffectFromIdOnActor', (...args) =>
+  //   API.removeEffectFromIdOnActorArr(...args),
+  // );
+  // variantEncumbranceSocket.register('toggleEffectFromIdOnActor', (...args) =>
+  //   API.toggleEffectFromIdOnActorArr(...args),
+  // );
+  // variantEncumbranceSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
+  // variantEncumbranceSocket.register('hasEffectAppliedFromIdOnActor', (...args) =>
+  //   API.hasEffectAppliedFromIdOnActorArr(...args),
+  // );
+  // variantEncumbranceSocket.register('hasEffectAppliedOnActor', (...args) => API.hasEffectAppliedOnActorArr(...args));
 
-  variantEncumbranceSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
-  variantEncumbranceSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
-  variantEncumbranceSocket.register('removeEffectFromIdOnToken', (...args) =>
-    API.removeEffectFromIdOnTokenArr(...args),
-  );
-  variantEncumbranceSocket.register('toggleEffectFromIdOnToken', (...args) =>
-    API.toggleEffectFromIdOnTokenArr(...args),
-  );
-  variantEncumbranceSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
-  variantEncumbranceSocket.register('updateEffectFromIdOnToken', (...args) =>
-    API.updateEffectFromIdOnTokenArr(...args),
-  );
-  variantEncumbranceSocket.register('updateEffectFromNameOnToken', (...args) =>
-    API.updateEffectFromNameOnTokenArr(...args),
-  );
-  variantEncumbranceSocket.register('updateActiveEffectFromIdOnToken', (...args) =>
-    API.updateActiveEffectFromIdOnTokenArr(...args),
-  );
-  variantEncumbranceSocket.register('updateActiveEffectFromNameOnToken', (...args) =>
-    API.updateActiveEffectFromNameOnTokenArr(...args),
-  );
+  // variantEncumbranceSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
+  // variantEncumbranceSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
+  // variantEncumbranceSocket.register('removeEffectFromIdOnToken', (...args) =>
+  //   API.removeEffectFromIdOnTokenArr(...args),
+  // );
+  // variantEncumbranceSocket.register('toggleEffectFromIdOnToken', (...args) =>
+  //   API.toggleEffectFromIdOnTokenArr(...args),
+  // );
+  // variantEncumbranceSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
+  // variantEncumbranceSocket.register('updateEffectFromIdOnToken', (...args) =>
+  //   API.updateEffectFromIdOnTokenArr(...args),
+  // );
+  // variantEncumbranceSocket.register('updateEffectFromNameOnToken', (...args) =>
+  //   API.updateEffectFromNameOnTokenArr(...args),
+  // );
+  // variantEncumbranceSocket.register('updateActiveEffectFromIdOnToken', (...args) =>
+  //   API.updateActiveEffectFromIdOnTokenArr(...args),
+  // );
+  // variantEncumbranceSocket.register('updateActiveEffectFromNameOnToken', (...args) =>
+  //   API.updateActiveEffectFromNameOnTokenArr(...args),
+  // );
 
   // =========================================================
   variantEncumbranceSocket.register('calculateWeightOnActorFromId', (...args) =>

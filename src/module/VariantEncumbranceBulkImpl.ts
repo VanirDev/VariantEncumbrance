@@ -9,13 +9,12 @@ import {
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
 import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, daeActive, dfQualityLifeActive } from './modules';
-import EffectInterface from './effects/effect-interface';
 import CONSTANTS from './constants';
 import { debug, error, i18n, isGMConnected, is_real_number } from './lib/lib';
 import API from './api';
-import type EffectHandler from './effects/effect-handler';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type { EffectInterfaceApi } from './effects/effect-interface-api';
 
 /* ------------------------------------ */
 /* Constants         					*/
@@ -107,10 +106,20 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
 
+    await VariantEncumbranceBulkImpl.calculateEncumbranceWithEffect(actorEntity, inventoryItems, false, invPlusActive);
+  },
+
+  calculateEncumbranceWithEffect: async function (
+    actorEntity: Actor,
+    // veItemData: VariantEncumbranceItemData | null,
+    inventoryItems: Item[],
+    ignoreCurrency: boolean,
+    invPlusActive: boolean,
+  ): Promise<EncumbranceBulkData> {
     const encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(
       actorEntity,
       inventoryItems,
-      false,
+      ignoreCurrency,
       invPlusActive,
     );
 
@@ -123,7 +132,7 @@ export const VariantEncumbranceBulkImpl = {
         if (encumbranceDataCurrent.encumbranceTier == encumbranceDataBulk.encumbranceTier) {
           //We ignore all the AE check
           await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
-          return;
+          return encumbranceDataBulk;
         }
       }
     }
@@ -134,8 +143,10 @@ export const VariantEncumbranceBulkImpl = {
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE_BULK)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
-      VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceDataBulk.encumbranceTier);
+      await VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceDataBulk.encumbranceTier);
     }
+
+    return encumbranceDataBulk;
   },
 
   manageActiveEffect: async function (actorEntity: Actor, encumbranceTier: number) {
@@ -709,7 +720,7 @@ export const VariantEncumbranceBulkImpl = {
         encumbered: encumbranceTier != ENCUMBRANCE_TIERS.NONE,
       };
 
-      return {
+      const encumbranceData = {
         totalWeight: totalWeightOriginal.toNearest(0.1),
         totalWeightToDisplay: totalWeight.toNearest(0.1),
         lightMax: lightMax.toNearest(0.1),
@@ -722,6 +733,8 @@ export const VariantEncumbranceBulkImpl = {
         minimumBulk: minimumBulk,
         encumbrance: dataEncumbrance,
       };
+      debug(JSON.stringify(encumbranceData));
+      return encumbranceData;
     } else {
       throw new Error('Something is wrong');
     }
@@ -1006,13 +1019,17 @@ export const VariantEncumbranceBulkImpl = {
    */
   async hasEffectApplied(effectName: string, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedOnActor(
+      return await (<EffectInterfaceApi>API.effectInterface).hasEffectAppliedOnActor(
         effectName,
         <string>actor.id,
         true,
       );
     } else {
-      return await API.hasEffectAppliedOnActor(<string>actor.id, effectName, true);
+      return await (<EffectInterfaceApi>API.effectInterface).hasEffectAppliedOnActor(
+        effectName,
+        <string>actor.id,
+        true,
+      );
     }
   },
 
@@ -1027,13 +1044,17 @@ export const VariantEncumbranceBulkImpl = {
    */
   async hasEffectAppliedFromId(effect: ActiveEffect, actor: Actor): Promise<boolean> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).hasEffectAppliedFromIdOnActor(
+      return await (<EffectInterfaceApi>API.effectInterface).hasEffectAppliedFromIdOnActor(
         <string>effect.id,
         <string>actor.id,
         true,
       );
     } else {
-      return await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>effect.id, true);
+      return await (<EffectInterfaceApi>API.effectInterface).hasEffectAppliedFromIdOnActor(
+        <string>effect.id,
+        <string>actor.id,
+        true,
+      );
     }
   },
 
@@ -1046,12 +1067,9 @@ export const VariantEncumbranceBulkImpl = {
    */
   async removeEffect(effectName: string, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectOnActor(
-        effectName,
-        <string>actor.id,
-      );
+      return await (<EffectInterfaceApi>API.effectInterface).removeEffectOnActor(effectName, <string>actor.id);
     } else {
-      return await API.removeEffectOnActor(<string>actor.id, effectName);
+      return await (<EffectInterfaceApi>API.effectInterface).removeEffectOnActor(effectName, <string>actor.id);
     }
   },
 
@@ -1064,12 +1082,15 @@ export const VariantEncumbranceBulkImpl = {
    */
   async removeEffectFromId(effectToRemove: ActiveEffect, actor: Actor) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-      return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).removeEffectFromIdOnActor(
+      return await (<EffectInterfaceApi>API.effectInterface).removeEffectFromIdOnActor(
         <string>effectToRemove.id,
         <string>actor.id,
       );
     } else {
-      return await API.removeEffectFromIdOnActor(<string>actor.id, <string>effectToRemove.id);
+      return await (<EffectInterfaceApi>API.effectInterface).removeEffectFromIdOnActor(
+        <string>effectToRemove.id,
+        <string>actor.id,
+      );
     }
   },
 
@@ -1104,15 +1125,9 @@ export const VariantEncumbranceBulkImpl = {
       };
       effect.isTemporary = true;
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature') || !isGMConnected()) {
-        return await (<EffectHandler>(<any>API.effectInterface)._effectHandler).addEffectOnActor(
-          effectName,
-          <string>actor.id,
-          '',
-          false,
-          effect,
-        );
+        return await (<EffectInterfaceApi>API.effectInterface).addEffectOnActor(effectName, <string>actor.id, effect);
       } else {
-        return await API.addEffectOnActor(<string>actor.id, effectName, effect);
+        return await (<EffectInterfaceApi>API.effectInterface).addEffectOnActor(effectName, <string>actor.id, effect);
       }
     }
   },
@@ -1172,8 +1187,13 @@ function calcItemWeight(
     return acc + (item.data.data.bulk ?? 0); // TODO convert this in a static method ???
   }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
   // [Optional] add Currency Weight (for non-transformed actors)
-  //@ts-ignore
-  if (!ignoreCurrency && game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') && game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+  if (
+    !ignoreCurrency &&
+    game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight') &&
+    game.settings.get('dnd5e', 'currencyWeight') &&
+    //@ts-ignore
+    item.data.data.currency
+  ) {
     //@ts-ignore
     const currency = item.data.data.currency ?? {};
     const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);

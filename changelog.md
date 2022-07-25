@@ -1,3 +1,9 @@
+### 0.10.0
+
+- Big update
+- Added dependency to 'active-effect-manager-lib'
+- Bug fix on render actor sheet for the active ffect application
+
 ### 0.9.15
 
 - Add moduel setting 'enableCurrencyWeight'

@@ -15,7 +15,6 @@
 import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/modules';
-import EffectInterface from './module/effects/effect-interface';
 import CONSTANTS from './module/constants';
 import { error } from './module/lib/lib';
 import type API from './module/api';

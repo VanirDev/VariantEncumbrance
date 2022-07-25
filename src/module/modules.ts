@@ -13,9 +13,9 @@ import { checkBulkCategory, convertPoundsToKg, debug, i18n, i18nFormat, warn } f
 import CONSTANTS from './constants';
 import { registerSocket } from './socket';
 import API from './api';
-import EffectInterface from './effects/effect-interface';
 import { VariantEncumbranceBulkImpl } from './VariantEncumbranceBulkImpl';
 import { setApi } from '../VariantEncumbrance';
+import type { ActiveEffectManagerLibApi } from './effects/effect-api';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -30,6 +30,8 @@ export let dfredsConvenientEffectsActive;
 export let invMidiQol;
 export let dfQualityLifeActive;
 export let daeActive;
+
+export let aemlApi: ActiveEffectManagerLibApi;
 
 export const initHooks = () => {
   warn('Init Hooks processing');
@@ -117,10 +119,11 @@ export const initHooks = () => {
 };
 
 export const setupHooks = async () => {
-  // setup all the hooks
-  API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME) as unknown as typeof EffectInterface;
   //@ts-ignore
-  API.effectInterface.initialize();
+  aemlApi = <ActiveEffectManagerLibApi>game.modules.get('active-effect-manager-lib').api;
+  aemlApi.effectInterface.initialize(CONSTANTS.MODULE_NAME);
+
+  API.effectInterface = aemlApi.effectInterface;
 
   setApi(API);
 
@@ -227,7 +230,7 @@ export const readyHooks = async () => {
           }
         }
 
-        module.renderActorSheetBulkSystem(
+        await module.renderActorSheetBulkSystem(
           actorSheet,
           htmlElement,
           actorObject,
@@ -236,7 +239,7 @@ export const readyHooks = async () => {
           sheetClass,
         );
 
-        module.renderActorSheetVariant(
+        await module.renderActorSheetVariant(
           actorSheet,
           htmlElement,
           actorObject,
@@ -745,14 +748,14 @@ export async function deleteDocuments(wrapped, ids = [], context = { parent: {},
 // }
 
 const module = {
-  renderActorSheetVariant(
+  async renderActorSheetVariant(
     actorSheet: ActorSheet,
     htmlElement: JQuery<HTMLElement>,
     actorObject: any,
     actorEntityTmp: Actor,
     htmlElementEncumbranceVariant,
     sheetClass: string,
-  ): void {
+  ): Promise<void> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enabled')) {
       // ===============================
       // CUSTOMIZE ENCUMBRANCE VARIANT
@@ -918,14 +921,14 @@ const module = {
       }
     }
   },
-  renderActorSheetBulkSystem(
+  async renderActorSheetBulkSystem(
     actorSheet: ActorSheet,
     htmlElement: JQuery<HTMLElement>,
     actorObject: any,
     actorEntityTmp: Actor,
     encumbranceElement,
     sheetClass: string,
-  ): void {
+  ): Promise<void> {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableBulkSystem')) {
       // ======================================================
       // CUSTOMIZE INVENTORY
