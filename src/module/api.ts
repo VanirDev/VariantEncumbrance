@@ -496,7 +496,9 @@ const API = {
         inventoryItems.push(im);
       }
     });
-    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(actor, inventoryItems, false, invPlusActive);
+    const ignoreCurrency =  !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight');
+    const encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
+      actor, inventoryItems, ignoreCurrency, invPlusActive);
     return encumbranceData;
   },
 

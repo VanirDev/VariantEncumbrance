@@ -297,7 +297,7 @@ export const readyHooks = async () => {
             VariantEncumbranceImpl.calculateEncumbrance(
               actorEntity,
               actorEntity.data.items.contents,
-              false,
+              !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
               invPlusActive,
             );
           }
@@ -305,7 +305,7 @@ export const readyHooks = async () => {
             VariantEncumbranceBulkImpl.calculateEncumbrance(
               actorEntity,
               actorEntity.data.items.contents,
-              false,
+              !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
               invPlusActive,
             );
           }
@@ -800,7 +800,7 @@ const module = {
           actorEntityTmp,
           //@ts-ignore
           actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
-          false,
+          !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
           invPlusActive,
         );
       }
@@ -1061,7 +1061,7 @@ const module = {
           actorEntityTmp,
           //@ts-ignore
           actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
-          false,
+          !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
           invPlusActive,
         );
       }
