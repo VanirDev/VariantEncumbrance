@@ -209,15 +209,13 @@ export const VariantEncumbranceImpl = {
       }
     }
 
-    await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA, encumbranceData);
-
     const enableVarianEncumbranceEffectsOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
       await VariantEncumbranceImpl.manageActiveEffect(actorEntity, encumbranceData.encumbranceTier);
     }
-
+    await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA, encumbranceData);
     return encumbranceData;
   },
 

@@ -50,6 +50,10 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 This module uses the [socketLib](https://github.com/manuelVo/foundryvtt-socketlib) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
+### active-effect-manager-lib
+
+This module uses the [active-effect-manager-lib](https://github.com/p4535992/foundryvtt-active-effect-manager-lib) library like a dependency. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
 ### midi-qol
 
 This module uses the [midi-qol](https://gitlab.com/tposney/midi-qol/-/tree/master). It is a optional dependency but it is recommended for the best experience and compatibility with other modules.

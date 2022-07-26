@@ -62,7 +62,11 @@ Hooks.once('ready', () => {
     if (game.modules.get('socketlib')) word = 'activate';
     throw error(`Requires the 'socketlib' module. Please ${word} it.`);
   }
-
+  if (!game.modules.get('active-effect-manager-lib')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('active-effect-manager-lib')) word = 'activate';
+    throw error(`Requires the 'active-effect-manager-lib' module. Please ${word} it.`);
+  }
   readyHooks();
 });
 

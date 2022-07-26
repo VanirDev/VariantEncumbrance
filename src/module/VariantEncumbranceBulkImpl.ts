@@ -137,14 +137,13 @@ export const VariantEncumbranceBulkImpl = {
       }
     }
 
-    await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
-
     const enableVarianEncumbranceEffectsOnActorFlag = <boolean>(
       actorEntity.getFlag(CONSTANTS.FLAG, EncumbranceFlags.ENABLED_AE_BULK)
     );
     if (enableVarianEncumbranceEffectsOnActorFlag) {
       await VariantEncumbranceBulkImpl.manageActiveEffect(actorEntity, encumbranceDataBulk.encumbranceTier);
     }
+    await actorEntity.setFlag(CONSTANTS.FLAG, EncumbranceFlags.DATA_BULK, encumbranceDataBulk);
 
     return encumbranceDataBulk;
   },
@@ -190,7 +189,7 @@ export const VariantEncumbranceBulkImpl = {
       // Ignore all non encumbrance effect renamed from the player (again)
       if (
         !hasProperty(effectEntity.data, `flags.${CONSTANTS.FLAG}`) &&
-        effectNameToSet !==ENCUMBRANCE_STATE.UNENCUMBERED &&
+        effectNameToSet !== ENCUMBRANCE_STATE.UNENCUMBERED &&
         effectNameToSet !== ENCUMBRANCE_STATE.ENCUMBERED &&
         effectNameToSet !== ENCUMBRANCE_STATE.HEAVILY_ENCUMBERED &&
         effectNameToSet !== ENCUMBRANCE_STATE.OVERBURDENED

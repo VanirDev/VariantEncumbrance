@@ -9,13 +9,14 @@ import {
   BulkData,
   SUPPORTED_SHEET,
 } from './VariantEncumbranceModels';
-import { checkBulkCategory, convertPoundsToKg, debug, i18n, i18nFormat, warn } from './lib/lib';
+import { checkBulkCategory, convertPoundsToKg, debug, duplicateExtended, i18n, i18nFormat, warn } from './lib/lib';
 import CONSTANTS from './constants';
 import { registerSocket } from './socket';
 import API from './api';
 import { VariantEncumbranceBulkImpl } from './VariantEncumbranceBulkImpl';
 import { setApi } from '../VariantEncumbrance';
 import type { ActiveEffectManagerLibApi } from './effects/effect-api';
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export let ENCUMBRANCE_STATE = {
   UNENCUMBERED: '', // "Unencumbered",
@@ -297,7 +298,7 @@ export const readyHooks = async () => {
             VariantEncumbranceImpl.calculateEncumbrance(
               actorEntity,
               actorEntity.data.items.contents,
-              !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
+              false,
               invPlusActive,
             );
           }
@@ -305,7 +306,7 @@ export const readyHooks = async () => {
             VariantEncumbranceBulkImpl.calculateEncumbrance(
               actorEntity,
               actorEntity.data.items.contents,
-              !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
+              false,
               invPlusActive,
             );
           }
@@ -796,11 +797,26 @@ const module = {
           setProperty(actorEntityTmp.data, 'data', actorObject.data);
         }
         // mergeObject(actorEntity.data.items, actorObject.items);
+        let itemsToCheck = <Item[]>[];
+        // if (actorObject.items && actorObject.items instanceof Array) {
+        //   for (const itemM of actorEntityTmp.data.items.contents) {
+        //     const itemToMerge = <ItemData>actorObject.items.find((z: ItemData) => {
+        //       return z._id === itemM.id;
+        //     });
+        //     const newItem = <any>duplicate(itemM);
+        //     if (itemToMerge) {
+        //       mergeObject(newItem.data, itemToMerge);
+        //     }
+        //     itemsToCheck.push(newItem);
+        //   }
+        // } else {
+          itemsToCheck = actorEntityTmp.data.items.contents;
+        // }
+
         encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
           actorEntityTmp,
-          //@ts-ignore
-          actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
-          !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
+          itemsToCheck,
+          false,
           invPlusActive,
         );
       }
@@ -1057,11 +1073,26 @@ const module = {
           setProperty(actorEntityTmp.data, 'data', actorObject.data);
         }
         // mergeObject(actorEntity.data.items, actorObject.items);
+        let itemsToCheck = <Item[]>[];
+        // if (actorObject.items && actorObject.items instanceof Array) {
+        //   for (const itemM of actorEntityTmp.data.items.contents) {
+        //     const itemToMerge = <ItemData>actorObject.items.find((z: ItemData) => {
+        //       return z._id === itemM.id;
+        //     });
+        //     const newItem = <any>duplicate(itemM);
+        //     if (itemToMerge) {
+        //       mergeObject(newItem.data, itemToMerge);
+        //     }
+        //     itemsToCheck.push(newItem);
+        //   }
+        // } else {
+          itemsToCheck = actorEntityTmp.data.items.contents;
+        // }
+
         encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(
           actorEntityTmp,
-          //@ts-ignore
-          actorObject.items instanceof Array ? actorObject.items : actorEntityTmp.data.items.contents,
-          !game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyWeight'),
+          itemsToCheck,
+          false,
           invPlusActive,
         );
       }
