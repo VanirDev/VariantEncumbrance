@@ -56,6 +56,8 @@
   "system": ["dnd5e", "sw5e"],
   "esmodules": ["VariantEncumbrance.js"],
   "styles": ["styles/VariantEncumbrance.css"],
+  "minimumCoreVersion": "9",
+  "compatibleCoreVersion": "9",
   "compatibility": {
     "minimum": 9,
     "verified": 9,
