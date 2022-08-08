@@ -9,9 +9,17 @@ import {
   ENCUMBRANCE_TIERS,
 } from './VariantEncumbranceModels';
 import Effect from './effects/effect';
-import { dfQualityLifeActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './modules';
+import { daeActive, dfQualityLifeActive, ENCUMBRANCE_STATE, invMidiQol, invPlusActive } from './modules';
 import CONSTANTS from './constants';
-import { debug, error, i18n, isGMConnected, is_real_number } from './lib/lib';
+import {
+  debug,
+  error,
+  i18n,
+  isGMConnected,
+  is_real_number,
+  retrieveAttributeEncumbranceMax,
+  retrieveAttributeCapacityCargo,
+} from './lib/lib';
 import API from './api';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
@@ -680,12 +688,44 @@ export const VariantEncumbranceImpl = {
         // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
         //@ts-ignore
         max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        const daeValueAttributeEncumbranceMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, max)
+            : 0;
+        if (daeValueAttributeEncumbranceMax && daeValueAttributeEncumbranceMax > 0) {
+          max = daeValueAttributeEncumbranceMax;
+        }
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
         //@ts-ignore
         const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+
+        // lightMax = lightMultiplier * strengthScore;
+        // mediumMax = mediumMultiplier * strengthScore;
+        // heavyMax = heavyMultiplier * strengthScore;
         lightMax = lightMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxLightMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, lightMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxLightMax && daeValueAttributeEncumbranceMaxLightMax > 0) {
+          lightMax = daeValueAttributeEncumbranceMaxLightMax;
+        }
         mediumMax = mediumMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxMediumMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, mediumMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxMediumMax && daeValueAttributeEncumbranceMaxMediumMax > 0) {
+          mediumMax = daeValueAttributeEncumbranceMaxMediumMax;
+        }
         heavyMax = heavyMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxHeavyMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, heavyMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxHeavyMax && daeValueAttributeEncumbranceMaxHeavyMax > 0) {
+          heavyMax = daeValueAttributeEncumbranceMaxHeavyMax;
+        }
       } else if (actorEntity.type === EncumbranceActorType.VEHICLE) {
         // ===============================
         // VEHICLE
@@ -750,14 +790,50 @@ export const VariantEncumbranceImpl = {
         // Compute overall encumbrance
         // const max = actorData.data.attributes.capacity.cargo;
         max = capacityCargo * strengthMultiplier * modForSize;
+        const daeValueAttributeCapacityCargo =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeCapacityCargo(actorEntity, max)
+            : 0;
+        if (daeValueAttributeCapacityCargo && daeValueAttributeCapacityCargo > 0) {
+          max = daeValueAttributeCapacityCargo;
+        }
         pct = Math.clamped((totalWeightOriginal * 100) / max, 0, 100);
+        //@ts-ignore
+        const strengthScore = capacityCargo * strengthMultiplier * modForSize;
+
         // Manage vehicle specific case
         // lightMax = lightMultiplier * capacityCargo * strengthMultiplier * modForSize;
         // mediumMax = mediumMultiplier * capacityCargo * strengthMultiplier * modForSize;
         // heavyMax = heavyMultiplier * capacityCargo * strengthMultiplier * modForSize;
-        lightMax = capacityCargo * strengthMultiplier * modForSize * 0.33;
-        mediumMax = capacityCargo * strengthMultiplier * modForSize * 0.66;
-        heavyMax = capacityCargo * strengthMultiplier * modForSize;
+
+        // lightMax = capacityCargo * strengthMultiplier * modForSize * 0.33;
+        // mediumMax = capacityCargo * strengthMultiplier * modForSize * 0.66;
+        // heavyMax = capacityCargo * strengthMultiplier * modForSize;
+
+        lightMax = strengthScore * 0.33;
+        const daeValueAttributeCapacityCargoLightMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeCapacityCargo(actorEntity, lightMax)
+            : 0;
+        if (daeValueAttributeCapacityCargoLightMax && daeValueAttributeCapacityCargoLightMax > 0) {
+          lightMax = daeValueAttributeCapacityCargoLightMax;
+        }
+        mediumMax = strengthScore * 0.66;
+        const daeValueAttributeCapacityCargoMediumMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeCapacityCargo(actorEntity, mediumMax)
+            : 0;
+        if (daeValueAttributeCapacityCargoMediumMax && daeValueAttributeCapacityCargoMediumMax > 0) {
+          mediumMax = daeValueAttributeCapacityCargoMediumMax;
+        }
+        heavyMax = strengthScore;
+        const daeValueAttributeCapacityCargoHeavyMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeCapacityCargo(actorEntity, heavyMax)
+            : 0;
+        if (daeValueAttributeCapacityCargoHeavyMax && daeValueAttributeCapacityCargoHeavyMax > 0) {
+          heavyMax = daeValueAttributeCapacityCargoHeavyMax;
+        }
       } else {
         // ===========================
         // NO CHARACTER, NO VEHICLE (BY DEFAULT THE CHARACTER)
@@ -765,12 +841,45 @@ export const VariantEncumbranceImpl = {
         // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
         //@ts-ignore
         max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        const daeValueAttributeEncumbranceMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, max)
+            : 0;
+        if (daeValueAttributeEncumbranceMax && daeValueAttributeEncumbranceMax > 0) {
+          max = daeValueAttributeEncumbranceMax;
+        }
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
         //@ts-ignore
         const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+
+        // lightMax = lightMultiplier * strengthScore;
+        // mediumMax = mediumMultiplier * strengthScore;
+        // heavyMax = heavyMultiplier * strengthScore;
+
         lightMax = lightMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxLightMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, lightMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxLightMax && daeValueAttributeEncumbranceMaxLightMax > 0) {
+          lightMax = daeValueAttributeEncumbranceMaxLightMax;
+        }
         mediumMax = mediumMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxMediumMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, mediumMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxMediumMax && daeValueAttributeEncumbranceMaxMediumMax > 0) {
+          mediumMax = daeValueAttributeEncumbranceMaxMediumMax;
+        }
         heavyMax = heavyMultiplier * strengthScore;
+        const daeValueAttributeEncumbranceMaxHeavyMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, heavyMax)
+            : 0;
+        if (daeValueAttributeEncumbranceMaxHeavyMax && daeValueAttributeEncumbranceMaxHeavyMax > 0) {
+          heavyMax = daeValueAttributeEncumbranceMaxHeavyMax;
+        }
       }
 
       let encumbranceTier = ENCUMBRANCE_TIERS.NONE;
@@ -1426,9 +1535,34 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
     //@ts-ignore
     const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+
+    // lightMax = lightMultiplier * strengthScore;
+    // mediumMax = mediumMultiplier * strengthScore;
+    // heavyMax = heavyMultiplier * strengthScore;
     lightMax = lightMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxLightMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, lightMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxLightMax && daeValueAttributeEncumbranceMaxLightMax > 0) {
+      lightMax = daeValueAttributeEncumbranceMaxLightMax;
+    }
     mediumMax = mediumMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxMediumMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, mediumMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxMediumMax && daeValueAttributeEncumbranceMaxMediumMax > 0) {
+      mediumMax = daeValueAttributeEncumbranceMaxMediumMax;
+    }
     heavyMax = heavyMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxHeavyMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, heavyMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxHeavyMax && daeValueAttributeEncumbranceMaxHeavyMax > 0) {
+      heavyMax = daeValueAttributeEncumbranceMaxHeavyMax;
+    }
   } else if (actorEntity.type === EncumbranceActorType.VEHICLE) {
     dataEncumbrance = _standardVehicleWeightCalculation(actorEntity);
     // Integration with DragonFlagon Quality of Life, Vehicle Cargo Capacity Unit Feature
@@ -1472,21 +1606,74 @@ function _standardActorWeightCalculation(actorEntity: Actor): EncumbranceData {
     }
     //@ts-ignore
     const capacityCargo = <number>actorEntity.data.data.attributes.capacity.cargo;
-    // Compute overall encumbrance
+    //@ts-ignore
+    const strengthScore = capacityCargo * strengthMultiplier * modForSize;
+
     // Manage vehicle specific case
     // lightMax = lightMultiplier * capacityCargo * strengthMultiplier * modForSize;
     // mediumMax = mediumMultiplier * capacityCargo * strengthMultiplier * modForSize;
     // heavyMax = heavyMultiplier * capacityCargo * strengthMultiplier * modForSize;
-    lightMax = capacityCargo * strengthMultiplier * modForSize * 0.33;
-    mediumMax = capacityCargo * strengthMultiplier * modForSize * 0.66;
-    heavyMax = capacityCargo * strengthMultiplier * modForSize;
+
+    // lightMax = capacityCargo * strengthMultiplier * modForSize * 0.33;
+    // mediumMax = capacityCargo * strengthMultiplier * modForSize * 0.66;
+    // heavyMax = capacityCargo * strengthMultiplier * modForSize;
+
+    lightMax = strengthScore * 0.33;
+    const daeValueAttributeCapacityCargoLightMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeCapacityCargo(actorEntity, lightMax)
+        : 0;
+    if (daeValueAttributeCapacityCargoLightMax && daeValueAttributeCapacityCargoLightMax > 0) {
+      lightMax = daeValueAttributeCapacityCargoLightMax;
+    }
+    mediumMax = strengthScore * 0.66;
+    const daeValueAttributeCapacityCargoMediumMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeCapacityCargo(actorEntity, mediumMax)
+        : 0;
+    if (daeValueAttributeCapacityCargoMediumMax && daeValueAttributeCapacityCargoMediumMax > 0) {
+      mediumMax = daeValueAttributeCapacityCargoMediumMax;
+    }
+    heavyMax = strengthScore;
+    const daeValueAttributeCapacityCargoHeavyMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeCapacityCargo(actorEntity, heavyMax)
+        : 0;
+    if (daeValueAttributeCapacityCargoHeavyMax && daeValueAttributeCapacityCargoHeavyMax > 0) {
+      heavyMax = daeValueAttributeCapacityCargoHeavyMax;
+    }
   } else {
     dataEncumbrance = _standardCharacterWeightCalculation(actorEntity);
     //@ts-ignore
     const strengthScore = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+
+    // lightMax = lightMultiplier * strengthScore;
+    // mediumMax = mediumMultiplier * strengthScore;
+    // heavyMax = heavyMultiplier * strengthScore;
     lightMax = lightMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxLightMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, lightMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxLightMax && daeValueAttributeEncumbranceMaxLightMax > 0) {
+      lightMax = daeValueAttributeEncumbranceMaxLightMax;
+    }
     mediumMax = mediumMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxMediumMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, mediumMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxMediumMax && daeValueAttributeEncumbranceMaxMediumMax > 0) {
+      mediumMax = daeValueAttributeEncumbranceMaxMediumMax;
+    }
     heavyMax = heavyMultiplier * strengthScore;
+    const daeValueAttributeEncumbranceMaxHeavyMax =
+      daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+        ? retrieveAttributeEncumbranceMax(actorEntity, heavyMax)
+        : 0;
+    if (daeValueAttributeEncumbranceMaxHeavyMax && daeValueAttributeEncumbranceMaxHeavyMax > 0) {
+      heavyMax = daeValueAttributeEncumbranceMaxHeavyMax;
+    }
   }
 
   let encumbranceTier = ENCUMBRANCE_TIERS.NONE;

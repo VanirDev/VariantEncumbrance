@@ -30,7 +30,7 @@
   "variant-encumbrance-dnd5e.setting.profEquippedMultiplier.hint": "Multiplier for proficient items when equipped, can be used to reduce effective weight for armour and weapons.",
 
   "variant-encumbrance-dnd5e.setting.enableCurrencyWeight.name": "Enable currency Per Weight Unit",
-  "variant-encumbrance-dnd5e.setting.enableCurrencyWeight.hint": "If enavled it will add the weight of the currency to the total.",
+  "variant-encumbrance-dnd5e.setting.enableCurrencyWeight.hint": "If enabled it will add the weight of the currency to the total.",
 
   "variant-encumbrance-dnd5e.setting.currencyWeight.name": "Currency Per Weight Unit",
   "variant-encumbrance-dnd5e.setting.currencyWeight.hint": "Define the number of coins required to equal 1 unit of weight.",
@@ -97,6 +97,9 @@
 
   "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.name": "Use equipped/unequipped feature of the ItemCollection/Item Container module for the backpack",
   "variant-encumbrance-dnd5e.setting.useEquippedUnequippedItemCollectionFeature.hint": "I DON'T RECOMMENDED it, the only difference (only for item container) is \"Item container\" module set 0 if unequipped, the \"variant encumbrance\" get the value from the module setting by default 1 if unequipped, and now i remember the calculation not make sense for some people because there are two behaviour for the equipped and unequipped items if they are item container or standard item. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped)",
+
+  "variant-encumbrance-dnd5e.setting.enableDAEIntegration.name": "Enable DAE integration",
+  "variant-encumbrance-dnd5e.setting.enableDAEIntegration.hint": "If enabled, this setting will apply the value recovered by the DAE effects to the 'data.attributes.encumbrance.max' and 'data.attributes.capacity.cargo' attributes IF the 'DAE' module is present and active.",
 
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.name": "Disable the socketLib feature integration",
   "variant-encumbrance-dnd5e.setting.doNotUseSocketLibFeature.hint": "This is usually useful only for avoid a socket collision with other modules",

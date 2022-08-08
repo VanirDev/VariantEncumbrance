@@ -1,5 +1,11 @@
-### 0.10.0
+### 0.10.1
 
+- Add integration with DAE
+- Add module setting 'Enable DAE integration' by default is true
+- Bug fix [VariantEncumbrance calculates from original data rather than derived data (DAE support)](https://github.com/VanirDev/VariantEncumbrance/issues/30)
+- Bug fix [[Request] Increasing carry weight on single actor isn't possible, could there be a % based system?](https://github.com/VanirDev/VariantEncumbrance/issues/66)
+
+### 0.10.0
 - Big update
 - Added dependency to 'active-effect-manager-lib'
 - Bug fix on render actor sheet for the active ffect application

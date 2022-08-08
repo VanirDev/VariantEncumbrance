@@ -10,7 +10,15 @@ import {
 import Effect from './effects/effect';
 import { ENCUMBRANCE_STATE, invMidiQol, invPlusActive, daeActive, dfQualityLifeActive } from './modules';
 import CONSTANTS from './constants';
-import { debug, error, i18n, isGMConnected, is_real_number } from './lib/lib';
+import {
+  debug,
+  error,
+  i18n,
+  isGMConnected,
+  is_real_number,
+  retrieveAttributeCapacityCargo,
+  retrieveAttributeEncumbranceMax,
+} from './lib/lib';
 import API from './api';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
@@ -683,6 +691,13 @@ export const VariantEncumbranceBulkImpl = {
         // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
         //@ts-ignore
         max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        const daeValueAttributeEncumbranceMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, max)
+            : 0;
+        if (daeValueAttributeEncumbranceMax && daeValueAttributeEncumbranceMax > 0) {
+          max = daeValueAttributeEncumbranceMax;
+        }
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
       } else if (actorEntity.type === EncumbranceActorType.VEHICLE) {
         // ===============================
@@ -693,6 +708,13 @@ export const VariantEncumbranceBulkImpl = {
         // Compute overall encumbrance
         // const max = actorData.data.attributes.capacity.cargo;
         max = capacityCargo * strengthMultiplier * modForSize;
+        const daeValueAttributeCapacityCargo =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeCapacityCargo(actorEntity, max)
+            : 0;
+        if (daeValueAttributeCapacityCargo && daeValueAttributeCapacityCargo > 0) {
+          max = daeValueAttributeCapacityCargo;
+        }
         pct = Math.clamped((totalWeightOriginal * 100) / max, 0, 100);
       } else {
         // ===========================
@@ -701,6 +723,13 @@ export const VariantEncumbranceBulkImpl = {
         // const max = (actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize).toNearest(0.1);
         //@ts-ignore
         max = actorEntity.data.data.abilities.str.value * strengthMultiplier * modForSize;
+        const daeValueAttributeEncumbranceMax =
+          daeActive && game.settings.get(CONSTANTS.MODULE_NAME, 'enableDAEIntegration')
+            ? retrieveAttributeEncumbranceMax(actorEntity, max)
+            : 0;
+        if (daeValueAttributeEncumbranceMax && daeValueAttributeEncumbranceMax > 0) {
+          max = daeValueAttributeEncumbranceMax;
+        }
         pct = Math.clamped((totalWeight * 100) / max, 0, 100);
       }
 

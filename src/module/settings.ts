@@ -341,6 +341,15 @@ export const registerSettings = function () {
     default: false,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableDAEIntegration', {
+    name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableDAEIntegration.name'),
+    hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableDAEIntegration.hint'),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
   // BULK SYSTEM
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableBulkSystem', {
@@ -805,6 +814,15 @@ function otherSettings(apply = false) {
       config: true,
       type: Boolean,
       default: false,
+    },
+
+    enableDAEIntegration: {
+      name: i18n(CONSTANTS.MODULE_NAME + '.setting.enableDAEIntegration.name'),
+      hint: i18n(CONSTANTS.MODULE_NAME + '.setting.enableDAEIntegration.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
     },
 
     // BULK SYSTEM

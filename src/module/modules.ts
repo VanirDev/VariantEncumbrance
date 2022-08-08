@@ -810,7 +810,7 @@ const module = {
         //     itemsToCheck.push(newItem);
         //   }
         // } else {
-          itemsToCheck = actorEntityTmp.data.items.contents;
+        itemsToCheck = actorEntityTmp.data.items.contents;
         // }
 
         encumbranceData = VariantEncumbranceImpl.calculateEncumbrance(
@@ -1086,7 +1086,7 @@ const module = {
         //     itemsToCheck.push(newItem);
         //   }
         // } else {
-          itemsToCheck = actorEntityTmp.data.items.contents;
+        itemsToCheck = actorEntityTmp.data.items.contents;
         // }
 
         encumbranceDataBulk = VariantEncumbranceBulkImpl.calculateEncumbrance(

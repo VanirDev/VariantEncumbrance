@@ -1,5 +1,11 @@
-import { BULK_CATEGORY, BulkData } from './../VariantEncumbranceModels';
+import { BULK_CATEGORY, BulkData, EncumbranceActorType } from './../VariantEncumbranceModels';
 import CONSTANTS from '../constants.js';
+import type {
+  EffectChangeData,
+  EffectChangeDataProperties,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
+import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 // =============================
 // Module Generic function
@@ -275,7 +281,7 @@ export function getFirstPlayerTokenSelected(): Token | null {
     //iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
     return null;
   }
-  if (!selectedTokens || selectedTokens.length == 0) {
+  if (!selectedTokens || selectedTokens.length === 0) {
     //if(game.user.character.data.token){
     //  //@ts-ignore
     //  return game.user.character.data.token;
@@ -302,7 +308,7 @@ export function getFirstPlayerToken(): Token | null {
   // If exactly one token is selected, take that
   token = <Token>controlled[0];
   if (!token) {
-    if (!controlled.length || controlled.length == 0) {
+    if (!controlled.length || controlled.length === 0) {
       // If no token is selected use the token of the users character
       token = <Token>canvas.tokens?.placeables.find((token) => token.data._id === game.user?.character?.data?._id);
     }
@@ -379,4 +385,192 @@ export function checkBulkCategory(weight: number): BulkData {
   } else {
     return BULK_CATEGORY.XX_LARGE;
   }
+}
+
+export function retrieveAttributeEncumbranceMax(actorEntity: Actor, standardValueN: number): number {
+  // const standardValueS = getProperty(actor, 'data.data.attributes.encumbrance.max');
+  // let standardValueN = 0;
+  // try {
+  //   standardValueN = Number(standardValueS);
+  // } catch (e) {
+  //   standardValueN = 0;
+  // }
+  const daeValue = retrieveActiveEffectDataChangeByKey(actorEntity, 'data.attributes.encumbrance.max');
+  try {
+    if (daeValue) {
+      const valueN = Number(daeValue.value);
+      if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
+        return standardValueN + valueN;
+      } else if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.DOWNGRADE) {
+        return standardValueN - valueN;
+      } else if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
+        return standardValueN * valueN;
+      } else if (
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.CUSTOM ||
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.OVERRIDE ||
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.UPGRADE
+      ) {
+        return valueN;
+      } else {
+        warn(`Can't parse the mode value ${daeValue.mode} for 'data.attributes.encumbrance.max'`);
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  } catch (e) {
+    warn(`Can't parse the value ${daeValue} for 'data.attributes.encumbrance.max'`);
+    return 0;
+  }
+}
+
+export function retrieveAttributeCapacityCargo(actor: Actor, standardValueN: number): number {
+  // const standardValueS = getProperty(actor, 'data.data.attributes.capacity.cargo');
+  // let standardValueN = 0;
+  // try {
+  //   standardValueN = Number(standardValueS);
+  // } catch (e) {
+  //   standardValueN = 0;
+  // }
+  const daeValue = retrieveActiveEffectDataChangeByKey(actor, 'data.data.attributes.capacity.cargo');
+  try {
+    if (daeValue) {
+      const valueN = Number(daeValue.value);
+      if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
+        return standardValueN + valueN;
+      } else if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.DOWNGRADE) {
+        return standardValueN - valueN;
+      } else if (daeValue.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
+        return standardValueN * valueN;
+      } else if (
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.CUSTOM ||
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.OVERRIDE ||
+        daeValue.mode === CONST.ACTIVE_EFFECT_MODES.UPGRADE
+      ) {
+        return valueN;
+      } else {
+        warn(`Can't parse the mode value ${daeValue.mode} for 'data.data.attributes.capacity.cargo'`);
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  } catch (e) {
+    warn(`Can't parse the value ${daeValue} for 'data.data.attributes.capacity.cargo'`);
+    return 0;
+  }
+}
+
+export function retrieveActiveEffectDataChangeByKey(actor: Actor, key: string): EffectChangeDataProperties | undefined {
+  if (!actor) {
+    return undefined;
+  }
+  if (actor.documentName !== 'Actor') {
+    return undefined;
+  }
+  const isPlayerOwned = <boolean>actor.token?.isOwner;
+  if (!game.user?.isGM && !isPlayerOwned) {
+    return undefined;
+  }
+  // let sourceToken = <Token>actor.token?.object;
+  // if (!sourceToken) {
+  //   sourceToken = <Token>canvas.tokens?.placeables.find((t) => {
+  //     return <string>t.actor?.id === <string>actor.id;
+  //   });
+  // }
+  // if (!sourceToken) {
+  //   return;
+  // }
+  //@ts-ignore
+  let valueDefault: EffectChangeDataProperties | undefined = undefined;
+  const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>actor?.data.effects;
+  for (const aef of actorEffects) {
+    if (aef.data.disabled) {
+      continue;
+    }
+    const c = retrieveActiveEffectDataChangeByKeyFromActiveEffect(actor, key, aef.data.changes);
+    if (c.value) {
+      valueDefault = c;
+      break;
+    }
+  }
+  return valueDefault;
+}
+
+export function retrieveActiveEffectDataChangeByKeyFromActiveEffect(
+  actor: Actor,
+  activeEffectDataChangeKey: string,
+  effectChanges: EffectChangeData[],
+): EffectChangeDataProperties {
+  const effectEntityChanges = effectChanges.sort((a, b) => <number>a.priority - <number>b.priority);
+  const atcvEffectChangeData = <EffectChangeData>effectEntityChanges.find((aee) => {
+    if (aee.key === activeEffectDataChangeKey && aee.value) {
+      return aee;
+    }
+  });
+  let myvalue = '';
+  if (atcvEffectChangeData.value && String(atcvEffectChangeData.value).includes('data.')) {
+    // Retrieve the formula.
+    const formula = atcvEffectChangeData.value.replace(/data\./g, '@');
+    // Replace shorthand.
+    // formula = formula
+    //   .replace(/@abil\./g, '@abilities.')
+    //   .replace(/@attr\./g, '@attributes.');
+    // Roll the dice!
+    // Build the roll.
+    const data = actor ? actor.getRollData() : {};
+    const roll = new Roll(formula, data);
+    // Roll the dice.
+    let myresult = '';
+    //roll.roll();
+    try {
+      // TODO Roll#evaluate is becoming asynchronous. In the short term you may pass async=true or async=false
+      // to evaluation options to nominate your preferred behavior.
+      roll.evaluate({ async: false });
+      //await roll.evaluate({async: true});
+      myresult = roll.total ? String(roll.total) : roll.result;
+    } catch (e) {
+      const evalValue = eval(roll.result);
+      myresult = evalValue ? String(evalValue) : '';
+    }
+    myvalue = myresult;
+  } else if (atcvEffectChangeData.value && String(atcvEffectChangeData.value).includes('@')) {
+    // Retrieve the formula.
+    const formula = atcvEffectChangeData.value;
+    // Replace shorthand.
+    // formula = formula
+    //   .replace(/@abil\./g, '@abilities.')
+    //   .replace(/@attr\./g, '@attributes.');
+    // Roll the dice!
+    // Build the roll.
+    const data = actor ? actor.getRollData() : {};
+    const roll = new Roll(formula, data);
+    // Roll the dice.
+    let myresult = '';
+    //roll.roll();
+    try {
+      // TODO Roll#evaluate is becoming asynchronous. In the short term you may pass async=true or async=false
+      // to evaluation options to nominate your preferred behavior.
+      roll.evaluate({ async: false });
+      //await roll.evaluate({async: true});
+      myresult = roll.total ? String(roll.total) : roll.result;
+    } catch (e) {
+      const evalValue = eval(roll.result);
+      myresult = evalValue ? String(evalValue) : '';
+    }
+    myvalue = myresult;
+  } else {
+    try {
+      const evalValue = eval(atcvEffectChangeData.value);
+      myvalue = evalValue ? String(evalValue) : '';
+    } catch (e) {
+      myvalue = atcvEffectChangeData.value;
+    }
+  }
+  return {
+    key: atcvEffectChangeData.key,
+    value: myvalue,
+    mode: atcvEffectChangeData.mode,
+    priority: atcvEffectChangeData.priority,
+  };
 }
