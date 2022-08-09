@@ -1,4 +1,4 @@
-### 0.10.1
+### 0.10.1-2
 
 - Add integration with DAE
 - Add module setting 'Enable DAE integration' by default is true
