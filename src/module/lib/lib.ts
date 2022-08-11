@@ -489,7 +489,7 @@ export function retrieveActiveEffectDataChangeByKey(actor: Actor, key: string): 
       continue;
     }
     const c = retrieveActiveEffectDataChangeByKeyFromActiveEffect(actor, key, aef.data.changes);
-    if (c.value) {
+    if (c && c.value) {
       valueDefault = c;
       break;
     }
@@ -501,13 +501,16 @@ export function retrieveActiveEffectDataChangeByKeyFromActiveEffect(
   actor: Actor,
   activeEffectDataChangeKey: string,
   effectChanges: EffectChangeData[],
-): EffectChangeDataProperties {
+): EffectChangeDataProperties|undefined {
   const effectEntityChanges = effectChanges.sort((a, b) => <number>a.priority - <number>b.priority);
   const atcvEffectChangeData = <EffectChangeData>effectEntityChanges.find((aee) => {
     if (aee.key === activeEffectDataChangeKey && aee.value) {
       return aee;
     }
   });
+  if(!atcvEffectChangeData || !atcvEffectChangeData.value){
+    return undefined;
+  }
   let myvalue = '';
   if (atcvEffectChangeData.value && String(atcvEffectChangeData.value).includes('data.')) {
     // Retrieve the formula.

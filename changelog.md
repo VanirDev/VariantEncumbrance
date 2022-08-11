@@ -1,3 +1,7 @@
+### 0.10.3
+
+- Bug fix [[BUG] Can no longer delete inventory items.](https://github.com/VanirDev/VariantEncumbrance/issues/68)
+
 ### 0.10.1-2
 
 - Add integration with DAE
