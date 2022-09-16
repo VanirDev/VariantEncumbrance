@@ -12,6 +12,8 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/VanirDev/VariantEncumbrance/total?style=for-the-badge)
 
+# [THE PROJECT IS BEEN TRANSFERED HERE WITH FVTT 10](https://github.com/p4535992/foundryvtt-variant-encumbrance-dnd5e)
+
 A visual modification to player character sheets to better display the effects of the [Encumbrance variant ruleset in the PHB](https://5thsrd.org/rules/abilities/strength/).
 
 - The rules for Lifting and Carrying are intentionally simple. Here is a variant if you are looking for more detailed rules for determining how a character is hindered by the weight of Equipment. When you use this variant, ignore the Strength column of the Armor table.
